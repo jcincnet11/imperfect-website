@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "team": "Equipo",
+    "games": "Juegos",
+    "results": "Resultados",
+    "community": "Comunidad",
+    "news": "Noticias"
+  },
+  "hero": {
+    "tag": "El Equipo #1 de Hero Shooters en Puerto Rico",
+    "headline": "Somos",
+    "subheadline": "Forjados en la isla. Compitiendo con el mundo.",
+    "cta_primary": "Conoce el Equipo",
+    "cta_secondary": "Únete a la Comunidad"
+  },
+  "stats": {
+    "founded": "Fundado",
+    "players": "Jugadores",
+    "games": "Juegos",
+    "tournaments": "Torneos"
+  },
+  "games": {
+    "title": "Nuestros Juegos",
+    "subtitle": "Compitiendo al más alto nivel en hero shooters.",
+    "ow2": {
+      "name": "Overwatch 2",
+      "desc": "Precisión, trabajo en equipo y estrategia. Nuestro roster de OW2 compite en las mejores ligas de Puerto Rico y torneos online."
+    },
+    "mr": {
+      "name": "Marvel Rivals",
+      "desc": "El nuevo campo de batalla. IMPerfect ya está marcando presencia en Marvel Rivals ranked y la escena competitiva."
+    }
+  },
+  "about": {
+    "title": "Hecho en Puerto Rico",
+    "body": "IMPerfect nació de una simple creencia — que Puerto Rico tiene talento de clase mundial que merece un escenario de clase mundial. Construimos este equipo desde cero, compitiendo, mejorando y representando la isla en cada partida que jugamos.",
+    "cta": "Nuestra Historia"
+  },
+  "roster": {
+    "title": "El Roster",
+    "subtitle": "Conoce a los jugadores detrás del nombre.",
+    "cta": "Roster Completo"
+  },
+  "community": {
+    "title": "Más Que un Equipo",
+    "subtitle": "Estamos construyendo la comunidad gamer de Puerto Rico — torneos, eventos, contenido y un espacio para cada gamer en la isla.",
+    "discord_cta": "Únete a nuestro Discord",
+    "events_cta": "Ver Eventos"
+  },
+  "footer": {
+    "tagline": "El Equipo Premier de Hero Shooters de Puerto Rico",
+    "links_team": "Equipo",
+    "links_games": "Juegos",
+    "links_results": "Resultados",
+    "links_community": "Comunidad",
+    "links_news": "Noticias",
+    "rights": "Todos los derechos reservados."
+  }
+}

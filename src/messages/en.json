@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "Home",
+    "team": "Team",
+    "games": "Games",
+    "results": "Results",
+    "community": "Community",
+    "news": "News"
+  },
+  "hero": {
+    "tag": "Puerto Rico's #1 Hero Shooter Team",
+    "headline": "We Are",
+    "subheadline": "Built from the island. Competing with the world.",
+    "cta_primary": "Meet the Team",
+    "cta_secondary": "Join the Community"
+  },
+  "stats": {
+    "founded": "Founded",
+    "players": "Players",
+    "games": "Games",
+    "tournaments": "Tournaments"
+  },
+  "games": {
+    "title": "Our Games",
+    "subtitle": "Competing at the highest level across hero shooters.",
+    "ow2": {
+      "name": "Overwatch 2",
+      "desc": "Precision, teamwork, and strategy. Our OW2 roster competes in Puerto Rico's top leagues and online tournaments."
+    },
+    "mr": {
+      "name": "Marvel Rivals",
+      "desc": "The newest battlefield. IMPerfect is already making waves in Marvel Rivals ranked and competitive scene."
+    }
+  },
+  "about": {
+    "title": "Built in Puerto Rico",
+    "body": "IMPerfect was born from a simple belief — that Puerto Rico has world-class talent that deserves a world-class stage. We built this team from the ground up, competing, grinding, and representing the island in every match we play.",
+    "cta": "Our Story"
+  },
+  "roster": {
+    "title": "The Roster",
+    "subtitle": "Meet the players behind the name.",
+    "cta": "Full Roster"
+  },
+  "community": {
+    "title": "More Than a Team",
+    "subtitle": "We're building the Puerto Rico gaming community — tournaments, events, content, and a place for every gamer on the island.",
+    "discord_cta": "Join Our Discord",
+    "events_cta": "View Events"
+  },
+  "footer": {
+    "tagline": "Puerto Rico's Premier Hero Shooter Team",
+    "links_team": "Team",
+    "links_games": "Games",
+    "links_results": "Results",
+    "links_community": "Community",
+    "links_news": "News",
+    "rights": "All rights reserved."
+  }
+}
