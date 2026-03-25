@@ -58,10 +58,11 @@ export default function Hero() {
             {t("headline")}
           </span>
           <span
-            className="block text-[clamp(5rem,14vw,12rem)] text-lime glow-lime-text"
+            className="block text-[clamp(5rem,14vw,12rem)] glow-lime-text"
             style={{ lineHeight: 0.9 }}
           >
-            ΣPERFECT
+            <span className="text-lime">IM</span>
+            <span className="text-white">Perfect</span>
           </span>
         </motion.h1>
 

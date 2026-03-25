@@ -27,8 +27,8 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <span className="font-heading text-3xl font-black tracking-tight">
-              <span className="text-lime">Σ</span>
-              <span className="text-white">PERFECT</span>
+              <span className="text-lime">IM</span>
+              <span className="text-white">Perfect</span>
             </span>
             <p className="mt-3 text-sm text-white/50 max-w-xs leading-relaxed">
               {t("tagline")}
