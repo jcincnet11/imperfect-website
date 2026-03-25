@@ -61,7 +61,9 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <LanguageToggle />
           <Link
-            href={`/${locale}/community`}
+            href="https://discord.gg/VuTAEqPT"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lime text-dark text-sm font-bold hover:bg-lime-dim transition-colors duration-150"
           >
             Discord

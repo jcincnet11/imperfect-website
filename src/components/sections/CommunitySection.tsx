@@ -41,7 +41,9 @@ export default function CommunitySection() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="#"
+                href="https://discord.gg/VuTAEqPT"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-8 py-4 rounded-full bg-[#5865F2] text-white font-bold text-sm hover:bg-[#4752c4] transition-colors duration-150 flex items-center gap-2"
               >
                 <svg width="20" height="20" viewBox="0 0 71 55" fill="none">

@@ -17,7 +17,7 @@ export default function Footer() {
     { label: "Instagram", href: "#" },
     { label: "TikTok", href: "#" },
     { label: "YouTube", href: "#" },
-    { label: "Discord", href: "#" },
+    { label: "Discord", href: "https://discord.gg/VuTAEqPT" },
   ];
 
   return (
