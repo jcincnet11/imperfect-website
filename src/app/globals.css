@@ -23,38 +23,41 @@ body {
   font-family: var(--font-inter), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Subtle dot grid background */
+/* Dot grid */
 .bg-grid {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-/* Lime glow effect */
+/* Lime glow */
 .glow-lime {
   box-shadow: 0 0 80px rgba(197, 212, 0, 0.15), 0 0 200px rgba(197, 212, 0, 0.06);
 }
 
 .glow-lime-text {
-  text-shadow: 0 0 40px rgba(197, 212, 0, 0.4);
+  text-shadow: 0 0 60px rgba(197, 212, 0, 0.35);
 }
 
-/* Gradient border */
-.border-gradient {
-  background: linear-gradient(var(--color-panel), var(--color-panel)) padding-box,
-    linear-gradient(135deg, rgba(197, 212, 0, 0.4), rgba(255, 255, 255, 0.05)) border-box;
-  border: 1px solid transparent;
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0d0d0d;
-}
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 3px;
-}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #0d0d0d; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }

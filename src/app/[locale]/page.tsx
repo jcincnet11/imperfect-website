@@ -1,4 +1,5 @@
 import Hero from "@/components/sections/Hero";
+import MarqueeTicker from "@/components/sections/MarqueeTicker";
 import StatsBar from "@/components/sections/StatsBar";
 import GamesSection from "@/components/sections/GamesSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -9,6 +10,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <MarqueeTicker />
       <StatsBar />
       <GamesSection />
       <AboutSection />

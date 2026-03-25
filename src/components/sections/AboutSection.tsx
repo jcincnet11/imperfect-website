@@ -10,80 +10,95 @@ export default function AboutSection() {
   const locale = useLocale();
 
   return (
-    <section className="py-28 px-6 bg-panel border-y border-white/[0.06] overflow-hidden">
+    <section className="py-24 px-6 bg-panel border-y border-white/[0.06] overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-center">
-          {/* Left - Text */}
+          {/* Left */}
           <motion.div
-            initial={{ opacity: 0, x: -24 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
-            <p className="text-xs text-lime font-semibold uppercase tracking-widest mb-4">
+            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-4">
               Our Story
             </p>
-            <h2 className="font-heading font-black text-5xl md:text-6xl uppercase text-white leading-none mb-8">
+            <h2
+              className="font-heading font-black uppercase text-white leading-none mb-8"
+              style={{ fontSize: "clamp(3rem, 7vw, 6rem)" }}
+            >
               {t("title")}
             </h2>
-            <p className="text-white/60 text-lg leading-relaxed mb-8">
+            <p className="text-white/55 text-base leading-relaxed mb-8 max-w-md">
               {t("body")}
             </p>
             <Link
               href={`/${locale}/about`}
-              className="inline-flex items-center gap-2 text-lime font-semibold hover:gap-4 transition-all duration-200"
+              className="inline-flex items-center gap-3 text-sm font-semibold text-lime group"
             >
-              {t("cta")}
-              <span>→</span>
+              <span>{t("cta")}</span>
+              <span className="transition-transform duration-200 group-hover:translate-x-1">
+                →
+              </span>
             </Link>
           </motion.div>
 
-          {/* Right - Visual */}
+          {/* Right — PR visual card */}
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
+            initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative"
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
-            {/* PR flag colors as decorative blocks */}
-            <div className="relative h-80 rounded-2xl overflow-hidden bg-dark border border-white/[0.06]">
-              <div className="absolute inset-0 flex flex-col">
-                <div className="flex-1 bg-[#ED0000]/80" />
-                <div className="flex-1 bg-white/90" />
-                <div className="flex-1 bg-[#ED0000]/80" />
-                <div className="flex-1 bg-white/90" />
-                <div className="flex-1 bg-[#ED0000]/80" />
+            <div className="relative rounded-2xl overflow-hidden border border-white/[0.06] aspect-[4/3] bg-dark flex items-center justify-center">
+              {/* PR flag stripes */}
+              <div className="absolute inset-0 flex flex-col opacity-20">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="flex-1"
+                    style={{ background: i % 2 === 0 ? "#ED0000" : "#fff" }}
+                  />
+                ))}
               </div>
-              {/* Blue triangle */}
+              {/* Blue triangle overlay */}
               <div
-                className="absolute left-0 top-0 bottom-0"
+                className="absolute left-0 top-0 bottom-0 opacity-30"
                 style={{
                   width: 0,
-                  height: 0,
-                  borderTop: "160px solid transparent",
-                  borderBottom: "160px solid transparent",
-                  borderLeft: "180px solid #002868",
+                  borderTop: "200px solid transparent",
+                  borderBottom: "200px solid transparent",
+                  borderLeft: "220px solid #002868",
                 }}
               />
-              {/* Star */}
-              <div className="absolute left-16 top-1/2 -translate-y-1/2 text-5xl">
-                ⭐
-              </div>
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-dark/60" />
-              {/* Sigma */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-heading font-black text-[8rem] text-lime/20 leading-none">
+              {/* Dark overlay */}
+              <div className="absolute inset-0 bg-dark/70" />
+
+              {/* Giant Σ */}
+              <div className="relative z-10 text-center">
+                <span
+                  className="font-heading font-black text-lime/10 select-none leading-none"
+                  style={{ fontSize: "clamp(8rem, 20vw, 16rem)" }}
+                >
                   Σ
                 </span>
               </div>
-              <div className="absolute bottom-6 left-6 right-6">
-                <p className="font-heading font-black text-2xl text-white uppercase">
-                  Puerto Rico 🇵🇷
-                </p>
-                <p className="text-white/50 text-sm">Representing since 2022</p>
+
+              {/* Bottom label */}
+              <div className="absolute bottom-6 left-6 right-6 z-10 flex items-end justify-between">
+                <div>
+                  <p className="font-heading font-black text-xl uppercase text-white">
+                    Puerto Rico
+                  </p>
+                  <p className="text-white/40 text-xs mt-0.5 uppercase tracking-widest">
+                    Est. 2022
+                  </p>
+                </div>
+                <span className="text-3xl">🇵🇷</span>
               </div>
+
+              {/* Top accent line */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime/30 to-transparent" />
             </div>
           </motion.div>
         </div>
