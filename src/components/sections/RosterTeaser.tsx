@@ -5,13 +5,22 @@ import { useLocale } from "next-intl";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+const ROLE_COLORS: Record<string, string> = {
+  Duelist:    "#E74C3C",
+  Vanguard:   "#3A7BD5",
+  Strategist: "#c5d400",
+};
+
 const players = [
-  { tag: "Player 1", role: "Tank", game: "OW2", color: "#F99E1A" },
-  { tag: "Player 2", role: "DPS", game: "OW2", color: "#F99E1A" },
-  { tag: "Player 3", role: "Support", game: "OW2", color: "#F99E1A" },
-  { tag: "Player 4", role: "Duelist", game: "MR", color: "#c5d400" },
-  { tag: "Player 5", role: "Strategist", game: "MR", color: "#c5d400" },
-];
+  { tag: "iaguacate",      role: "Strategist", label: "Coach",  game: "MR" },
+  { tag: "lblazerowl",     role: "Strategist", label: "Coach",  game: "MR" },
+  { tag: "crazyturnx",     role: "Duelist",    label: "Player", game: "MR" },
+  { tag: "georgierican",   role: "Strategist", label: "Player", game: "MR" },
+  { tag: "spooit",         role: "Vanguard",   label: "Player", game: "MR" },
+  { tag: "the_mofn_ninja", role: "Duelist",    label: "Player", game: "MR" },
+  { tag: "tides100ping",   role: "Duelist",    label: "Player", game: "MR" },
+  { tag: "zoivanni",       role: "Vanguard",   label: "Player", game: "MR" },
+].map((p) => ({ ...p, color: ROLE_COLORS[p.role] }));
 
 export default function RosterTeaser() {
   const t = useTranslations("roster");
