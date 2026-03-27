@@ -25,7 +25,10 @@ export default function Navbar() {
     { href: `/${locale}/results`, label: t("results") },
     { href: `/${locale}/community`, label: t("community") },
     { href: `/${locale}/news`, label: t("news") },
+    { href: `/${locale}/about`, label: "About" },
   ];
+
+  const sponsorshipHref = `/${locale}/sponsorship`;
 
   return (
     <header
@@ -60,6 +63,12 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-3">
           <LanguageToggle />
+          <Link
+            href={sponsorshipHref}
+            className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-lime/20 text-lime/70 hover:text-lime hover:border-lime/40 text-xs font-semibold tracking-wide transition-colors duration-150"
+          >
+            Sponsorship
+          </Link>
           <Link
             href="/team-hub"
             className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/[0.1] text-white/40 hover:text-white hover:border-white/25 text-xs font-semibold tracking-wide transition-colors duration-150"
@@ -101,6 +110,13 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href={sponsorshipHref}
+            onClick={() => setMenuOpen(false)}
+            className="text-sm text-lime/70 hover:text-lime transition-colors font-medium"
+          >
+            Sponsorship
+          </Link>
           <Link
             href="/team-hub"
             onClick={() => setMenuOpen(false)}
