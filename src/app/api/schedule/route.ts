@@ -6,6 +6,7 @@ import {
   deleteScheduleBlock,
   type ScheduleBlock,
 } from "@/lib/db";
+import { notifyBlockAdded, notifyBlockUpdated, notifyBlockDeleted } from "@/lib/discord-notify";
 import { randomUUID } from "crypto";
 
 export async function GET(request: NextRequest) {
@@ -44,7 +45,11 @@ export async function POST(request: NextRequest) {
     notes: body.notes,
   };
 
+  const isNew = !body.id;
   const saved = await upsertScheduleBlock(block);
+  // Fire-and-forget notification
+  if (isNew) notifyBlockAdded(saved).catch(() => {});
+  else notifyBlockUpdated(saved).catch(() => {});
   return Response.json(saved);
 }
 
@@ -63,7 +68,10 @@ export async function DELETE(request: NextRequest) {
   const id = searchParams.get("id");
   if (!id) return Response.json({ error: "Missing id" }, { status: 400 });
 
+  // Get block before deleting so we can notify
+  const [block] = await getScheduleBlocks(currentWeekStart(), "").catch(() => []);
   await deleteScheduleBlock(id);
+  if (block) notifyBlockDeleted(block).catch(() => {});
   return Response.json({ ok: true });
 }
 
