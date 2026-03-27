@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 const ROLE_COLORS: Record<string, string> = {
@@ -12,14 +13,14 @@ const ROLE_COLORS: Record<string, string> = {
 };
 
 const players = [
-  { tag: "iaguacate",      role: "Strategist", label: "Coach",  game: "MR" },
-  { tag: "lblazerowl",     role: "Strategist", label: "Coach",  game: "MR" },
-  { tag: "crazyturnx",     role: "Duelist",    label: "Player", game: "MR" },
-  { tag: "georgierican",   role: "Strategist", label: "Player", game: "MR" },
-  { tag: "spooit",         role: "Vanguard",   label: "Player", game: "MR" },
-  { tag: "the_mofn_ninja", role: "Duelist",    label: "Player", game: "MR" },
-  { tag: "tides100ping",   role: "Duelist",    label: "Player", game: "MR" },
-  { tag: "zoivanni",       role: "Vanguard",   label: "Player", game: "MR" },
+  { tag: "iaguacate",      role: "Strategist", label: "Coach",  game: "MR", img: "/players/AGUACATE_3.png" },
+  { tag: "lblazerowl",     role: "Strategist", label: "Coach",  game: "MR", img: "/players/BLAZER_3.png" },
+  { tag: "crazyturnx",     role: "Duelist",    label: "Player", game: "MR", img: "/players/FILTHYPRYDE.png" },
+  { tag: "georgierican",   role: "Strategist", label: "Player", game: "MR", img: "/players/GEORGIE.png" },
+  { tag: "spooit",         role: "Vanguard",   label: "Player", game: "MR", img: "/players/KEVO.png" },
+  { tag: "the_mofn_ninja", role: "Duelist",    label: "Player", game: "MR", img: "/players/MOFN_2.png" },
+  { tag: "tides100ping",   role: "Duelist",    label: "Player", game: "MR", img: "/players/TIDES.png" },
+  { tag: "zoivanni",       role: "Vanguard",   label: "Player", game: "MR", img: "/players/VANNI.png" },
 ].map((p) => ({ ...p, color: ROLE_COLORS[p.role] }));
 
 export default function RosterTeaser() {
@@ -77,16 +78,18 @@ export default function RosterTeaser() {
               />
 
               {/* Avatar area */}
-              <div
-                className="h-20 flex items-center justify-center"
-                style={{ background: `${player.color}08` }}
-              >
-                <span
-                  className="font-heading font-black text-3xl"
-                  style={{ color: `${player.color}40` }}
-                >
-                  {player.tag[0]}
-                </span>
+              <div className="relative h-40 overflow-hidden" style={{ background: `${player.color}08` }}>
+                <Image
+                  src={player.img}
+                  alt={player.tag}
+                  fill
+                  className="object-cover object-top"
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 20vw"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `linear-gradient(to top, ${player.color}18 0%, transparent 60%)` }}
+                />
               </div>
 
               {/* Info */}
