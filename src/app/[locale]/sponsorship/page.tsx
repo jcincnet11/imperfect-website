@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 const TIERS = [
   {
     name: "Associate",
-    price: "Contra / Product",
     color: "#7F8C8D",
     highlight: false,
     description: "Get your brand in front of our audience with product placement and community exposure.",
@@ -20,7 +19,6 @@ const TIERS = [
   },
   {
     name: "Partner",
-    price: "$250–$500 / mo",
     color: "#c5d400",
     highlight: true,
     description: "Full brand integration across stream, jerseys, and regular content — the most popular tier.",
@@ -34,7 +32,6 @@ const TIERS = [
   },
   {
     name: "Title Sponsor",
-    price: "$750+ / mo",
     color: "#E74C3C",
     highlight: false,
     description: "Maximum exposure. Your brand at the forefront of everything we do.",
@@ -203,12 +200,11 @@ export default function SponsorshipPage() {
                 />
                 <div className="mb-6">
                   <h3
-                    className="font-heading font-black uppercase text-2xl mb-1"
+                    className="font-heading font-black uppercase text-2xl"
                     style={{ color: tier.color }}
                   >
                     {tier.name}
                   </h3>
-                  <p className="text-white/50 text-sm font-semibold">{tier.price}</p>
                 </div>
                 <p className="text-sm text-white/40 leading-relaxed mb-6">{tier.description}</p>
                 <ul className="space-y-2.5 flex-1 mb-8">

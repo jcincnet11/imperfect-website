@@ -5,9 +5,9 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const TIERS = [
-  { name: "Associate", detail: "Contra / Product", color: "#7F8C8D" },
-  { name: "Partner",   detail: "$250–500 / mo",    color: "#c5d400" },
-  { name: "Title",     detail: "$750+ / mo",        color: "#E74C3C" },
+  { name: "Associate",    color: "#7F8C8D" },
+  { name: "Partner",      color: "#c5d400" },
+  { name: "Title Sponsor",color: "#E74C3C" },
 ];
 
 const PLATFORMS = ["Twitch", "TikTok", "Instagram", "YouTube", "Discord", "Twitter/X"];
@@ -93,7 +93,6 @@ export default function SponsorshipTeaser() {
                     {tier.name}
                   </span>
                 </div>
-                <span className="text-sm text-white/40 font-semibold">{tier.detail}</span>
               </motion.div>
             ))}
 
