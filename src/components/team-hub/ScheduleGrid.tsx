@@ -39,6 +39,12 @@ type Props = {
   canEdit: boolean;
 };
 
+function getDayDate(weekStart: string, dayIndex: number): string {
+  const d = new Date(weekStart + "T12:00:00");
+  d.setDate(d.getDate() + dayIndex);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
+}
+
 type EditState = {
   day: string;
   time_slot: string;
@@ -113,9 +119,10 @@ export default function ScheduleGrid({ initialBlocks, weekStart, division, canEd
           {/* Header row */}
           <div className="grid" style={{ gridTemplateColumns: "60px repeat(7, 1fr)" }}>
             <div />
-            {DAYS.map((day) => (
-              <div key={day} className="text-center text-[11px] font-semibold text-white/35 uppercase tracking-wider pb-2">
-                {DAY_LABELS[day]}
+            {DAYS.map((day, i) => (
+              <div key={day} className="text-center pb-2">
+                <p className="text-[11px] font-semibold text-white/35 uppercase tracking-wider">{DAY_LABELS[day]}</p>
+                <p className="text-[10px] text-white/20">{getDayDate(weekStart, i)}</p>
               </div>
             ))}
           </div>
