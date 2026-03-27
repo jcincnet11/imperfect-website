@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
-import { getPlayerByDiscordId } from "@/lib/db";
 
 const approvedIds = (process.env.APPROVED_DISCORD_IDS || "")
   .split(",")
@@ -33,6 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.discordId = discordId;
         // Fetch role from DB (falls back to "player" if not found)
         try {
+          const { getPlayerByDiscordId } = await import("@/lib/db");
           const player = await getPlayerByDiscordId(discordId);
           token.role = player?.role ?? "player";
           token.division = player?.division ?? null;
