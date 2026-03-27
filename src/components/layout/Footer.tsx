@@ -15,10 +15,8 @@ export default function Footer() {
   ];
 
   const socials = [
-    { label: "Twitter / X", href: "#" },
-    { label: "Instagram", href: "#" },
-    { label: "TikTok", href: "#" },
-    { label: "YouTube", href: "#" },
+    { label: "Twitter / X", href: "https://x.com/Imperfectow" },
+    { label: "Instagram", href: "https://www.instagram.com/Imperfectgamingpr" },
     { label: "Discord", href: "https://discord.gg/VuTAEqPT" },
   ];
 
