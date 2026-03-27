@@ -5,32 +5,28 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const ACHIEVEMENTS = [
-  { label: "20+", desc: "Tournaments Competed" },
-  { label: "PR #1", desc: "Marvel Rivals Region" },
-  { label: "PR #1", desc: "Overwatch 2 Region" },
-  { label: "3", desc: "Active Teams" },
+  { label: "5",    desc: "Tournament Wins" },
+  { label: "PR #1", desc: "Marvel Rivals" },
+  { label: "PR #1", desc: "Overwatch 2" },
+  { label: "3",    desc: "Active Teams" },
 ];
 
 const RESULTS = [
   {
-    year: "2024–25",
     game: "Marvel Rivals",
     gameColor: "#c5d400",
     entries: [
-      { event: "MR Puerto Rico Open — Season 1", placement: "1st Place",  highlight: true },
-      { event: "MR Island Clash Invitational",   placement: "Top 4",      highlight: false },
-      { event: "MR Caribbean Cup — Qualifier",   placement: "Qualified",  highlight: false },
+      { event: "UPRM Tournament",  placement: "1st Place", highlight: true },
+      { event: "Winter Clash",     placement: "1st Place", highlight: true },
     ],
   },
   {
-    year: "2023–24",
     game: "Overwatch 2",
     gameColor: "#F99E1A",
     entries: [
-      { event: "OW2 Puerto Rico Open",           placement: "1st Place",  highlight: true },
-      { event: "OW2 PR League — Spring Split",   placement: "Top 2",      highlight: false },
-      { event: "OW2 PR League — Fall Split",     placement: "Top 4",      highlight: false },
-      { event: "OW2 Caribbean Qualifier",        placement: "Top 8",      highlight: false },
+      { event: "Estarei  ×3",      placement: "1st Place", highlight: true },
+      { event: "Heroes de La Bahía", placement: "1st Place", highlight: true },
+      { event: "UPRM Tournament",  placement: "1st Place", highlight: true },
     ],
   },
 ];
@@ -107,7 +103,7 @@ export default function ResultsPage() {
       <div className="max-w-7xl mx-auto px-6 py-16 space-y-12">
         {RESULTS.map((section, si) => (
           <motion.div
-            key={section.year}
+            key={section.game}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -120,7 +116,6 @@ export default function ResultsPage() {
               >
                 {section.game}
               </span>
-              <span className="text-sm text-white/25 font-semibold">{section.year}</span>
             </div>
             <div className="bg-[#111] border border-white/[0.07] rounded-2xl overflow-hidden">
               {section.entries.map((entry, ei) => (
