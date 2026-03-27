@@ -9,8 +9,8 @@ const approvedIds = (process.env.APPROVED_DISCORD_IDS || "")
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Discord({
-      clientId: process.env.DISCORD_CLIENT_ID,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET,
+      clientId: process.env.AUTH_DISCORD_ID ?? process.env.DISCORD_CLIENT_ID ?? "",
+      clientSecret: process.env.AUTH_DISCORD_SECRET ?? process.env.DISCORD_CLIENT_SECRET ?? "",
     }),
   ],
   callbacks: {
