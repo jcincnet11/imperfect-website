@@ -10,6 +10,8 @@ export default function Footer() {
     { href: "/results", label: t("links_results") },
     { href: "/community", label: t("links_community") },
     { href: "/news", label: t("links_news") },
+    { href: "/sponsorship", label: "Sponsorship" },
+    { href: "/about", label: "About" },
   ];
 
   const socials = [

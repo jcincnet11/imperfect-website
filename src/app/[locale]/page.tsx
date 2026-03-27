@@ -4,6 +4,7 @@ import StatsBar from "@/components/sections/StatsBar";
 import GamesSection from "@/components/sections/GamesSection";
 import AboutSection from "@/components/sections/AboutSection";
 import RosterTeaser from "@/components/sections/RosterTeaser";
+import SponsorshipTeaser from "@/components/sections/SponsorshipTeaser";
 import CommunitySection from "@/components/sections/CommunitySection";
 
 export default function HomePage() {
@@ -15,6 +16,7 @@ export default function HomePage() {
       <GamesSection />
       <AboutSection />
       <RosterTeaser />
+      <SponsorshipTeaser />
       <CommunitySection />
     </>
   );
