@@ -7,10 +7,13 @@ const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] as const;
 const DAY_LABELS: Record<string, string> = {
   MON: "Mon", TUE: "Tue", WED: "Wed", THU: "Thu", FRI: "Fri", SAT: "Sat", SUN: "Sun",
 };
-const TIME_SLOTS = ["16:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
+// Default slots: 7 PM – 11 PM. Earlier slots shown only for tournaments.
+const DEFAULT_TIME_SLOTS = ["19:00", "20:00", "21:00", "22:00", "23:00"];
+const TOURNAMENT_TIME_SLOTS = ["14:00", "15:00", "16:00", "17:00", "18:00"];
+const ALL_TIME_SLOTS = [...TOURNAMENT_TIME_SLOTS, ...DEFAULT_TIME_SLOTS];
 const TIME_LABELS: Record<string, string> = {
-  "16:00": "4 PM", "17:00": "5 PM", "18:00": "6 PM",
-  "19:00": "7 PM", "20:00": "8 PM", "21:00": "9 PM",
+  "14:00": "2 PM", "15:00": "3 PM", "16:00": "4 PM", "17:00": "5 PM", "18:00": "6 PM",
+  "19:00": "7 PM", "20:00": "8 PM", "21:00": "9 PM", "22:00": "10 PM", "23:00": "11 PM",
 };
 
 export const BLOCK_TYPES = [
@@ -55,6 +58,12 @@ export default function ScheduleGrid({ initialBlocks, weekStart, division, canEd
   const [blocks, setBlocks] = useState<ScheduleBlock[]>(initialBlocks);
   const [editing, setEditing] = useState<EditState>(null);
   const [saving, setSaving] = useState(false);
+
+  // Show early slots only if there's a tournament block there
+  const hasTournamentEarly = blocks.some(
+    (b) => b.block_type === "TOURNAMENT" && TOURNAMENT_TIME_SLOTS.includes(b.time_slot)
+  );
+  const visibleSlots = hasTournamentEarly ? ALL_TIME_SLOTS : DEFAULT_TIME_SLOTS;
 
   const getBlock = useCallback(
     (day: string, time_slot: string) =>
@@ -128,7 +137,7 @@ export default function ScheduleGrid({ initialBlocks, weekStart, division, canEd
           </div>
 
           {/* Time rows */}
-          {TIME_SLOTS.map((slot) => (
+          {visibleSlots.map((slot) => (
             <div
               key={slot}
               className="grid border-t border-white/[0.05]"

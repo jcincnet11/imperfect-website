@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { getScheduleBlocks } from "@/lib/db";
 import ScheduleGrid from "@/components/team-hub/ScheduleGrid";
+import ScheduleSuggestions from "@/components/team-hub/ScheduleSuggestions";
 
 function getWeekStart(offsetWeeks = 0): string {
   const d = new Date();
@@ -60,6 +61,8 @@ export default async function SchedulePage({
         <DivisionTab division="Shadows"   active={division === "Shadows"}   weekStart={weekStart} label="Shadows" />
         <DivisionTab division="Echoes"    active={division === "Echoes"}    weekStart={weekStart} label="Echoes" />
       </div>
+
+      <ScheduleSuggestions weekStart={weekStart} division={division} />
 
       {canEdit && (
         <p className="text-xs text-white/30 mb-4 flex items-center gap-1.5">
