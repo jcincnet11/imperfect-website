@@ -61,6 +61,12 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <LanguageToggle />
           <Link
+            href="/team-hub"
+            className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-white/[0.1] text-white/40 hover:text-white hover:border-white/25 text-xs font-semibold tracking-wide transition-colors duration-150"
+          >
+            <span className="text-[10px]">🔒</span> Team Hub
+          </Link>
+          <Link
             href="https://discord.gg/VuTAEqPT"
             target="_blank"
             rel="noopener noreferrer"
@@ -95,6 +101,13 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/team-hub"
+            onClick={() => setMenuOpen(false)}
+            className="text-sm text-white/40 hover:text-white transition-colors font-medium flex items-center gap-1.5"
+          >
+            <span className="text-xs">🔒</span> Team Hub
+          </Link>
         </div>
       )}
     </header>

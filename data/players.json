@@ -1,0 +1,16 @@
+[
+  {
+    "discord_id": "000000000000000001",
+    "display_name": "Coach Demo",
+    "division": "OW2",
+    "role": "coach",
+    "is_admin": false
+  },
+  {
+    "discord_id": "000000000000000002",
+    "display_name": "Admin Demo",
+    "division": "OW2",
+    "role": "admin",
+    "is_admin": true
+  }
+]

@@ -1,11 +1,16 @@
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-const handler = createMiddleware(routing);
+const intlHandler = createMiddleware(routing);
 
 export function proxy(request: NextRequest) {
-  return handler(request);
+  // Team Hub lives outside locale routing — pass through directly
+  if (request.nextUrl.pathname.startsWith("/team-hub")) {
+    return NextResponse.next();
+  }
+  return intlHandler(request);
 }
 
 export const config = {
