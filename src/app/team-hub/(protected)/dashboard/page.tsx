@@ -72,20 +72,22 @@ export default async function DashboardPage() {
   const role = user.role ?? "player";
   const weekStart = currentWeekStart();
 
-  const [ow2Blocks, mrBlocks, availability, players] = await Promise.all([
-    getScheduleBlocks(weekStart, "OW2"),
-    getScheduleBlocks(weekStart, "MR"),
+  const [impBlocks, shadowsBlocks, echoesBlocks, availability, players] = await Promise.all([
+    getScheduleBlocks(weekStart, "IMPerfect"),
+    getScheduleBlocks(weekStart, "Shadows"),
+    getScheduleBlocks(weekStart, "Echoes"),
     getAvailability(weekStart, role === "player" ? user.discordId : undefined),
     role !== "player" ? getAllPlayers() : Promise.resolve([]),
   ]);
 
-  const totalSessions = ow2Blocks.length + mrBlocks.length;
+  const totalSessions = impBlocks.length + shadowsBlocks.length + echoesBlocks.length;
   const availableCount = availability.filter((a) => a.status === "AVAILABLE").length;
   const totalDays = 7;
   const attendancePct = totalDays > 0 ? Math.round((availableCount / totalDays) * 100) : 0;
 
-  const ow2Next = nextSession(ow2Blocks, weekStart);
-  const mrNext = nextSession(mrBlocks, weekStart);
+  const impNext = nextSession(impBlocks, weekStart);
+  const shadowsNext = nextSession(shadowsBlocks, weekStart);
+  const echoesNext = nextSession(echoesBlocks, weekStart);
 
   const weekLabel = new Date(weekStart).toLocaleDateString("en-US", {
     month: "long",
@@ -110,30 +112,38 @@ export default async function DashboardPage() {
         <StatCard label="Sessions this week" value={String(totalSessions)} />
         <StatCard
           label="Next session"
-          value={ow2Next ? ow2Next.date : mrNext ? mrNext.date : "None scheduled"}
+          value={impNext ? impNext.date : shadowsNext ? shadowsNext.date : echoesNext ? echoesNext.date : "None scheduled"}
           small
         />
         <StatCard label="My availability" value={`${attendancePct}%`} />
       </div>
 
-      {/* Division cards */}
+      {/* Team cards */}
       <h2 className="font-heading font-bold text-lg tracking-wide text-white/70 uppercase mb-4">
-        Divisions
+        Teams — Marvel Rivals
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <DivisionCard
-          game="Overwatch 2"
-          division="OW2"
-          sessions={ow2Blocks.length}
-          nextBlock={ow2Next}
+          game="IMPerfect"
+          division="IMPerfect"
+          sessions={impBlocks.length}
+          nextBlock={impNext}
           blockColors={BLOCK_COLORS}
           blockLabels={BLOCK_LABELS}
         />
         <DivisionCard
-          game="Marvel Rivals"
-          division="MR"
-          sessions={mrBlocks.length}
-          nextBlock={mrNext}
+          game="Shadows"
+          division="Shadows"
+          sessions={shadowsBlocks.length}
+          nextBlock={shadowsNext}
+          blockColors={BLOCK_COLORS}
+          blockLabels={BLOCK_LABELS}
+        />
+        <DivisionCard
+          game="Echoes"
+          division="Echoes"
+          sessions={echoesBlocks.length}
+          nextBlock={echoesNext}
           blockColors={BLOCK_COLORS}
           blockLabels={BLOCK_LABELS}
         />

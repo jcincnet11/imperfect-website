@@ -27,8 +27,9 @@ export default async function SchedulePage({
   const user = session!.user as { role?: string };
   const canEdit = user.role === "admin" || user.role === "coach";
 
+  const TEAMS = ["IMPerfect", "Shadows", "Echoes"];
   const weekStart = params.week ?? getWeekStart();
-  const division = (params.division === "MR" ? "MR" : "OW2") as "OW2" | "MR";
+  const division = TEAMS.includes(params.division ?? "") ? params.division! : "IMPerfect";
 
   const blocks = await getScheduleBlocks(weekStart, division);
 
@@ -53,10 +54,11 @@ export default async function SchedulePage({
         </div>
       </div>
 
-      {/* Division tabs */}
-      <div className="flex gap-2 mb-6">
-        <DivisionTab division="OW2" active={division === "OW2"} weekStart={weekStart} label="Overwatch 2" />
-        <DivisionTab division="MR" active={division === "MR"} weekStart={weekStart} label="Marvel Rivals" />
+      {/* Team tabs */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        <DivisionTab division="IMPerfect" active={division === "IMPerfect"} weekStart={weekStart} label="IMPerfect" />
+        <DivisionTab division="Shadows"   active={division === "Shadows"}   weekStart={weekStart} label="Shadows" />
+        <DivisionTab division="Echoes"    active={division === "Echoes"}    weekStart={weekStart} label="Echoes" />
       </div>
 
       {canEdit && (

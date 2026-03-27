@@ -34,7 +34,7 @@ export type Player = {
 export type ScheduleBlock = {
   id: string;
   week_start: string; // ISO date string "YYYY-MM-DD"
-  division: "OW2" | "MR";
+  division: string;   // team name e.g. "IMPerfect", "Shadows", "Echoes"
   day: "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
   time_slot: string; // "16:00", "17:00", etc.
   block_type: "PRACTICE" | "SCRIM" | "VOD_REVIEW" | "MEETING" | "TOURNAMENT" | "FLEX" | "REST";

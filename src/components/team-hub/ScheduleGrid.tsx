@@ -35,7 +35,7 @@ function blockLabel(type: string): string {
 type Props = {
   initialBlocks: ScheduleBlock[];
   weekStart: string;
-  division: "OW2" | "MR";
+  division: string;
   canEdit: boolean;
 };
 
