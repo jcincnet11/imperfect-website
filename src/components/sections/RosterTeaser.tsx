@@ -59,7 +59,7 @@ export default function RosterTeaser() {
         </motion.div>
 
         {/* Player grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {players.map((player, i) => (
             <motion.div
               key={player.tag}
@@ -67,47 +67,48 @@ export default function RosterTeaser() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: i * 0.06 }}
-              className="group relative rounded-xl border border-white/[0.06] bg-panel overflow-hidden hover:border-white/15 transition-all duration-300 cursor-pointer"
+              className="group relative rounded-xl overflow-hidden cursor-pointer aspect-square"
+              style={{ border: `1px solid ${player.color}20` }}
             >
-              {/* Top accent line */}
-              <div
-                className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${player.color}, transparent)`,
-                }}
+              {/* Full-bleed image */}
+              <Image
+                src={player.img}
+                alt={player.tag}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                sizes="(max-width: 640px) 50vw, 25vw"
               />
 
-              {/* Avatar area */}
-              <div className="relative h-40 overflow-hidden" style={{ background: `${player.color}08` }}>
-                <Image
-                  src={player.img}
-                  alt={player.tag}
-                  fill
-                  className="object-cover object-top"
-                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 20vw"
-                />
+              {/* Bottom gradient overlay with info */}
+              <div
+                className="absolute inset-0 flex flex-col justify-end p-3"
+                style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)" }}
+              >
+                {/* Accent line */}
                 <div
-                  className="absolute inset-0"
-                  style={{ background: `linear-gradient(to top, ${player.color}18 0%, transparent 60%)` }}
+                  className="absolute top-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: `linear-gradient(90deg, transparent, ${player.color}, transparent)` }}
                 />
-              </div>
-
-              {/* Info */}
-              <div className="p-4">
-                <p className="font-heading font-bold uppercase text-white text-sm tracking-wide">
-                  {player.tag}
-                </p>
-                <p className="text-[11px] text-white/35 mt-0.5">{player.role}</p>
-                <span
-                  className="mt-2 inline-block text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-[0.15em]"
-                  style={{
-                    color: player.color,
-                    background: `${player.color}15`,
-                    border: `1px solid ${player.color}25`,
-                  }}
-                >
-                  {player.game}
-                </span>
+                <div className="flex items-end justify-between gap-1">
+                  <div>
+                    <p className="font-heading font-black uppercase text-white text-xs sm:text-sm leading-tight tracking-wide drop-shadow">
+                      {player.tag}
+                    </p>
+                    <p className="text-[10px] sm:text-[11px] mt-0.5 drop-shadow" style={{ color: player.color }}>
+                      {player.role}
+                    </p>
+                  </div>
+                  <span
+                    className="shrink-0 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-[0.1em]"
+                    style={{
+                      color: player.color,
+                      background: `${player.color}25`,
+                      border: `1px solid ${player.color}40`,
+                    }}
+                  >
+                    {player.label === "Coach" ? "Coach" : player.game}
+                  </span>
+                </div>
               </div>
             </motion.div>
           ))}
