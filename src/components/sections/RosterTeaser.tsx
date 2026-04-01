@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 const ROLE_COLORS: Record<string, string> = {
   Duelist:    "#E74C3C",
   Vanguard:   "#3A7BD5",
-  Strategist: "#c5d400",
+  Strategist: "#C8E400",
 };
 
 const players = [
@@ -28,37 +28,26 @@ export default function RosterTeaser() {
   const locale = useLocale();
 
   return (
-    <section className="py-24 px-6 bg-dark border-t border-white/[0.06]">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4"
-        >
+    <section style={{ padding: "80px 0", borderBottom: "1px solid #1F1F1F", background: "#1A1A1A" }}>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "40px" }} className="md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              Players
-            </p>
-            <h2
-              className="font-heading font-black uppercase text-white leading-none"
-              style={{ fontSize: "clamp(3rem, 8vw, 7rem)" }}
-            >
+            <span className="eyebrow">Players</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
               {t("title")}
             </h2>
-            <p className="mt-3 text-white/40 text-sm">{t("subtitle")}</p>
+            <p style={{ marginTop: "8px", fontSize: "14px", color: "#888888" }}>{t("subtitle")}</p>
           </div>
           <Link
             href={`/${locale}/team`}
-            className="self-start md:self-auto inline-flex items-center gap-2 text-sm font-semibold text-white/40 hover:text-lime transition-colors duration-150 group"
+            style={{ fontSize: "13px", color: "#C8E400", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.75")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
-            {t("cta")}
-            <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+            {t("cta")} →
           </Link>
-        </motion.div>
+        </div>
 
-        {/* Player grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {players.map((player, i) => (
             <motion.div
@@ -67,10 +56,9 @@ export default function RosterTeaser() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: i * 0.06 }}
-              className="group relative rounded-xl overflow-hidden cursor-pointer aspect-square"
-              style={{ border: `1px solid ${player.color}20` }}
+              className="group relative overflow-hidden"
+              style={{ aspectRatio: "1/1", borderRadius: "8px", border: `1px solid ${player.color}20` }}
             >
-              {/* Full-bleed image */}
               <Image
                 src={player.img}
                 alt={player.tag}
@@ -78,33 +66,22 @@ export default function RosterTeaser() {
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 sizes="(max-width: 640px) 50vw, 25vw"
               />
-
-              {/* Bottom gradient overlay with info */}
               <div
-                className="absolute inset-0 flex flex-col justify-end p-3"
-                style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)" }}
+                className="absolute inset-0 flex flex-col justify-end"
+                style={{ padding: "12px", background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)" }}
               >
-                {/* Accent line */}
                 <div
-                  className="absolute top-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: `linear-gradient(90deg, transparent, ${player.color}, transparent)` }}
+                  className="absolute top-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ height: "3px", background: player.color }}
                 />
-                <div className="flex items-end justify-between gap-1">
+                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "4px" }}>
                   <div>
-                    <p className="font-heading font-black uppercase text-white text-xs sm:text-sm leading-tight tracking-wide drop-shadow">
-                      {player.tag}
-                    </p>
-                    <p className="text-[10px] sm:text-[11px] mt-0.5 drop-shadow" style={{ color: player.color }}>
-                      {player.role}
-                    </p>
+                    <p className="font-heading font-black uppercase" style={{ fontSize: "12px", color: "#FFFFFF", lineHeight: 1.2 }}>{player.tag}</p>
+                    <p style={{ fontSize: "10px", marginTop: "2px", color: player.color }}>{player.role}</p>
                   </div>
                   <span
-                    className="shrink-0 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-[0.1em]"
-                    style={{
-                      color: player.color,
-                      background: `${player.color}25`,
-                      border: `1px solid ${player.color}40`,
-                    }}
+                    className="font-heading font-bold uppercase"
+                    style={{ fontSize: "8px", letterSpacing: "0.10em", padding: "2px 6px", borderRadius: "2px", color: player.color, background: `${player.color}20`, border: `1px solid ${player.color}40`, flexShrink: 0 }}
                   >
                     {player.label === "Coach" ? "Coach" : player.game}
                   </span>

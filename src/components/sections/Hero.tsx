@@ -1,104 +1,114 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+const STATS = [
+  { value: "2017",  label: "Founded" },
+  { value: "8+",    label: "Players" },
+  { value: "2",     label: "Active Titles" },
+  { value: "20+",   label: "Tournaments" },
+  { value: "PR #1", label: "Both Titles" },
+];
+
 export default function Hero() {
-  const t = useTranslations("hero");
   const locale = useLocale();
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-end overflow-hidden bg-dark">
-      {/* Subtle grid */}
-      <div className="absolute inset-0 bg-grid opacity-60 pointer-events-none" />
-
-      {/* Lime glow behind text */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-[70vh] pointer-events-none"
+    <section
+      style={{
+        position: "relative",
+        minHeight: "100vh",
+        background: "#1A1A1A",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        overflow: "hidden",
+        paddingTop: "72px",
+      }}
+    >
+      {/* Background video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
         style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(197,212,0,0.07) 0%, transparent 70%)",
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: 0,
         }}
-      />
-
-      {/* Tag — top of page */}
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="absolute top-28 left-6 md:left-12"
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-lime/25 bg-lime/5">
-          <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
-          <span className="text-[10px] text-lime font-semibold tracking-[0.2em] uppercase">
-            {t("tag")}
-          </span>
-        </div>
-      </motion.div>
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
 
-      {/* Main headline — 100T style: massive, fills viewport, tight stack */}
-      <div className="relative z-10 px-4 md:px-8 pb-10 md:pb-16">
+      {/* Dark overlay so text stays readable */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.3) 100%)", zIndex: 1 }} />
+
+      {/* Left accent bar */}
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "4px", background: "#C8E400", zIndex: 2 }} />
+      <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" style={{ zIndex: 1 }} />
+
+      <div className="w-full" style={{ maxWidth: "1280px", margin: "0 auto", padding: "80px 48px 80px 64px", position: "relative", zIndex: 2 }}>
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}
+        >
+          <div style={{ width: "28px", height: "2px", background: "#C8E400", flexShrink: 0 }} />
+          <span className="font-heading font-bold uppercase" style={{ fontSize: "11px", letterSpacing: "0.20em", color: "#C8E400" }}>
+            Puerto Rico · Est. 2017
+          </span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="font-heading font-black uppercase"
+          style={{ fontSize: "clamp(48px, 10vw, 96px)", lineHeight: 0.92, color: "#FFFFFF", marginBottom: "20px" }}
+        >
+          We Are
+          <span style={{ display: "block", color: "#C8E400" }}>IMPerfect.</span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+          style={{ fontSize: "15px", color: "#888888", maxWidth: "460px", lineHeight: 1.65, marginBottom: "32px" }}
+        >
+          Puerto Rico's #1 competitive hero shooter org. Overwatch 2 · Marvel Rivals.
+          Built from the island — competing with the world.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.35 }}
+          style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}
+        >
+          <Link href={`/${locale}/team`} className="btn-primary">Meet the Team</Link>
+          <Link href={`/${locale}/sponsorship`} className="btn-secondary">Partner With Us</Link>
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.15 }}
-          className="font-heading font-black uppercase leading-[0.85] tracking-tighter"
+          transition={{ duration: 0.5, delay: 0.5 }}
+          style={{ borderTop: "1px solid #2A2A2A", paddingTop: "32px", marginTop: "40px", display: "flex", gap: "40px", flexWrap: "wrap" }}
         >
-          {/* "WE ARE" line */}
-          <div
-            className="text-white/20 select-none"
-            style={{ fontSize: "clamp(3.5rem, 10vw, 9rem)" }}
-          >
-            {t("headline")}
-          </div>
-
-          {/* "IMPERFECT" — viewport filling */}
-          <div
-            className="relative"
-            style={{ fontSize: "clamp(5.5rem, 18vw, 18rem)", lineHeight: 0.85 }}
-          >
-            <span className="text-lime glow-lime-text">IM</span>
-            <span className="text-white">PERFECT</span>
-          </div>
-
-          {/* "PUERTO RICO" subline */}
-          <div
-            className="text-white/15 select-none mt-2"
-            style={{ fontSize: "clamp(2rem, 5.5vw, 5rem)" }}
-          >
-            PUERTO RICO 🇵🇷
-          </div>
-        </motion.div>
-
-        {/* Bottom row — subheadline + CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.45 }}
-          className="mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-t border-white/[0.07] pt-6"
-        >
-          <p className="text-white/45 text-sm md:text-base max-w-sm leading-relaxed">
-            {t("subheadline")}
-          </p>
-
-          <div className="flex items-center gap-3 shrink-0">
-            <Link
-              href={`/${locale}/team`}
-              className="px-6 py-3 rounded-full bg-lime text-dark text-sm font-bold hover:bg-lime-dim transition-all duration-150 hover:scale-[1.02]"
-            >
-              {t("cta_primary")}
-            </Link>
-            <Link
-              href="https://discord.gg/VuTAEqPT"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 rounded-full border border-white/12 text-white/70 text-sm font-medium hover:border-white/25 hover:text-white transition-all duration-150"
-            >
-              {t("cta_secondary")}
-            </Link>
-          </div>
+          {STATS.map((s) => (
+            <div key={s.label}>
+              <p className="font-heading font-black" style={{ fontSize: "32px", color: "#C8E400", lineHeight: 1 }}>{s.value}</p>
+              <p style={{ fontSize: "10px", color: "#666666", textTransform: "uppercase", letterSpacing: "0.12em", marginTop: "4px" }}>{s.label}</p>
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>

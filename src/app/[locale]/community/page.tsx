@@ -4,48 +4,32 @@ import { useLocale } from "next-intl";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const WEEKLY_SCHEDULE = [
-  { day: "MON", platform: "Twitter / X",  type: "Engagement", activity: "This or That poll — hero meta" },
-  { day: "MON", platform: "Discord",       type: "Engagement", activity: "Discussion question in #general" },
-  { day: "TUE", platform: "TikTok / IG",  type: "Content",    activity: "Player highlight clip" },
-  { day: "WED", platform: "Twitter / X",  type: "Community",  activity: "Community clip shoutout" },
-  { day: "WED", platform: "Discord",       type: "Engagement", activity: "Rank check-in in #ranked-talk" },
-  { day: "THU", platform: "Instagram",    type: "Content",    activity: "Player spotlight carousel" },
-  { day: "FRI", platform: "All Platforms",type: "Hype",       activity: "Weekend match hype post" },
-  { day: "FRI", platform: "Discord",       type: "Community",  activity: "Friday open voice — casual hangout" },
-  { day: "SAT", platform: "Twitch / YT",  type: "Content",    activity: "Live stream match or ranked session" },
-  { day: "SUN", platform: "Discord",       type: "Engagement", activity: "Community vote — next week's event" },
-  { day: "SUN", platform: "Twitter / X",  type: "Content",    activity: "Weekly recap — results + what's coming" },
+const WEEKLY = [
+  { day: "MON", type: "Engagement", platform: "Twitter / X",   activity: "This or That poll — hero meta" },
+  { day: "MON", type: "Engagement", platform: "Discord",        activity: "Discussion question in #general" },
+  { day: "TUE", type: "Content",    platform: "TikTok / IG",   activity: "Player highlight clip" },
+  { day: "WED", type: "Community",  platform: "Twitter / X",   activity: "Community clip shoutout" },
+  { day: "WED", type: "Engagement", platform: "Discord",        activity: "Rank check-in in #ranked-talk" },
+  { day: "THU", type: "Content",    platform: "Instagram",      activity: "Player spotlight carousel" },
+  { day: "FRI", type: "Hype",       platform: "All Platforms",  activity: "Weekend match hype post" },
+  { day: "FRI", type: "Community",  platform: "Discord",        activity: "Friday open voice — casual hangout" },
+  { day: "SAT", type: "Content",    platform: "Twitch / YT",   activity: "Live stream match or ranked session" },
+  { day: "SUN", type: "Engagement", platform: "Discord",        activity: "Community vote — next week's event" },
+  { day: "SUN", type: "Content",    platform: "Twitter / X",   activity: "Weekly recap — results + what's coming" },
 ];
 
-const TYPE_COLORS: Record<string, string> = {
-  Engagement: "#c5d400",
-  Content:    "#3A7BD5",
-  Hype:       "#E74C3C",
-  Community:  "#9B59B6",
+const TYPE_STYLE: Record<string, { bg: string; color: string; border: string }> = {
+  Engagement: { bg: "rgba(200,228,0,0.08)",   color: "#C8E400", border: "rgba(200,228,0,0.3)" },
+  Content:    { bg: "rgba(29,158,117,0.08)",   color: "#1D9E75", border: "rgba(29,158,117,0.3)" },
+  Hype:       { bg: "rgba(231,76,60,0.08)",    color: "#E74C3C", border: "rgba(231,76,60,0.3)" },
+  Community:  { bg: "rgba(88,101,242,0.08)",   color: "#5865F2", border: "rgba(88,101,242,0.3)" },
 };
 
 const MONTHLY_EVENTS = [
-  {
-    week: "Week 1",
-    title: "Community Inhouse",
-    desc: "Org-run 6v6 in Marvel Rivals — open to all Discord members. Announced one week ahead.",
-  },
-  {
-    week: "Week 2",
-    title: "Clip of the Month",
-    desc: "Submit your best plays all month. Staff picks the winner. Prize: shoutout + exclusive Discord role.",
-  },
-  {
-    week: "Week 3",
-    title: "Watch Party",
-    desc: "Watch a major MR or OW2 tournament together in voice. Live reactions and predictions.",
-  },
-  {
-    week: "Week 4",
-    title: "Giveaway Drop",
-    desc: "Sponsor or org giveaway. Entry via Discord reaction or social repost.",
-  },
+  { week: "Week 1", title: "Community Inhouse",  desc: "Org-run 6v6 in Marvel Rivals — open to all Discord members. Announced one week ahead." },
+  { week: "Week 2", title: "Clip of the Month",  desc: "Submit your best plays all month. Staff picks the winner. Prize: shoutout + exclusive Discord role." },
+  { week: "Week 3", title: "Watch Party",         desc: "Watch a major MR or OW2 tournament together in voice. Live reactions and predictions." },
+  { week: "Week 4", title: "Giveaway Drop",       desc: "Sponsor or org giveaway. Entry via Discord reaction or social repost." },
 ];
 
 const MILESTONES = [
@@ -60,66 +44,35 @@ export default function CommunityPage() {
   const locale = useLocale();
 
   return (
-    <main className="min-h-screen bg-dark">
+    <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>
       {/* Header */}
-      <section className="pt-32 pb-20 px-6 border-b border-white/[0.06] relative overflow-hidden">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 50% 70% at 60% 50%, rgba(88,101,242,0.05) 0%, transparent 70%)" }}
-        />
-        <div className="max-w-7xl mx-auto relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Link
-              href={`/${locale}`}
-              className="inline-flex items-center gap-2 text-xs text-white/30 hover:text-lime transition-colors mb-8 uppercase tracking-widest font-semibold"
-            >
-              ← Back
-            </Link>
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              Community
-            </p>
-            <h1
-              className="font-heading font-black uppercase text-white leading-none mb-6"
-              style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}
-            >
-              More Than<br />a Team
-            </h1>
-            <p className="text-white/50 text-base leading-relaxed max-w-xl mb-8">
-              We're building the Puerto Rico gaming community — tournaments, events, content, and a place for every gamer on the island.
-            </p>
-            <Link
-              href="https://discord.gg/VuTAEqPT"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#5865F2] text-white font-bold text-sm hover:bg-[#4752c4] transition-colors"
-            >
-              <svg width="18" height="14" viewBox="0 0 71 55" fill="none">
-                <path d="M60.1 4.9A58.6 58.6 0 0 0 45.6.7a.2.2 0 0 0-.2.1 40.8 40.8 0 0 0-1.8 3.7 54.1 54.1 0 0 0-16.3 0A37.5 37.5 0 0 0 25.4.8a.2.2 0 0 0-.2-.1 58.4 58.4 0 0 0-14.5 4.2.2.2 0 0 0-.1.1C1.6 18.7-.9 32.2.3 45.4a.2.2 0 0 0 .1.2 58.9 58.9 0 0 0 17.7 8.9.2.2 0 0 0 .2-.1 42 42 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.8 38.8 0 0 1-5.5-2.6.2.2 0 0 1 0-.4l1.1-.8a.2.2 0 0 1 .2 0c11.6 5.3 24.1 5.3 35.5 0a.2.2 0 0 1 .2 0l1.1.8a.2.2 0 0 1 0 .4 36.1 36.1 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47.1 47.1 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.7 58.7 0 0 0 17.8-8.9.2.2 0 0 0 .1-.2c1.4-15.2-2.4-28.5-10.1-40.3a.2.2 0 0 0-.1-.1ZM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.1s2.8-7.1 6.4-7.1c3.6 0 6.5 3.2 6.4 7.1 0 3.9-2.8 7.1-6.4 7.1Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.1s2.8-7.1 6.4-7.1c3.6 0 6.5 3.2 6.4 7.1 0 3.9-2.8 7.1-6.4 7.1Z" fill="currentColor"/>
-              </svg>
-              Join Our Discord
-            </Link>
-          </motion.div>
+      <section style={{ paddingTop: "120px", paddingBottom: "64px", padding: "120px 24px 64px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#555555", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700, marginBottom: "32px" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
+            ← Back
+          </Link>
+          <span className="eyebrow">Community</span>
+          <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "20px" }}>
+            More Than<br />a Team
+          </h1>
+          <p style={{ fontSize: "15px", color: "#888888", maxWidth: "520px", lineHeight: 1.65, marginBottom: "32px" }}>
+            We're building the Puerto Rico gaming community — tournaments, events, content, and a place for every gamer on the island.
+          </p>
+          <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">
+            Join Our Discord
+          </Link>
         </div>
       </section>
 
       {/* Monthly events */}
-      <section className="py-20 px-6 border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">Monthly</p>
-            <h2 className="font-heading font-black uppercase text-white leading-none" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
-              Events Calendar
-            </h2>
-            <p className="mt-3 text-white/40 text-sm max-w-md">Every month, every week — something happening for the community.</p>
+      <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">Monthly</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>Events Calendar</h2>
+            <p style={{ fontSize: "14px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>Every month, every week — something happening for the community.</p>
           </motion.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {MONTHLY_EVENTS.map((event, i) => (
@@ -129,11 +82,11 @@ export default function CommunityPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="p-6 rounded-xl bg-[#111] border border-white/[0.07]"
+                style={{ background: "#222222", border: "1px solid #2A2A2A", borderTop: "3px solid #C8E400", borderRadius: "8px", padding: "20px" }}
               >
-                <p className="text-[10px] text-lime font-black uppercase tracking-widest mb-3">{event.week}</p>
-                <h3 className="font-heading font-black uppercase text-white text-lg mb-2">{event.title}</h3>
-                <p className="text-sm text-white/40 leading-relaxed">{event.desc}</p>
+                <p className="font-heading font-bold uppercase" style={{ fontSize: "10px", color: "#C8E400", letterSpacing: "0.18em", marginBottom: "8px" }}>{event.week}</p>
+                <h3 className="font-heading font-black uppercase" style={{ fontSize: "18px", color: "#FFFFFF", marginBottom: "8px" }}>{event.title}</h3>
+                <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6 }}>{event.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -141,66 +94,51 @@ export default function CommunityPage() {
       </section>
 
       {/* Weekly schedule */}
-      <section className="py-20 px-6 border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">Weekly</p>
-            <h2 className="font-heading font-black uppercase text-white leading-none" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
-              Content Schedule
-            </h2>
+      <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">Weekly</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>Content Schedule</h2>
           </motion.div>
-          <div className="bg-[#111] border border-white/[0.07] rounded-2xl overflow-hidden">
-            {WEEKLY_SCHEDULE.map((item, i) => (
-              <motion.div
-                key={`${item.day}-${item.platform}`}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.04 }}
-                className="flex items-center gap-4 px-6 py-4 border-b border-white/[0.05] last:border-0"
-              >
-                <span className="w-10 text-[11px] font-black uppercase text-white/25 shrink-0">{item.day}</span>
-                <span
-                  className="w-20 text-[9px] font-black px-2 py-1 rounded uppercase tracking-wider shrink-0 text-center"
-                  style={{
-                    color: TYPE_COLORS[item.type],
-                    background: `${TYPE_COLORS[item.type]}15`,
-                    border: `1px solid ${TYPE_COLORS[item.type]}25`,
-                  }}
+          <div style={{ background: "#222222", border: "1px solid #2A2A2A", borderRadius: "8px", overflow: "hidden" }}>
+            {WEEKLY.map((item, i) => {
+              const ts = TYPE_STYLE[item.type];
+              return (
+                <motion.div
+                  key={`${item.day}-${item.platform}`}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.25, delay: i * 0.03 }}
+                  style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 20px", borderBottom: i < WEEKLY.length - 1 ? "1px solid #1F1F1F" : "none" }}
                 >
-                  {item.type}
-                </span>
-                <span className="text-xs text-white/30 w-28 shrink-0">{item.platform}</span>
-                <span className="text-sm text-white/60">{item.activity}</span>
-              </motion.div>
-            ))}
+                  <span className="font-heading font-bold uppercase" style={{ fontSize: "10px", letterSpacing: "0.15em", background: "#2A2A2A", color: "#888888", padding: "3px 8px", borderRadius: "3px", minWidth: "36px", textAlign: "center", flexShrink: 0 }}>
+                    {item.day}
+                  </span>
+                  <span
+                    className="font-heading font-bold uppercase"
+                    style={{ fontSize: "10px", letterSpacing: "0.10em", padding: "2px 8px", borderRadius: "3px", background: ts.bg, color: ts.color, border: `1px solid ${ts.border}`, flexShrink: 0, minWidth: "88px", textAlign: "center" }}
+                  >
+                    {item.type}
+                  </span>
+                  <span style={{ fontSize: "12px", color: "#555555", flexShrink: 0, minWidth: "100px" }}>{item.platform}</span>
+                  <span style={{ fontSize: "13px", color: "#888888" }}>{item.activity}</span>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Growth milestones */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">Growth</p>
-            <h2 className="font-heading font-black uppercase text-white leading-none" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
-              Discord Milestones
-            </h2>
-            <p className="mt-3 text-white/40 text-sm max-w-md">
-              Every milestone unlocks something for the community. Help us get there.
-            </p>
+      {/* Milestones */}
+      <section style={{ padding: "80px 24px" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">Growth</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>Discord Milestones</h2>
+            <p style={{ fontSize: "14px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>Every milestone unlocks something for the community. Help us get there.</p>
           </motion.div>
-          <div className="space-y-3">
+          <div style={{ display: "flex", flexDirection: "column" }}>
             {MILESTONES.map((m, i) => (
               <motion.div
                 key={m.count}
@@ -208,14 +146,14 @@ export default function CommunityPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.07 }}
-                className="flex items-center gap-6 p-5 rounded-xl bg-[#111] border border-white/[0.07]"
+                style={{ display: "flex", alignItems: "center", gap: "24px", padding: "20px 0", borderBottom: i < MILESTONES.length - 1 ? "1px solid #1F1F1F" : "none" }}
               >
-                <div className="shrink-0 text-right w-24">
-                  <span className="font-heading font-black text-2xl text-lime">{m.count}</span>
-                  <p className="text-[10px] text-white/25 uppercase tracking-wider">{m.label}</p>
+                <div style={{ flexShrink: 0, minWidth: "80px" }}>
+                  <p className="font-heading font-black" style={{ fontSize: "36px", color: "#C8E400", lineHeight: 1 }}>{m.count}</p>
+                  <p style={{ fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.10em" }}>{m.label}</p>
                 </div>
-                <div className="w-px h-8 bg-white/[0.08] shrink-0" />
-                <p className="text-sm text-white/50">{m.reward}</p>
+                <div style={{ width: "1px", height: "40px", background: "#2A2A2A", flexShrink: 0 }} />
+                <p style={{ fontSize: "13px", color: "#888888" }}>{m.reward}</p>
               </motion.div>
             ))}
           </div>

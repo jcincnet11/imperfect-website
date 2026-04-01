@@ -5,98 +5,77 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const COMING_SOON_ITEMS = [
-  { icon: "🏆", label: "Tournament Recaps" },
-  { icon: "🎮", label: "Roster Announcements" },
-  { icon: "🤝", label: "Partnership News" },
-  { icon: "📅", label: "Event Coverage" },
-  { icon: "👤", label: "Player Spotlights" },
-  { icon: "📊", label: "Season Updates" },
+  { label: "Tournament Recaps" },
+  { label: "Roster Announcements" },
+  { label: "Partnership News" },
+  { label: "Event Coverage" },
+  { label: "Player Spotlights" },
+  { label: "Season Updates" },
 ];
 
 export default function NewsPage() {
   const locale = useLocale();
 
   return (
-    <main className="min-h-screen bg-dark">
-      <section className="pt-32 pb-16 px-6 border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Link
-              href={`/${locale}`}
-              className="inline-flex items-center gap-2 text-xs text-white/30 hover:text-lime transition-colors mb-8 uppercase tracking-widest font-semibold"
-            >
-              ← Back
-            </Link>
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              Latest
-            </p>
-            <h1
-              className="font-heading font-black uppercase text-white leading-none"
-              style={{ fontSize: "clamp(3.5rem, 10vw, 8rem)" }}
-            >
-              News
-            </h1>
-          </motion.div>
+    <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>
+      {/* Header */}
+      <section style={{ padding: "120px 24px 64px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#555555", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700, marginBottom: "32px" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
+            ← Back
+          </Link>
+          <span className="eyebrow">Latest</span>
+          <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "16px" }}>News</h1>
+          <p style={{ fontSize: "15px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>
+            Org updates, tournament recaps, and player news.
+          </p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 py-24">
+      {/* Coming soon */}
+      <div style={{ maxWidth: "640px", margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl mx-auto text-center"
         >
-          <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold mb-8"
-            style={{ background: "rgba(197,212,0,0.08)", border: "1px solid rgba(197,212,0,0.2)", color: "#c5d400" }}
+          <span
+            className="font-heading font-bold uppercase"
+            style={{ fontSize: "10px", letterSpacing: "0.15em", padding: "4px 12px", borderRadius: "3px", color: "#C8E400", background: "rgba(200,228,0,0.08)", border: "1px solid rgba(200,228,0,0.2)", display: "inline-block", marginBottom: "24px" }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#c5d400] animate-pulse" />
             Coming Soon
-          </div>
+          </span>
 
-          <h2
-            className="font-heading font-black uppercase text-white leading-none mb-6"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
-          >
-            The Feed is Loading
+          <h2 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(28px, 5vw, 48px)", lineHeight: 0.95, marginBottom: "16px" }}>
+            The Feed Is<br />Loading
           </h2>
-          <p className="text-white/40 text-sm leading-relaxed mb-12">
-            We're setting up our news hub. Follow us on Discord and social media for the latest updates in the meantime.
+          <p style={{ fontSize: "14px", color: "#888888", lineHeight: 1.65, marginBottom: "48px" }}>
+            We're setting up our news hub. Follow us on Discord and social media for updates in the meantime.
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-12">
+          {/* Content type grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3" style={{ marginBottom: "48px" }}>
             {COMING_SOON_ITEMS.map((item, i) => (
               <motion.div
                 key={item.label}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.06 }}
-                className="p-4 rounded-xl bg-[#111] border border-white/[0.07] text-center"
+                style={{ padding: "16px", background: "#222222", border: "1px solid #2A2A2A", borderRadius: "8px", display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <span className="text-2xl block mb-2">{item.icon}</span>
-                <span className="text-xs text-white/40 font-semibold uppercase tracking-wider">{item.label}</span>
+                <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#C8E400", flexShrink: 0 }} />
+                <span className="font-heading font-bold uppercase" style={{ fontSize: "10px", color: "#888888", letterSpacing: "0.12em" }}>{item.label}</span>
               </motion.div>
             ))}
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="https://discord.gg/VuTAEqPT"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-4 rounded-full bg-[#5865F2] text-white font-bold text-sm hover:bg-[#4752c4] transition-colors"
-            >
-              Follow on Discord
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+            <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">
+              Join Discord
             </Link>
-            <Link
-              href={`/${locale}`}
-              className="px-8 py-4 rounded-full border border-white/10 text-white/50 text-sm font-medium hover:border-white/20 hover:text-white transition-colors"
-            >
+            <Link href={`/${locale}`} className="btn-secondary">
               Back to Home
             </Link>
           </div>

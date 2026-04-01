@@ -1,86 +1,154 @@
-import { useTranslations } from "next-intl";
+"use client";
+
 import Link from "next/link";
 
+const NAV_LINKS = [
+  { href: "/team",        label: "Team" },
+  { href: "/games",       label: "Games" },
+  { href: "/results",     label: "Results" },
+  { href: "/community",   label: "Community" },
+  { href: "/news",        label: "News" },
+  { href: "/sponsorship", label: "Sponsorship" },
+  { href: "/about",       label: "About" },
+];
+
+const SOCIALS = [
+  {
+    label: "Twitter / X",
+    href: "https://x.com/Imperfectow",
+    primary: false,
+    svg: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/Imperfectgamingpr",
+    primary: false,
+    svg: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "TikTok",
+    href: "#", /* TODO: add TikTok handle when available */
+    primary: false,
+    svg: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.28 8.28 0 0 0 4.84 1.54V6.78a4.85 4.85 0 0 1-1.07-.09z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "YouTube",
+    href: "#", /* TODO: add YouTube channel when available */
+    primary: false,
+    svg: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Discord",
+    href: "https://discord.gg/VuTAEqPT",
+    primary: true,
+    svg: (
+      <svg width="14" height="14" viewBox="0 0 71 55" fill="currentColor">
+        <path d="M60.1 4.9A58.6 58.6 0 0 0 45.6.7a.2.2 0 0 0-.2.1 40.8 40.8 0 0 0-1.8 3.7 54.1 54.1 0 0 0-16.3 0A37.5 37.5 0 0 0 25.4.8a.2.2 0 0 0-.2-.1 58.4 58.4 0 0 0-14.5 4.2.2.2 0 0 0-.1.1C1.6 18.7-.9 32.2.3 45.4a.2.2 0 0 0 .1.2 58.9 58.9 0 0 0 17.7 8.9.2.2 0 0 0 .2-.1 42 42 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.8 38.8 0 0 1-5.5-2.6.2.2 0 0 1 0-.4l1.1-.8a.2.2 0 0 1 .2 0c11.6 5.3 24.1 5.3 35.5 0a.2.2 0 0 1 .2 0l1.1.8a.2.2 0 0 1 0 .4 36.1 36.1 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47.1 47.1 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.7 58.7 0 0 0 17.8-8.9.2.2 0 0 0 .1-.2c1.4-15.2-2.4-28.5-10.1-40.3a.2.2 0 0 0-.1-.1ZM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.1s2.8-7.1 6.4-7.1c3.6 0 6.5 3.2 6.4 7.1 0 3.9-2.8 7.1-6.4 7.1Zm23.6 0c-3.5 0-6.4-3.2-6.4-7.1s2.8-7.1 6.4-7.1c3.6 0 6.5 3.2 6.4 7.1 0 3.9-2.8 7.1-6.4 7.1Z"/>
+      </svg>
+    ),
+  },
+];
+
 export default function Footer() {
-  const t = useTranslations("footer");
-
-  const navLinks = [
-    { href: "/team", label: t("links_team") },
-    { href: "/games", label: t("links_games") },
-    { href: "/results", label: t("links_results") },
-    { href: "/community", label: t("links_community") },
-    { href: "/news", label: t("links_news") },
-    { href: "/sponsorship", label: "Sponsorship" },
-    { href: "/about", label: "About" },
-  ];
-
-  const socials = [
-    { label: "Twitter / X", href: "https://x.com/Imperfectow" },
-    { label: "Instagram", href: "https://www.instagram.com/Imperfectgamingpr" },
-    { label: "Discord", href: "https://discord.gg/VuTAEqPT" },
-  ];
-
   return (
-    <footer className="border-t border-white/[0.06] bg-dark">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <span className="font-heading text-3xl font-black tracking-tight">
-              <span className="text-lime">IM</span>
-              <span className="text-white">Perfect</span>
+    <footer style={{ background: "#111111", borderTop: "1px solid #1F1F1F" }}>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "48px 24px 32px" }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+
+          {/* Col 1 — Brand */}
+          <div>
+            <span className="font-heading font-black uppercase" style={{ fontSize: "18px" }}>
+              <span style={{ color: "#C8E400" }}>IM</span>
+              <span style={{ color: "#FFFFFF" }}>PERFECT</span>
             </span>
-            <p className="mt-3 text-sm text-white/50 max-w-xs leading-relaxed">
-              {t("tagline")}
+            <p style={{ fontSize: "12px", color: "#555555", marginTop: "8px", lineHeight: 1.6 }}>
+              Representing the island · Puerto Rico 🇵🇷
             </p>
-            <div className="mt-6 flex items-center gap-3">
-              {socials.map((s) => (
+          </div>
+
+          {/* Col 2 — Nav */}
+          <div>
+            <p className="font-heading font-bold uppercase" style={{ fontSize: "10px", letterSpacing: "0.18em", color: "#C8E400", marginBottom: "12px" }}>
+              Navigate
+            </p>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {NAV_LINKS.map((link) => (
                 <Link
-                  key={s.label}
-                  href={s.href}
-                  className="text-xs text-white/40 hover:text-lime transition-colors duration-150"
-                  aria-label={s.label}
+                  key={link.href}
+                  href={link.href}
+                  style={{ fontSize: "13px", color: "#555555", lineHeight: "2.2", textDecoration: "none", transition: "color 0.15s" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}
                 >
-                  {s.label.split(" ")[0]}
+                  {link.label}
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Nav */}
+          {/* Col 3 — Socials */}
           <div>
-            <p className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-4">
-              Navigate
+            <p className="font-heading font-bold uppercase" style={{ fontSize: "10px", letterSpacing: "0.18em", color: "#C8E400", marginBottom: "12px" }}>
+              Find Us
             </p>
-            <ul className="space-y-2">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/50 hover:text-white transition-colors duration-150"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+              {SOCIALS.map((s) => (
+                <Link
+                  key={s.label}
+                  href={s.href}
+                  target={s.href !== "#" ? "_blank" : undefined}
+                  rel={s.href !== "#" ? "noopener noreferrer" : undefined}
+                  aria-label={s.label}
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    background: "#1E1E1E",
+                    border: `1px solid ${s.primary ? "#C8E400" : "#2A2A2A"}`,
+                    borderRadius: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: s.primary ? "#C8E400" : "#555555",
+                    transition: "border-color 0.15s, color 0.15s",
+                    textDecoration: "none",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#C8E400";
+                    e.currentTarget.style.color = "#C8E400";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = s.primary ? "#C8E400" : "#2A2A2A";
+                    e.currentTarget.style.color = s.primary ? "#C8E400" : "#555555";
+                  }}
+                >
+                  {s.svg}
+                </Link>
               ))}
-            </ul>
-          </div>
-
-          {/* Location */}
-          <div>
-            <p className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-4">
-              Base
-            </p>
-            <p className="text-sm text-white/50">Puerto Rico 🇵🇷</p>
-            <p className="text-sm text-white/30 mt-1">Representing the island</p>
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/30">
-            © {new Date().getFullYear()} IMPerfect Esports. {t("rights")}
+        {/* Bottom bar */}
+        <div style={{ borderTop: "1px solid #1F1F1F", marginTop: "40px", paddingTop: "20px", textAlign: "center" }}>
+          <p style={{ fontSize: "12px", color: "#333333" }}>
+            © {new Date().getFullYear()} IMPerfect Esports. All rights reserved.
           </p>
-          <p className="text-xs text-white/20">Puerto Rico 🇵🇷</p>
         </div>
       </div>
     </footer>

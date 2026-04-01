@@ -9,7 +9,6 @@ const PHASES = [
     number: "01",
     name: "Foundation & Brand",
     period: "Months 1–2",
-    color: "#c5d400",
     status: "In Progress",
     milestones: [
       "Finalize brand identity, logo, and visual system",
@@ -23,7 +22,6 @@ const PHASES = [
     number: "02",
     name: "Growth & Competition",
     period: "Months 3–4",
-    color: "#3A7BD5",
     status: "Upcoming",
     milestones: [
       "Finalize all team rosters",
@@ -37,7 +35,6 @@ const PHASES = [
     number: "03",
     name: "Scale & Monetize",
     period: "Months 5–6",
-    color: "#9B59B6",
     status: "Upcoming",
     milestones: [
       "Scale to 5–8 active sponsors",
@@ -50,86 +47,48 @@ const PHASES = [
 ];
 
 const VALUES = [
-  {
-    icon: "🇵🇷",
-    title: "Island First",
-    body: "Every match we play, every tournament we enter — we're representing Puerto Rico. That's not a slogan. It's why this org exists.",
-  },
-  {
-    icon: "⚡",
-    title: "Compete Hard",
-    body: "We don't show up to participate. We show up to win. Every roster member, every coach, every team — the standard is high.",
-  },
-  {
-    icon: "🤝",
-    title: "Build Together",
-    body: "This isn't just a team. It's a community. We grow with our players, our fans, and every gamer on the island.",
-  },
-  {
-    icon: "📈",
-    title: "Think Long Term",
-    body: "We're not a flash in the pan. We're building infrastructure, developing talent, and creating an org that lasts.",
-  },
+  { icon: null,  title: "Island First",      body: "Every match we play, every tournament we enter — we're representing Puerto Rico. That's not a slogan. It's why this org exists." },
+  { icon: "⚡",  title: "Compete Hard",      body: "We don't show up to participate. We show up to win. Every roster member, every coach, every team — the standard is high." },
+  { icon: "🤝",  title: "Build Together",    body: "This isn't just a team. It's a community. We grow with our players, our fans, and every gamer on the island." },
+  { icon: "📈",  title: "Think Long Term",   body: "We're not a flash in the pan. We're building infrastructure, developing talent, and creating an org that lasts." },
 ];
+
+function PageHeader({ locale }: { locale: string }) {
+  return (
+    <section style={{ paddingTop: "120px", paddingBottom: "64px", paddingLeft: "24px", paddingRight: "24px", borderBottom: "1px solid #1F1F1F", background: "#1A1A1A", position: "relative" }}>
+      <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+        <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#555555", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700, marginBottom: "32px" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
+          ← Back
+        </Link>
+        <span className="eyebrow">Our Story</span>
+        <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "20px" }}>
+          Built in<br />Puerto Rico
+        </h1>
+        <p style={{ fontSize: "15px", color: "#888888", maxWidth: "520px", lineHeight: 1.65 }}>
+          IMPerfect was born from a simple belief — that Puerto Rico has world-class talent
+          that deserves a world-class stage. We built this org from the ground up, competing,
+          grinding, and representing the island in every match we play.
+        </p>
+      </div>
+    </section>
+  );
+}
 
 export default function AboutPage() {
   const locale = useLocale();
 
   return (
-    <main className="min-h-screen bg-dark">
-      {/* Header */}
-      <section className="pt-32 pb-20 px-6 border-b border-white/[0.06] overflow-hidden relative">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 60% 60% at 80% 50%, rgba(197,212,0,0.04) 0%, transparent 70%)" }}
-        />
-        <div className="max-w-7xl mx-auto relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Link
-              href={`/${locale}`}
-              className="inline-flex items-center gap-2 text-xs text-white/30 hover:text-lime transition-colors mb-8 uppercase tracking-widest font-semibold"
-            >
-              ← Back
-            </Link>
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              Our Story
-            </p>
-            <h1
-              className="font-heading font-black uppercase text-white leading-none mb-6"
-              style={{ fontSize: "clamp(3.5rem, 10vw, 8rem)" }}
-            >
-              Built in<br />Puerto Rico
-            </h1>
-            <p className="text-white/50 text-base leading-relaxed max-w-xl">
-              IMPerfect was born from a simple belief — that Puerto Rico has world-class talent
-              that deserves a world-class stage. We built this org from the ground up, competing,
-              grinding, and representing the island in every match we play.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>
+      <PageHeader locale={locale} />
 
       {/* Values */}
-      <section className="py-20 px-6 border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="mb-12"
-          >
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              What We Stand For
-            </p>
-            <h2
-              className="font-heading font-black uppercase text-white leading-none"
-              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-            >
+      <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">What We Stand For</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
               Core Values
             </h2>
           </motion.div>
@@ -141,11 +100,15 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="p-6 rounded-xl bg-[#111] border border-white/[0.07]"
+                style={{ background: "#222222", border: "1px solid #2A2A2A", borderTop: "3px solid #C8E400", borderRadius: "8px", padding: "24px 24px 28px" }}
               >
-                <span className="text-3xl mb-4 block">{v.icon}</span>
-                <h3 className="font-heading font-black uppercase text-lime text-lg mb-2">{v.title}</h3>
-                <p className="text-sm text-white/45 leading-relaxed">{v.body}</p>
+                {v.icon === null ? (
+                  <span className="font-heading font-black uppercase" style={{ fontSize: "13px", letterSpacing: "0.12em", padding: "4px 10px", borderRadius: "3px", color: "#C8E400", background: "rgba(200,228,0,0.1)", border: "1px solid rgba(200,228,0,0.3)", display: "inline-block", marginBottom: "14px" }}>PR</span>
+                ) : (
+                  <span style={{ fontSize: "24px", display: "block", marginBottom: "14px" }}>{v.icon}</span>
+                )}
+                <h3 className="font-heading font-bold uppercase" style={{ fontSize: "18px", color: "#FFFFFF", marginBottom: "8px" }}>{v.title}</h3>
+                <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6 }}>{v.body}</p>
               </motion.div>
             ))}
           </div>
@@ -153,117 +116,84 @@ export default function AboutPage() {
       </section>
 
       {/* Roadmap */}
-      <section className="py-20 px-6 border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="mb-12"
-          >
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              The Plan
-            </p>
-            <h2
-              className="font-heading font-black uppercase text-white leading-none"
-              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-            >
+      <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">The Plan</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>
               6-Month Roadmap
             </h2>
-            <p className="mt-3 text-white/40 text-sm max-w-md">
+            <p style={{ fontSize: "14px", color: "#888888", maxWidth: "420px", lineHeight: 1.65 }}>
               Three phases. Clear milestones. We're executing this publicly so our community can follow the journey.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {PHASES.map((phase, i) => (
-              <motion.div
-                key={phase.number}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: i * 0.1 }}
-                className="relative rounded-2xl p-6"
-                style={{ background: "#111", border: `1px solid ${phase.color}20` }}
-              >
-                <div
-                  className="absolute top-0 left-0 right-0 h-px"
-                  style={{ background: `linear-gradient(90deg, transparent, ${phase.color}60, transparent)` }}
-                />
-                <div className="flex items-start justify-between mb-6">
-                  <span
-                    className="font-heading font-black text-5xl leading-none opacity-20"
-                    style={{ color: phase.color }}
-                  >
-                    {phase.number}
-                  </span>
-                  <span
-                    className="text-[9px] font-black px-2 py-1 rounded uppercase tracking-widest"
-                    style={{
-                      color: phase.status === "In Progress" ? phase.color : "rgba(255,255,255,0.3)",
-                      background: phase.status === "In Progress" ? `${phase.color}15` : "rgba(255,255,255,0.05)",
-                      border: `1px solid ${phase.status === "In Progress" ? phase.color + "30" : "rgba(255,255,255,0.08)"}`,
-                    }}
-                  >
-                    {phase.status}
-                  </span>
-                </div>
-                <p className="text-[10px] text-white/30 uppercase tracking-widest mb-1">{phase.period}</p>
-                <h3
-                  className="font-heading font-black uppercase text-xl mb-5"
-                  style={{ color: phase.color }}
+          <div style={{ position: "relative" }}>
+            {/* Connector line desktop */}
+            <div className="hidden md:block" style={{ position: "absolute", top: "24px", left: "0", right: "0", height: "1px", background: "#2A2A2A", zIndex: 0 }} />
+
+            <div className="grid md:grid-cols-3 gap-6" style={{ position: "relative", zIndex: 1 }}>
+              {PHASES.map((phase, i) => (
+                <motion.div
+                  key={phase.number}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: i * 0.1 }}
                 >
-                  {phase.name}
-                </h3>
-                <ul className="space-y-2.5">
-                  {phase.milestones.map((m) => (
-                    <li key={m} className="flex items-start gap-2.5">
-                      <span className="w-1 h-1 rounded-full mt-2 shrink-0" style={{ backgroundColor: phase.color }} />
-                      <span className="text-xs text-white/45 leading-relaxed">{m}</span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
+                  {/* Phase number circle */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
+                    <div style={{
+                      width: "48px", height: "48px", borderRadius: "50%", background: "#1A1A1A",
+                      border: `2px solid ${phase.status === "In Progress" ? "#C8E400" : "#2A2A2A"}`,
+                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                    }}>
+                      <span className="font-heading font-black" style={{ fontSize: "16px", color: "#C8E400" }}>{phase.number}</span>
+                    </div>
+                    <span
+                      className="font-heading font-bold uppercase"
+                      style={{
+                        fontSize: "10px", letterSpacing: "0.10em", padding: "3px 10px", borderRadius: "3px",
+                        ...(phase.status === "In Progress"
+                          ? { background: "#C8E400", color: "#1A1A1A" }
+                          : { background: "#2A2A2A", color: "#666666" }
+                        ),
+                      }}
+                    >
+                      {phase.status}
+                    </span>
+                  </div>
+
+                  <div style={{ background: "#222222", border: "1px solid #2A2A2A", borderRadius: "8px", padding: "24px" }}>
+                    <p style={{ fontSize: "11px", color: "#C8E400", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.10em" }}>{phase.period}</p>
+                    <h3 className="font-heading font-black uppercase" style={{ fontSize: "20px", color: "#FFFFFF", marginBottom: "20px" }}>{phase.name}</h3>
+                    <ul style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                      {phase.milestones.map((m) => (
+                        <li key={m} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                          <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#C8E400", flexShrink: 0, marginTop: "6px" }} />
+                          <span style={{ fontSize: "13px", color: "#888888", lineHeight: 1.5 }}>{m}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="text-center"
-          >
-            <h2
-              className="font-heading font-black uppercase text-white leading-none mb-6"
-              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-            >
-              Want In?
-            </h2>
-            <p className="text-white/40 text-sm mb-8 max-w-sm mx-auto">
+      <section style={{ padding: "80px 24px" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", textAlign: "center" }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "16px" }}>Want In?</h2>
+            <p style={{ fontSize: "14px", color: "#888888", marginBottom: "32px", maxWidth: "360px", margin: "0 auto 32px" }}>
               Join our Discord community or reach out about sponsorship opportunities.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                href="https://discord.gg/VuTAEqPT"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-8 py-4 rounded-full bg-[#5865F2] text-white font-bold text-sm hover:bg-[#4752c4] transition-colors"
-              >
-                Join Discord
-              </Link>
-              <Link
-                href={`/${locale}/sponsorship`}
-                className="px-8 py-4 rounded-full border border-lime/20 text-lime font-bold text-sm hover:bg-lime/5 transition-colors"
-              >
-                Partner With Us
-              </Link>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">Join Discord</Link>
+              <Link href={`/${locale}/sponsorship`} className="btn-secondary">Partner With Us</Link>
             </div>
           </motion.div>
         </div>

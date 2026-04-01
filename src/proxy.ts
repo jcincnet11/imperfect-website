@@ -6,8 +6,11 @@ import { NextResponse } from "next/server";
 const intlHandler = createMiddleware(routing);
 
 export function proxy(request: NextRequest) {
-  // Team Hub lives outside locale routing — pass through directly
-  if (request.nextUrl.pathname.startsWith("/team-hub")) {
+  // Team Hub and Management live outside locale routing — pass through directly
+  if (
+    request.nextUrl.pathname.startsWith("/team-hub") ||
+    request.nextUrl.pathname.startsWith("/management")
+  ) {
     return NextResponse.next();
   }
   return intlHandler(request);

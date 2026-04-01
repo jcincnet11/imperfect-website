@@ -1,15 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-lime: #c5d400;
-  --color-lime-dim: #9ea800;
-  --color-dark: #0d0d0d;
-  --color-charcoal: #231f20;
-  --color-panel: #111111;
-  --color-border: rgba(255, 255, 255, 0.07);
+  --color-lime:       #C8E400;
+  --color-lime-dim:   #a8be00;
+  --color-dark:       #1A1A1A;
+  --color-deeper:     #111111;
+  --color-panel:      #111111;
+  --color-card:       #222222;
+  --color-charcoal:   #2A2A2A;
+  --color-border:     #2A2A2A;
+  --color-border-sub: #1F1F1F;
+  --color-muted:      #888888;
+  --color-dim:        #555555;
 
   --font-heading: var(--font-barlow);
-  --font-body: var(--font-inter);
+  --font-body:    var(--font-inter);
 }
 
 :root {
@@ -26,38 +31,90 @@ body {
   overflow-x: hidden;
 }
 
-/* Dot grid */
+/* ── Eyebrow ────────────────────────────────────────── */
+.eyebrow {
+  display: block;
+  font-family: var(--font-barlow), sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.20em;
+  color: #C8E400;
+  margin-bottom: 8px;
+}
+
+/* ── Buttons ────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #C8E400;
+  color: #1A1A1A;
+  font-family: var(--font-barlow), sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 28px;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary:hover { opacity: 0.85; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: #ffffff;
+  font-family: var(--font-barlow), sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 28px;
+  border-radius: 3px;
+  border: 1.5px solid #444444;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-secondary:hover { border-color: #C8E400; color: #C8E400; }
+
+/* ── Dot grid ───────────────────────────────────────── */
 .bg-grid {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
-/* Lime glow */
+/* ── Glow ───────────────────────────────────────────── */
 .glow-lime {
-  box-shadow: 0 0 80px rgba(197, 212, 0, 0.15), 0 0 200px rgba(197, 212, 0, 0.06);
+  box-shadow: 0 0 80px rgba(200,228,0,0.12), 0 0 200px rgba(200,228,0,0.05);
 }
-
 .glow-lime-text {
-  text-shadow: 0 0 60px rgba(197, 212, 0, 0.35);
+  text-shadow: 0 0 60px rgba(200,228,0,0.3);
 }
 
-/* Marquee */
+/* ── Marquee ────────────────────────────────────────── */
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-
 .marquee-track {
   display: flex;
   width: max-content;
   animation: marquee 30s linear infinite;
 }
+.marquee-track:hover { animation-play-state: paused; }
 
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-/* Scrollbar */
+/* ── Scrollbar ──────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #0d0d0d; }
-::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #111111; }
+::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 3px; }

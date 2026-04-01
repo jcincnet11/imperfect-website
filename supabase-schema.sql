@@ -38,6 +38,115 @@ CREATE TABLE IF NOT EXISTS availability (
   UNIQUE (week_start, player_discord_id, day)
 );
 
+-- ─── Management Dashboard Tables ─────────────────────────────────────────────
+
+-- Tournament entries
+CREATE TABLE IF NOT EXISTS tournaments (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name         TEXT NOT NULL,
+  game         TEXT NOT NULL,
+  organizer    TEXT,
+  format       TEXT,
+  date_start   DATE,
+  date_end     DATE,
+  reg_deadline DATE,
+  entry_fee    NUMERIC DEFAULT 0,
+  prize_pool   NUMERIC DEFAULT 0,
+  placement    TEXT,
+  prize_won    NUMERIC DEFAULT 0,
+  wins         INTEGER DEFAULT 0,
+  losses       INTEGER DEFAULT 0,
+  status       TEXT DEFAULT 'Upcoming',
+  notes        TEXT,
+  created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Sponsors / CRM
+CREATE TABLE IF NOT EXISTS sponsors (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  company_name   TEXT NOT NULL,
+  industry       TEXT,
+  contact_name   TEXT,
+  title          TEXT,
+  email          TEXT,
+  phone          TEXT,
+  tier           TEXT DEFAULT 'Prospect',
+  deal_value     NUMERIC DEFAULT 0,
+  contract_start DATE,
+  contract_end   DATE,
+  deliverables   TEXT,
+  paid_to_date   NUMERIC DEFAULT 0,
+  status         TEXT DEFAULT 'Prospect',
+  last_contact   DATE,
+  next_followup  DATE,
+  source         TEXT,
+  notes          TEXT,
+  created_at     TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Revenue entries
+CREATE TABLE IF NOT EXISTS revenue (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  date           DATE NOT NULL,
+  category       TEXT NOT NULL,
+  description    TEXT,
+  invoice_number TEXT,
+  amount         NUMERIC DEFAULT 0,
+  cost           NUMERIC DEFAULT 0,
+  payment_method TEXT,
+  received       BOOLEAN DEFAULT FALSE,
+  receipt_ref    TEXT,
+  notes          TEXT,
+  created_at     TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Merch pre-launch checklist
+CREATE TABLE IF NOT EXISTS checklist_items (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  section      TEXT NOT NULL,
+  label        TEXT NOT NULL,
+  completed    BOOLEAN DEFAULT FALSE,
+  completed_by TEXT,
+  completed_at TIMESTAMPTZ,
+  updated_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- RLS for management tables
+ALTER TABLE tournaments     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sponsors        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE revenue         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE checklist_items ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow all for anon" ON tournaments     FOR ALL USING (true);
+CREATE POLICY "Allow all for anon" ON sponsors        FOR ALL USING (true);
+CREATE POLICY "Allow all for anon" ON revenue         FOR ALL USING (true);
+CREATE POLICY "Allow all for anon" ON checklist_items FOR ALL USING (true);
+
+-- Seed: Merch pre-launch checklist items
+INSERT INTO checklist_items (section, label) VALUES
+  ('Foundation', 'Create Shopify account (Basic plan)'),
+  ('Foundation', 'Connect custom domain: shop.imperfectorg.gg'),
+  ('Foundation', 'Install Printful app and connect store'),
+  ('Foundation', 'Configure Stripe payment gateway'),
+  ('Foundation', 'Set up tax settings (Puerto Rico)'),
+  ('Production', 'Finalize all 8 SKU designs'),
+  ('Production', 'Submit samples order via Printful'),
+  ('Production', 'Complete product photography'),
+  ('Production', 'Write product descriptions in English'),
+  ('Production', 'Write product descriptions in Spanish'),
+  ('Production', 'Set up discount codes for players and partners'),
+  ('Pre-Launch', 'Enable Discord community early access'),
+  ('Pre-Launch', 'Publish 3 teaser posts on Instagram/TikTok'),
+  ('Pre-Launch', 'Send 5 influencer PR packages'),
+  ('Pre-Launch', 'Set up email signup landing page'),
+  ('Pre-Launch', 'Run full checkout flow QA test'),
+  ('Launch & Scale', 'Publish public launch announcement'),
+  ('Launch & Scale', 'Go live on all social channels simultaneously'),
+  ('Launch & Scale', 'Activate affiliate/referral program'),
+  ('Launch & Scale', 'Launch first paid social ad campaign'),
+  ('Launch & Scale', 'Set up monthly restock schedule')
+ON CONFLICT DO NOTHING;
+
 -- Auto-update updated_at
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$

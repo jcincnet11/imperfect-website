@@ -8,124 +8,63 @@ const TIERS = [
   {
     name: "Associate",
     color: "#7F8C8D",
-    highlight: false,
+    featured: false,
     description: "Get your brand in front of our audience with product placement and community exposure.",
-    perks: [
-      "Logo on team social posts",
-      "Discord community shoutout",
-      "Product placement in content",
-      "2 branded posts per month",
-    ],
+    perks: ["Logo on team social posts", "Discord community shoutout", "Product placement in content", "2 branded posts per month"],
   },
   {
     name: "Partner",
-    color: "#c5d400",
-    highlight: true,
+    color: "#C8E400",
+    featured: true,
     description: "Full brand integration across stream, jerseys, and regular content — the most popular tier.",
-    perks: [
-      "Jersey logo placement",
-      "Stream overlay branding",
-      "5 branded posts per month",
-      "Tournament coverage mention",
-      "Monthly performance report",
-    ],
+    perks: ["Jersey logo placement", "Stream overlay branding", "5 branded posts per month", "Tournament coverage mention", "Monthly performance report"],
   },
   {
     name: "Title Sponsor",
     color: "#E74C3C",
-    highlight: false,
+    featured: false,
     description: "Maximum exposure. Your brand at the forefront of everything we do.",
-    perks: [
-      "Primary jersey logo",
-      "Naming rights to a team",
-      "Exclusive content series",
-      "Event co-branding",
-      "10 branded posts per month",
-      "Quarterly strategy call",
-    ],
+    perks: ["Primary jersey logo", "Naming rights to a team", "Exclusive content series", "Event co-branding", "10 branded posts per month", "Quarterly strategy call"],
   },
 ];
 
 const REASONS = [
-  {
-    number: "01",
-    title: "Early Mover Advantage",
-    body: "Get in at ground level with an org that's building momentum now — before prices rise.",
-  },
-  {
-    number: "02",
-    title: "Hyper-Engaged Audience",
-    body: "Esports fans are 4× more likely to purchase from sponsors they see in the gaming ecosystem.",
-  },
-  {
-    number: "03",
-    title: "Multi-Platform Exposure",
-    body: "Your brand reaches audiences across Twitch, TikTok, Instagram, YouTube, Discord, and live events.",
-  },
-  {
-    number: "04",
-    title: "Local & Regional Impact",
-    body: "Build authentic ties with the Puerto Rico gaming community — a passionate and underserved market.",
-  },
+  { number: "01", title: "Early Mover Advantage",   body: "Get in at ground level with an org that's building momentum now — before prices rise." },
+  { number: "02", title: "Hyper-Engaged Audience",  body: "Esports fans are 4× more likely to purchase from sponsors they see in the gaming ecosystem." },
+  { number: "03", title: "Multi-Platform Exposure", body: "Your brand reaches audiences across Twitch, TikTok, Instagram, YouTube, Discord, and live events." },
+  { number: "04", title: "Local & Regional Impact", body: "Build authentic ties with the Puerto Rico gaming community — a passionate and underserved market." },
 ];
 
 export default function SponsorshipPage() {
   const locale = useLocale();
 
   return (
-    <main className="min-h-screen bg-dark">
+    <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>
       {/* Header */}
-      <section className="pt-32 pb-20 px-6 border-b border-white/[0.06] relative overflow-hidden">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 60% 80% at 50% 100%, rgba(197,212,0,0.05) 0%, transparent 65%)" }}
-        />
-        <div className="max-w-7xl mx-auto relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Link
-              href={`/${locale}`}
-              className="inline-flex items-center gap-2 text-xs text-white/30 hover:text-lime transition-colors mb-8 uppercase tracking-widest font-semibold"
-            >
-              ← Back
-            </Link>
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              Partners
-            </p>
-            <h1
-              className="font-heading font-black uppercase text-white leading-none mb-6"
-              style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}
-            >
-              Partner<br />With Us
-            </h1>
-            <p className="text-white/50 text-base leading-relaxed max-w-xl">
-              Puerto Rico's #1 hero shooter org. Three active teams. A growing community.
-              Reach a passionate gaming audience that actually buys.
-            </p>
-          </motion.div>
+      <section style={{ paddingTop: "120px", paddingBottom: "64px", padding: "120px 24px 64px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#555555", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700, marginBottom: "32px" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
+            ← Back
+          </Link>
+          <span className="eyebrow">Partners</span>
+          <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "20px" }}>
+            Partner<br />With Us
+          </h1>
+          <p style={{ fontSize: "15px", color: "#888888", maxWidth: "520px", lineHeight: 1.65 }}>
+            Puerto Rico's #1 hero shooter org. Three active teams. A growing community.
+            Reach a passionate gaming audience that actually buys.
+          </p>
         </div>
       </section>
 
       {/* Why us */}
-      <section className="py-20 px-6 border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="mb-12"
-          >
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              The Case
-            </p>
-            <h2
-              className="font-heading font-black uppercase text-white leading-none"
-              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-            >
+      <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">The Case</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
               Why Partner With Us
             </h2>
           </motion.div>
@@ -137,14 +76,12 @@ export default function SponsorshipPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.07 }}
-                className="p-6 rounded-xl bg-[#111] border border-white/[0.07] flex gap-5"
+                style={{ background: "#222222", border: "1px solid #2A2A2A", borderRadius: "8px", padding: "24px", display: "flex", gap: "20px" }}
               >
-                <span className="font-heading font-black text-4xl text-lime/15 leading-none shrink-0">
-                  {r.number}
-                </span>
+                <span className="font-heading font-black" style={{ fontSize: "40px", color: "#C8E400", opacity: 0.15, lineHeight: 1, flexShrink: 0 }}>{r.number}</span>
                 <div>
-                  <h3 className="font-heading font-black uppercase text-white text-lg mb-2">{r.title}</h3>
-                  <p className="text-sm text-white/45 leading-relaxed">{r.body}</p>
+                  <h3 className="font-heading font-black uppercase" style={{ fontSize: "18px", color: "#FFFFFF", marginBottom: "8px" }}>{r.title}</h3>
+                  <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6 }}>{r.body}</p>
                 </div>
               </motion.div>
             ))}
@@ -153,26 +90,15 @@ export default function SponsorshipPage() {
       </section>
 
       {/* Tiers */}
-      <section className="py-20 px-6 border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="mb-12"
-          >
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              Partnership Tiers
-            </p>
-            <h2
-              className="font-heading font-black uppercase text-white leading-none"
-              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-            >
+      <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">Partnership Tiers</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
               Choose Your Level
             </h2>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-5 items-start">
             {TIERS.map((tier, i) => (
               <motion.div
                 key={tier.name}
@@ -180,52 +106,37 @@ export default function SponsorshipPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: i * 0.1 }}
-                className="relative rounded-2xl p-7 flex flex-col"
-                style={{
-                  background: tier.highlight ? `${tier.color}08` : "#111",
-                  border: `1px solid ${tier.color}${tier.highlight ? "40" : "20"}`,
-                }}
               >
-                {tier.highlight && (
-                  <div
-                    className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
-                    style={{ backgroundColor: tier.color, color: "#000" }}
-                  >
-                    Most Popular
+                {tier.featured && (
+                  <div style={{ textAlign: "center", marginBottom: "12px" }}>
+                    <span className="font-heading font-bold uppercase" style={{ background: "#C8E400", color: "#1A1A1A", fontSize: "10px", letterSpacing: "0.10em", padding: "3px 12px", borderRadius: "3px" }}>
+                      Most Popular
+                    </span>
                   </div>
                 )}
-                <div
-                  className="absolute top-0 left-0 right-0 h-px"
-                  style={{ background: `linear-gradient(90deg, transparent, ${tier.color}, transparent)` }}
-                />
-                <div className="mb-6">
-                  <h3
-                    className="font-heading font-black uppercase text-2xl"
-                    style={{ color: tier.color }}
-                  >
-                    {tier.name}
-                  </h3>
+                <div style={{
+                  background: tier.featured ? "#1C2100" : "#222222",
+                  border: tier.featured ? "2px solid #C8E400" : "1px solid #2A2A2A",
+                  borderRadius: "8px",
+                  padding: "28px",
+                  display: "flex",
+                  flexDirection: "column",
+                }}>
+                  <span className="font-heading font-bold uppercase" style={{ fontSize: "11px", letterSpacing: "0.18em", color: "#C8E400", marginBottom: "4px" }}>Tier</span>
+                  <h3 className="font-heading font-black uppercase" style={{ fontSize: "28px", color: "#FFFFFF", marginBottom: "16px" }}>{tier.name}</h3>
+                  <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6, marginBottom: "24px" }}>{tier.description}</p>
+                  <ul style={{ display: "flex", flexDirection: "column", gap: "10px", flex: 1, marginBottom: "28px" }}>
+                    {tier.perks.map((perk) => (
+                      <li key={perk} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                        <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#C8E400", flexShrink: 0, marginTop: "6px" }} />
+                        <span style={{ fontSize: "13px", color: "#888888" }}>{perk}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <a href="mailto:sponsorships@imperfectorg.gg" className="btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                    Get Started
+                  </a>
                 </div>
-                <p className="text-sm text-white/40 leading-relaxed mb-6">{tier.description}</p>
-                <ul className="space-y-2.5 flex-1 mb-8">
-                  {tier.perks.map((perk) => (
-                    <li key={perk} className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: tier.color }} />
-                      <span className="text-sm text-white/60">{perk}</span>
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href="mailto:sponsorships@imperfectorg.gg"
-                  className="block text-center py-3 rounded-xl text-sm font-bold transition-all duration-150"
-                  style={
-                    tier.highlight
-                      ? { backgroundColor: tier.color, color: "#000" }
-                      : { border: `1px solid ${tier.color}40`, color: tier.color, background: "transparent" }
-                  }
-                >
-                  Get Started
-                </a>
               </motion.div>
             ))}
           </div>
@@ -233,30 +144,16 @@ export default function SponsorshipPage() {
       </section>
 
       {/* Contact CTA */}
-      <section className="py-20 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-          >
-            <h2
-              className="font-heading font-black uppercase text-white leading-none mb-4"
-              style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-            >
-              Ready to Talk?
-            </h2>
-            <p className="text-white/40 text-sm mb-8 leading-relaxed">
+      <section style={{ padding: "80px 24px" }}>
+        <div style={{ maxWidth: "640px", margin: "0 auto", textAlign: "center" }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "16px" }}>Ready to Talk?</h2>
+            <p style={{ fontSize: "14px", color: "#888888", marginBottom: "32px", lineHeight: 1.65 }}>
               We keep things simple. Send us an email and we'll get back to you within 48 hours.
             </p>
-            <a
-              href="mailto:sponsorships@imperfectorg.gg"
-              className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-bold text-sm text-dark transition-all hover:scale-[1.02] duration-150"
-              style={{ backgroundColor: "#c5d400" }}
-            >
-              sponsorships@imperfectorg.gg
-              <span>→</span>
+            {/* sponsorships@imperfectorg.gg — address to be confirmed with org leadership */}
+            <a href="mailto:sponsorships@imperfectorg.gg" className="btn-primary">
+              sponsorships@imperfectorg.gg →
             </a>
           </motion.div>
         </div>

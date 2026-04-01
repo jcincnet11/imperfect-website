@@ -1,36 +1,25 @@
 const items = [
-  "OVERWATCH 2",
-  "MARVEL RIVALS",
-  "PUERTO RICO",
-  "IMPERFECT",
-  "HERO SHOOTERS",
-  "COMPETITIVE",
-  "TEAM PR",
-  "COMUNIDAD",
-  "OVERWATCH 2",
-  "MARVEL RIVALS",
-  "PUERTO RICO",
-  "IMPERFECT",
-  "HERO SHOOTERS",
-  "COMPETITIVE",
-  "TEAM PR",
-  "COMUNIDAD",
+  "OVERWATCH 2", "MARVEL RIVALS", "PUERTO RICO", "IMPERFECT",
+  "HERO SHOOTERS", "COMPETITIVE", "TEAM PR", "COMUNIDAD",
+  "OVERWATCH 2", "MARVEL RIVALS", "PUERTO RICO", "IMPERFECT",
+  "HERO SHOOTERS", "COMPETITIVE", "TEAM PR", "COMUNIDAD",
 ];
 
 export default function MarqueeTicker() {
   return (
-    <div className="relative overflow-hidden border-y border-white/[0.06] bg-panel py-4 select-none">
-      {/* Fade edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-r from-panel to-transparent pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-l from-panel to-transparent pointer-events-none" />
-
+    <div
+      className="relative overflow-hidden select-none"
+      style={{ background: "#111111", borderTop: "1px solid #1F1F1F", borderBottom: "1px solid #1F1F1F", padding: "14px 0" }}
+    >
+      <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, #111111, transparent)" }} />
+      <div className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, #111111, transparent)" }} />
       <div className="marquee-track">
         {items.map((item, i) => (
-          <span key={i} className="flex items-center gap-4 px-4">
-            <span className="font-heading font-black text-sm uppercase tracking-[0.25em] text-white/30">
+          <span key={i} style={{ display: "flex", alignItems: "center", gap: "16px", padding: "0 16px" }}>
+            <span className="font-heading font-black uppercase" style={{ fontSize: "11px", letterSpacing: "0.25em", color: "#2A2A2A" }}>
               {item}
             </span>
-            <span className="w-1 h-1 rounded-full bg-lime/40 shrink-0" />
+            <span style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#C8E400", opacity: 0.5, flexShrink: 0 }} />
           </span>
         ))}
       </div>

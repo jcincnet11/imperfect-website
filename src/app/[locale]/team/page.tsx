@@ -1,200 +1,726 @@
 "use client";
 
-import { useLocale } from "next-intl";
-import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
+// ─────────────────────────────────────────────────────────────────
+// TO UPDATE PLAYER INFO: edit OW2_ROSTER and MR_ROSTER arrays below
+// Fields: name, ign, role, rank, flag, bio, socials, topHeroes
+// tracker.gg links are auto-generated from the ign field
+// ─────────────────────────────────────────────────────────────────
 
-const ROLE_COLORS: Record<string, string> = {
-  Duelist:    "#E74C3C",
-  Vanguard:   "#3A7BD5",
-  Strategist: "#c5d400",
+import { useState } from "react";
+import { useLocale } from "next-intl";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+
+// ── Types ────────────────────────────────────────────────────────
+
+type Socials = {
+  twitter: string | null;
+  instagram: string | null;
+  tiktok: string | null;
+  twitch: string | null;
 };
 
-const TEAMS = [
+type Hero = {
+  name: string;
+  role: string;
+  winRate: string;
+  timePlayed: string;
+};
+
+type Player = {
+  id: number;
+  name: string;
+  ign: string;
+  role: string;
+  division: "OW2" | "MR";
+  rank: string;
+  flag: string;
+  bio: string;
+  socials: Socials;
+  topHeroes: Hero[];
+};
+
+// ── Roster Data ──────────────────────────────────────────────────
+
+const OW2_ROSTER: Player[] = [
   {
-    name: "IMPerfect",
-    game: "Marvel Rivals",
-    color: "#c5d400",
-    description: "The flagship roster. Puerto Rico's #1 hero shooter team competing at the highest level.",
-    players: [
-      { tag: "iaguacate",      role: "Strategist", label: "Coach",  img: "/players/AGUACATE_3.png" },
-      { tag: "lblazerowl",     role: "Strategist", label: "Coach",  img: "/players/BLAZER_3.png" },
-      { tag: "crazyturnx",     role: "Duelist",    label: "Player", img: "/players/FILTHYPRYDE.png" },
-      { tag: "georgierican",   role: "Strategist", label: "Player", img: "/players/GEORGIE.png" },
-      { tag: "spooit",         role: "Vanguard",   label: "Player", img: "/players/KEVO.png" },
-      { tag: "the_mofn_ninja", role: "Duelist",    label: "Player", img: "/players/MOFN_2.png" },
-      { tag: "tides100ping",   role: "Duelist",    label: "Player", img: "/players/TIDES.png" },
-      { tag: "zoivanni",       role: "Vanguard",   label: "Player", img: "/players/VANNI.png" },
+    id: 1,
+    name: "Player One",
+    ign: "P1xGaming",
+    role: "Tank",
+    division: "OW2",
+    rank: "Top 500",
+    flag: "🇵🇷",
+    bio: "The anchor of the team. Calls the dives and holds the line.",
+    socials: {
+      twitter: "https://twitter.com/placeholder",
+      instagram: null,
+      tiktok: null,
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Reinhardt", role: "Tank", winRate: "68%", timePlayed: "120h" },
+      { name: "D.Va",      role: "Tank", winRate: "62%", timePlayed: "85h"  },
+      { name: "Zarya",     role: "Tank", winRate: "59%", timePlayed: "60h"  },
     ],
   },
   {
-    name: "Shadows",
-    game: "Marvel Rivals",
-    color: "#9B59B6",
-    description: "The second division squad, built from the same competitive DNA.",
-    players: [],
-    comingSoon: true,
+    id: 2,
+    name: "Player Two",
+    ign: "FlexDPS99",
+    role: "DPS",
+    division: "OW2",
+    rank: "Diamond 1",
+    flag: "🇵🇷",
+    bio: "Flex DPS with a lethal hitscan. If you see the tracer blink, it's already over.",
+    socials: {
+      twitter: "https://twitter.com/placeholder",
+      instagram: "https://instagram.com/placeholder",
+      tiktok: null,
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Tracer", role: "DPS", winRate: "71%", timePlayed: "200h" },
+      { name: "Genji",  role: "DPS", winRate: "65%", timePlayed: "110h" },
+      { name: "Sombra", role: "DPS", winRate: "60%", timePlayed: "70h"  },
+    ],
   },
   {
-    name: "Echoes",
-    game: "Marvel Rivals",
-    color: "#3A7BD5",
-    description: "Our third MR roster — developing the next generation of island talent.",
-    players: [],
-    comingSoon: true,
+    id: 3,
+    name: "Player Three",
+    ign: "VaultHunter",
+    role: "DPS",
+    division: "OW2",
+    rank: "Diamond 2",
+    flag: "🇵🇷",
+    bio: "Hitscan specialist. Doesn't miss. Keeps it simple. Gets the job done.",
+    socials: {
+      twitter: null,
+      instagram: "https://instagram.com/placeholder",
+      tiktok: "https://tiktok.com/@placeholder",
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Cassidy", role: "DPS", winRate: "66%", timePlayed: "150h" },
+      { name: "Ashe",    role: "DPS", winRate: "61%", timePlayed: "90h"  },
+      { name: "Soldier", role: "DPS", winRate: "58%", timePlayed: "55h"  },
+    ],
+  },
+  {
+    id: 4,
+    name: "Player Four",
+    ign: "AngelWings",
+    role: "Support",
+    division: "OW2",
+    rank: "Platinum 1",
+    flag: "🇵🇷",
+    bio: "Main support. Keeps everyone alive and the calls clean.",
+    socials: {
+      twitter: "https://twitter.com/placeholder",
+      instagram: null,
+      tiktok: null,
+      twitch: "https://twitch.tv/placeholder",
+    },
+    topHeroes: [
+      { name: "Ana",    role: "Support", winRate: "70%", timePlayed: "180h" },
+      { name: "Lucio",  role: "Support", winRate: "63%", timePlayed: "100h" },
+      { name: "Kiriko", role: "Support", winRate: "59%", timePlayed: "75h"  },
+    ],
+  },
+  {
+    id: 5,
+    name: "Player Five",
+    ign: "FlexSupport",
+    role: "Support",
+    division: "OW2",
+    rank: "Platinum 2",
+    flag: "🇵🇷",
+    bio: "Flex support. Adapts to whatever the team needs. Silent but essential.",
+    socials: {
+      twitter: null,
+      instagram: "https://instagram.com/placeholder",
+      tiktok: null,
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Mercy",    role: "Support", winRate: "67%", timePlayed: "130h" },
+      { name: "Moira",    role: "Support", winRate: "61%", timePlayed: "80h"  },
+      { name: "Zenyatta", role: "Support", winRate: "55%", timePlayed: "50h"  },
+    ],
   },
 ];
 
-export default function TeamPage() {
-  const locale = useLocale();
+const MR_ROSTER: Player[] = [
+  {
+    id: 6,
+    name: "Player Six",
+    ign: "IronFistPR",
+    role: "Vanguard",
+    division: "MR",
+    rank: "Grandmaster",
+    flag: "🇵🇷",
+    bio: "Front line enforcer. Sets the pace and controls the space.",
+    socials: {
+      twitter: "https://twitter.com/placeholder",
+      instagram: null,
+      tiktok: null,
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Magneto",  role: "Vanguard", winRate: "72%", timePlayed: "95h"  },
+      { name: "Thor",     role: "Vanguard", winRate: "65%", timePlayed: "70h"  },
+      { name: "Iron Man", role: "Duelist",  winRate: "58%", timePlayed: "40h"  },
+    ],
+  },
+  {
+    id: 7,
+    name: "Player Seven",
+    ign: "SpiderGang",
+    role: "Duelist",
+    division: "MR",
+    rank: "Grandmaster",
+    flag: "🇵🇷",
+    bio: "High-mobility duelist. Finds the angle before you know it exists.",
+    socials: {
+      twitter: "https://twitter.com/placeholder",
+      instagram: "https://instagram.com/placeholder",
+      tiktok: "https://tiktok.com/@placeholder",
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Spider-Man",    role: "Duelist", winRate: "74%", timePlayed: "120h" },
+      { name: "Black Panther", role: "Duelist", winRate: "66%", timePlayed: "80h"  },
+      { name: "Wolverine",     role: "Duelist", winRate: "60%", timePlayed: "55h"  },
+    ],
+  },
+  {
+    id: 8,
+    name: "Player Eight",
+    ign: "StarlordPR",
+    role: "Duelist",
+    division: "MR",
+    rank: "Diamond 1",
+    flag: "🇵🇷",
+    bio: "Ranged duelist. Consistent damage. Never out of position.",
+    socials: {
+      twitter: null,
+      instagram: "https://instagram.com/placeholder",
+      tiktok: null,
+      twitch: "https://twitch.tv/placeholder",
+    },
+    topHeroes: [
+      { name: "Star-Lord", role: "Duelist", winRate: "69%", timePlayed: "100h" },
+      { name: "Hawkeye",   role: "Duelist", winRate: "62%", timePlayed: "65h"  },
+      { name: "Punisher",  role: "Duelist", winRate: "57%", timePlayed: "45h"  },
+    ],
+  },
+  {
+    id: 9,
+    name: "Player Nine",
+    ign: "NightcrawlerX",
+    role: "Duelist",
+    division: "MR",
+    rank: "Diamond 1",
+    flag: "🇵🇷",
+    bio: "Dive duelist. If you blinked, you already lost the 1v1.",
+    socials: {
+      twitter: "https://twitter.com/placeholder",
+      instagram: null,
+      tiktok: "https://tiktok.com/@placeholder",
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Black Widow",    role: "Duelist", winRate: "67%", timePlayed: "90h"  },
+      { name: "Psylocke",       role: "Duelist", winRate: "63%", timePlayed: "70h"  },
+      { name: "Winter Soldier", role: "Duelist", winRate: "58%", timePlayed: "50h"  },
+    ],
+  },
+  {
+    id: 10,
+    name: "Player Ten",
+    ign: "DrStrangeVibes",
+    role: "Strategist",
+    division: "MR",
+    rank: "Grandmaster",
+    flag: "🇵🇷",
+    bio: "Main strategist. The IQ of the team. Sees three plays ahead.",
+    socials: {
+      twitter: "https://twitter.com/placeholder",
+      instagram: "https://instagram.com/placeholder",
+      tiktok: null,
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Doctor Strange", role: "Vanguard",   winRate: "71%", timePlayed: "110h" },
+      { name: "Loki",           role: "Strategist", winRate: "64%", timePlayed: "85h"  },
+      { name: "Adam Warlock",   role: "Strategist", winRate: "59%", timePlayed: "60h"  },
+    ],
+  },
+  {
+    id: 11,
+    name: "Player Eleven",
+    ign: "MantisMain",
+    role: "Strategist",
+    division: "MR",
+    rank: "Diamond 1",
+    flag: "🇵🇷",
+    bio: "Flex strategist. Adapts her kit to whatever the team needs in the moment.",
+    socials: {
+      twitter: null,
+      instagram: "https://instagram.com/placeholder",
+      tiktok: "https://tiktok.com/@placeholder",
+      twitch: null,
+    },
+    topHeroes: [
+      { name: "Mantis",          role: "Strategist", winRate: "68%", timePlayed: "100h" },
+      { name: "Luna Snow",       role: "Strategist", winRate: "62%", timePlayed: "75h"  },
+      { name: "Cloak & Dagger",  role: "Strategist", winRate: "57%", timePlayed: "45h"  },
+    ],
+  },
+];
+
+// ── Helpers ──────────────────────────────────────────────────────
+
+const ROLE_COLOR: Record<string, string> = {
+  Tank:       "#3A7BD5",
+  Vanguard:   "#3A7BD5",
+  DPS:        "#E74C3C",
+  Duelist:    "#E74C3C",
+  Support:    "#1D9E75",
+  Strategist: "#1D9E75",
+};
+
+function roleColor(role: string): string {
+  return ROLE_COLOR[role] ?? "#888888";
+}
+
+function initials(name: string): string {
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function trackerUrl(player: Player): string {
+  if (player.division === "OW2") {
+    return `https://tracker.gg/overwatch2/profile/ign/${player.ign}`;
+  }
+  return `https://tracker.gg/marvel-rivals/profile/ign/${player.ign}`;
+}
+
+// ── Sub-components ───────────────────────────────────────────────
+
+function RoleBadge({ role, small = false }: { role: string; small?: boolean }) {
+  const color = roleColor(role);
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        background: `${color}22`,
+        border: `1px solid ${color}55`,
+        color,
+        borderRadius: "3px",
+        fontSize: small ? "9px" : "10px",
+        fontWeight: 700,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        padding: small ? "1px 5px" : "2px 7px",
+        whiteSpace: "nowrap",
+        fontFamily: "var(--font-barlow), sans-serif",
+      }}
+    >
+      {role}
+    </span>
+  );
+}
+
+function SocialButton({
+  href,
+  label,
+}: {
+  href: string;
+  label: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={label}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "28px",
+        height: "28px",
+        background: "#1A1A1A",
+        border: "1px solid #333333",
+        borderRadius: "4px",
+        fontSize: "9px",
+        fontWeight: 700,
+        color: "#888888",
+        textDecoration: "none",
+        letterSpacing: "0.04em",
+        fontFamily: "var(--font-barlow), sans-serif",
+        transition: "border-color 0.15s, color 0.15s",
+        flexShrink: 0,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "#C8E400";
+        e.currentTarget.style.color = "#C8E400";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "#333333";
+        e.currentTarget.style.color = "#888888";
+      }}
+    >
+      {label}
+    </a>
+  );
+}
+
+function PlayerCard({ player }: { player: Player }) {
+  const color = roleColor(player.role);
 
   return (
-    <main className="min-h-screen bg-dark">
-      {/* Header */}
-      <section className="pt-32 pb-16 px-6 border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+    <div
+      style={{
+        background: "#222222",
+        border: "1px solid #2A2A2A",
+        borderTop: `3px solid ${color}`,
+        borderRadius: "8px",
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "16px",
+      }}
+    >
+      {/* ── Header row ── */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        {/* Avatar */}
+        <div
+          style={{
+            width: "40px",
+            height: "40px",
+            minWidth: "40px",
+            borderRadius: "50%",
+            background: "#2A2A2A",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#C8E400",
+            fontSize: "14px",
+            fontWeight: 700,
+            fontFamily: "var(--font-barlow), sans-serif",
+            letterSpacing: "0.02em",
+          }}
+        >
+          {initials(player.name)}
+        </div>
+
+        {/* Name + IGN */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p
+            className="font-heading font-black uppercase"
+            style={{
+              fontSize: "18px",
+              color: "#FFFFFF",
+              lineHeight: 1.1,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
           >
-            <Link
-              href={`/${locale}`}
-              className="inline-flex items-center gap-2 text-xs text-white/30 hover:text-lime transition-colors mb-8 uppercase tracking-widest font-semibold"
-            >
-              ← Back
-            </Link>
-            <p className="text-[10px] text-lime font-bold uppercase tracking-[0.25em] mb-3">
-              Roster
-            </p>
-            <h1
-              className="font-heading font-black uppercase text-white leading-none"
-              style={{ fontSize: "clamp(3.5rem, 10vw, 8rem)" }}
-            >
-              The Team
-            </h1>
-            <p className="mt-4 text-white/40 text-sm max-w-md">
-              Three teams. One org. All representing Puerto Rico.
-            </p>
-          </motion.div>
+            {player.name}
+          </p>
+          <p style={{ fontSize: "13px", color: "#888888", marginTop: "1px" }}>
+            @{player.ign}
+          </p>
+        </div>
+
+        {/* Flag + rank badge */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px", flexShrink: 0 }}>
+          <span style={{ fontSize: "16px", lineHeight: 1 }}>{player.flag}</span>
+          <span
+            style={{
+              background: color,
+              color: "#111111",
+              borderRadius: "999px",
+              fontSize: "10px",
+              fontWeight: 700,
+              fontFamily: "var(--font-barlow), sans-serif",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              padding: "2px 8px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {player.rank}
+          </span>
+        </div>
+      </div>
+
+      {/* ── Bio ── */}
+      <p
+        style={{
+          fontSize: "13px",
+          color: "#888888",
+          fontStyle: "italic",
+          lineHeight: 1.55,
+          display: "-webkit-box",
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+          margin: 0,
+        }}
+      >
+        {player.bio}
+      </p>
+
+      {/* ── Top Heroes ── */}
+      <div>
+        <p
+          style={{
+            fontSize: "10px",
+            color: "#C8E400",
+            textTransform: "uppercase",
+            letterSpacing: "0.15em",
+            fontWeight: 700,
+            fontFamily: "var(--font-barlow), sans-serif",
+            marginBottom: "10px",
+          }}
+        >
+          Top Heroes
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          {player.topHeroes.map((hero, i) => {
+            const hColor = roleColor(hero.role);
+            const isTop = i === 0;
+            return (
+              <div
+                key={hero.name}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  paddingLeft: isTop ? "8px" : "0",
+                  borderLeft: isTop ? "3px solid #C8E400" : "3px solid transparent",
+                }}
+              >
+                {/* Hero name */}
+                <span
+                  className="font-heading font-bold"
+                  style={{
+                    fontSize: isTop ? "15px" : "13px",
+                    color: "#FFFFFF",
+                    flex: 1,
+                    minWidth: 0,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {hero.name}
+                </span>
+
+                {/* Role badge */}
+                <RoleBadge role={hero.role} small />
+
+                {/* Win rate */}
+                <span
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: 700,
+                    color: "#C8E400",
+                    whiteSpace: "nowrap",
+                    fontFamily: "var(--font-barlow), sans-serif",
+                    minWidth: "34px",
+                    textAlign: "right",
+                  }}
+                >
+                  {hero.winRate}
+                </span>
+
+                {/* Time played */}
+                <span
+                  style={{
+                    fontSize: "11px",
+                    color: "#666666",
+                    whiteSpace: "nowrap",
+                    minWidth: "32px",
+                    textAlign: "right",
+                  }}
+                >
+                  {hero.timePlayed}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Social links ── */}
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+        {player.socials.twitter && (
+          <SocialButton href={player.socials.twitter} label="TW" />
+        )}
+        {player.socials.instagram && (
+          <SocialButton href={player.socials.instagram} label="IG" />
+        )}
+        {player.socials.tiktok && (
+          <SocialButton href={player.socials.tiktok} label="TT" />
+        )}
+        {player.socials.twitch && (
+          <SocialButton href={player.socials.twitch} label="TV" />
+        )}
+        <SocialButton href={trackerUrl(player)} label="TRK" />
+      </div>
+    </div>
+  );
+}
+
+// ── Page ─────────────────────────────────────────────────────────
+
+type Division = "OW2" | "MR";
+
+export default function TeamPage() {
+  const locale = useLocale();
+  const [activeDivision, setActiveDivision] = useState<Division>("OW2");
+
+  const roster = activeDivision === "OW2" ? OW2_ROSTER : MR_ROSTER;
+  const divisionLabel = activeDivision === "OW2" ? "Overwatch 2" : "Marvel Rivals";
+
+  return (
+    <div style={{ background: "#1A1A1A", minHeight: "100vh" }}>
+      {/* ── Page header ── */}
+      <section style={{ padding: "120px 24px 64px", borderBottom: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <Link
+            href={`/${locale}`}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "11px",
+              color: "#555555",
+              textDecoration: "none",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              fontWeight: 700,
+              marginBottom: "32px",
+              fontFamily: "var(--font-barlow), sans-serif",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}
+          >
+            ← Back
+          </Link>
+
+          <span className="eyebrow">The Roster</span>
+          <h1
+            className="font-heading font-black uppercase text-white"
+            style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "16px" }}
+          >
+            Meet the Team
+          </h1>
+          <p style={{ fontSize: "15px", color: "#888888", maxWidth: "440px", lineHeight: 1.65, marginBottom: "40px" }}>
+            Puerto Rico's premier hero shooter roster — OW2 &amp; Marvel Rivals
+          </p>
+
+          {/* Division toggle */}
+          <div style={{ display: "flex", gap: "8px" }}>
+            {(["OW2", "MR"] as Division[]).map((div) => {
+              const active = activeDivision === div;
+              const label = div === "OW2" ? "Overwatch 2" : "Marvel Rivals";
+              return (
+                <button
+                  key={div}
+                  onClick={() => setActiveDivision(div)}
+                  style={{
+                    background: active ? "#C8E400" : "#2A2A2A",
+                    color: active ? "#2A2A2A" : "#888888",
+                    border: active ? "none" : "1px solid #333333",
+                    borderRadius: "4px",
+                    padding: "10px 20px",
+                    fontSize: "13px",
+                    fontWeight: 700,
+                    fontFamily: "var(--font-barlow), sans-serif",
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    cursor: "pointer",
+                    transition: "background 0.15s, color 0.15s",
+                  }}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* Teams */}
-      <div className="max-w-7xl mx-auto px-6 py-16 space-y-20">
-        {TEAMS.map((team, ti) => (
-          <motion.div
-            key={team.name}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: ti * 0.1 }}
+      {/* ── Division section ── */}
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "56px 24px" }}>
+        {/* Section label */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "32px" }}>
+          <span
+            className="font-heading font-bold uppercase"
+            style={{ fontSize: "13px", color: "#FFFFFF", letterSpacing: "0.12em" }}
           >
-            {/* Team header */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-              <div>
-                <div className="flex items-center gap-3 mb-1">
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: team.color }}
-                  />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30">
-                    {team.game}
-                  </span>
-                </div>
-                <h2
-                  className="font-heading font-black uppercase leading-none"
-                  style={{ fontSize: "clamp(2rem, 5vw, 4rem)", color: team.color }}
-                >
-                  {team.name}
-                </h2>
-                <p className="mt-2 text-white/40 text-sm max-w-sm">{team.description}</p>
-              </div>
-              <span
-                className="self-start sm:self-auto text-[10px] font-black px-3 py-1.5 rounded uppercase tracking-[0.15em]"
-                style={{
-                  color: team.color,
-                  background: `${team.color}15`,
-                  border: `1px solid ${team.color}30`,
-                }}
-              >
-                {team.players.length > 0 ? `${team.players.length} members` : "Coming soon"}
-              </span>
-            </div>
+            {divisionLabel}
+          </span>
+          <span
+            style={{
+              background: "#C8E40022",
+              border: "1px solid #C8E40044",
+              color: "#C8E400",
+              borderRadius: "999px",
+              fontSize: "11px",
+              fontWeight: 700,
+              fontFamily: "var(--font-barlow), sans-serif",
+              padding: "2px 10px",
+            }}
+          >
+            {roster.length} players
+          </span>
+        </div>
 
-            {/* Player grid */}
-            {team.comingSoon ? (
-              <div
-                className="rounded-2xl border border-dashed p-16 flex items-center justify-center"
-                style={{ borderColor: `${team.color}20` }}
+        {/* Card grid with fade on tab switch */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeDivision}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="grid grid-cols-1 sm:grid-cols-2"
+            style={{ gap: "16px" }}
+          >
+            {roster.map((player, i) => (
+              <motion.div
+                key={player.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
               >
-                <p className="text-white/20 text-sm font-semibold uppercase tracking-widest">
-                  Roster Announcement Coming Soon
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {team.players.map((player, i) => {
-                  const color = ROLE_COLORS[player.role];
-                  return (
-                    <motion.div
-                      key={player.tag}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.35, delay: i * 0.05 }}
-                      className="group relative rounded-xl overflow-hidden aspect-square cursor-default"
-                      style={{ border: `1px solid ${color}20` }}
-                    >
-                      <Image
-                        src={player.img}
-                        alt={player.tag}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 640px) 50vw, 25vw"
-                      />
-                      <div
-                        className="absolute inset-0 flex flex-col justify-end p-3"
-                        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)" }}
-                      >
-                        <div
-                          className="absolute top-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }}
-                        />
-                        <div className="flex items-end justify-between gap-1">
-                          <div>
-                            <p className="font-heading font-black uppercase text-white text-xs sm:text-sm leading-tight tracking-wide">
-                              {player.tag}
-                            </p>
-                            <p className="text-[10px] mt-0.5" style={{ color }}>
-                              {player.role}
-                            </p>
-                          </div>
-                          <span
-                            className="shrink-0 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-[0.1em]"
-                            style={{
-                              color,
-                              background: `${color}25`,
-                              border: `1px solid ${color}40`,
-                            }}
-                          >
-                            {player.label === "Coach" ? "Coach" : "Player"}
-                          </span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
-
-            {ti < TEAMS.length - 1 && (
-              <div className="mt-20 border-t border-white/[0.06]" />
-            )}
+                <PlayerCard player={player} />
+              </motion.div>
+            ))}
           </motion.div>
-        ))}
+        </AnimatePresence>
       </div>
-    </main>
+
+      {/* ── Stats strip ── */}
+      <div style={{ borderTop: "1px solid #1F1F1F", background: "#111111" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "20px 24px" }}>
+          <p
+            className="font-heading font-bold uppercase"
+            style={{ fontSize: "12px", color: "#555555", letterSpacing: "0.15em", textAlign: "center" }}
+          >
+            5 OW2 Players · 6 MR Players · PR #1 in Both Titles · Est. 2017
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
