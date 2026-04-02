@@ -159,7 +159,7 @@ export default function AvailabilityGrid({
     );
   }
 
-  function TeamSummary({ teamPlayers }: { teamPlayers: typeof rows }) {
+  function TeamSummary({ teamPlayers }: { teamPlayers: AnyPlayer[] }) {
     return (
       <div className="grid mt-1 mb-3" style={{ gridTemplateColumns: colTemplate }}>
         <div className="text-[10px] text-white/25 py-1">Available</div>
@@ -202,33 +202,43 @@ export default function AvailabilityGrid({
         <span className="text-xs text-white/25 ml-auto">Click to toggle · Auto-saves</span>
       </div>
 
-      {/* Grid */}
-      <div className="overflow-x-auto">
-        <div className="min-w-[520px]">
-          {/* Day headers */}
-          <div className="grid mb-1" style={{ gridTemplateColumns: colTemplate }}>
-            {isCoachOrAdmin && <div />}
-            {DAYS.map((day, i) => (
-              <div key={day} className="text-center text-[11px] font-semibold text-white/35 uppercase tracking-wider pb-2">
-                {DAY_LABELS[i]}
-              </div>
-            ))}
-          </div>
-
-          {teamGroups.map((group) => (
-            <div key={group.division} className="mb-2">
-              {isCoachOrAdmin && (
-                <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#c5d400]/70 pt-3 pb-1.5">
+      {/* One card per team */}
+      <div className="space-y-4">
+        {teamGroups.map((group) => (
+          <div key={group.division} className="bg-[#0d0d0d] border border-white/[0.07] rounded-xl overflow-hidden">
+            {/* Team header */}
+            {isCoachOrAdmin && (
+              <div className="px-4 py-3 border-b border-white/[0.07] flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#c5d400]">
                   {group.division}
+                </span>
+                <span className="text-[10px] text-white/25">{group.players.length} players</span>
+              </div>
+            )}
+
+            <div className="overflow-x-auto">
+              <div className="min-w-[520px] p-3">
+                {/* Day headers */}
+                <div className="grid mb-1" style={{ gridTemplateColumns: colTemplate }}>
+                  {isCoachOrAdmin && <div />}
+                  {DAYS.map((day, i) => (
+                    <div key={day} className="text-center text-[11px] font-semibold text-white/30 uppercase tracking-wider pb-1">
+                      {DAY_LABELS[i]}
+                    </div>
+                  ))}
                 </div>
-              )}
-              {group.players.map((player) => (
-                <PlayerRow key={player.discord_id} player={player} />
-              ))}
-              {isCoachOrAdmin && <TeamSummary teamPlayers={group.players} />}
+
+                {/* Player rows */}
+                {group.players.map((player) => (
+                  <PlayerRow key={player.discord_id} player={player} />
+                ))}
+
+                {/* Per-team summary */}
+                {isCoachOrAdmin && <TeamSummary teamPlayers={group.players} />}
+              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
