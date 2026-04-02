@@ -10,15 +10,19 @@ export const metadata = {
 export default async function TeamHubLoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; next?: string }>;
 }) {
   const [session, params] = await Promise.all([auth(), searchParams]);
 
   if (session?.user) {
-    redirect("/team-hub/dashboard");
+    // If already logged in and there's a next param, honour it
+    const dest = params.next?.startsWith("/team-hub/") ? params.next : "/team-hub/dashboard";
+    redirect(dest);
   }
 
   const error = params.error;
+  // Validate next to prevent open redirects
+  const nextUrl = params.next?.startsWith("/team-hub/") ? params.next : "/team-hub/dashboard";
   const isNotApproved = error === "not_approved" || error === "AccessDenied";
 
   return (
@@ -108,7 +112,7 @@ export default async function TeamHubLoginPage({
               <form
                 action={async () => {
                   "use server";
-                  await signIn("discord", { redirectTo: "/team-hub/dashboard" });
+                  await signIn("discord", { redirectTo: nextUrl });
                 }}
               >
                 <button

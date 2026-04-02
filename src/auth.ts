@@ -21,11 +21,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!discordId) return false;
         // OWNER always has access
         if (discordId === process.env.OWNER_DISCORD_ID) return true;
-        // Primary check: player must exist in the DB
+        // Check if player is in DB
         try {
-          const { getPlayerByDiscordId } = await import("@/lib/db");
+          const { getPlayerByDiscordId, getInvites } = await import("@/lib/db");
           const player = await getPlayerByDiscordId(discordId);
-          if (!player) return "/team-hub?error=not_approved";
+          if (player) return true;
+          // Not in DB — allow through only if there are valid (unused, unexpired) invites
+          // so new members can complete the invite redemption flow
+          const invites = await getInvites();
+          const hasValidInvite = invites.some(
+            (inv) => !inv.used_by && new Date(inv.expires_at) > new Date()
+          );
+          if (hasValidInvite) return true;
+          return "/team-hub?error=not_approved";
         } catch {
           // DB unavailable — fall back to env var approved list
           if (approvedIds.length > 0 && !approvedIds.includes(discordId)) {
