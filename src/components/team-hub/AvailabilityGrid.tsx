@@ -93,6 +93,8 @@ export default function AvailabilityGrid({
     }
   }
 
+  const TEAM_ORDER = ["IMPerfect", "Shadows", "Echoes"];
+
   // For players, show only their own row
   const displayPlayers = isCoachOrAdmin
     ? players
@@ -104,9 +106,84 @@ export default function AvailabilityGrid({
     ? [{ discord_id: currentDiscordId, display_name: "You", division: "—", role: "player" as const, is_admin: false }]
     : displayPlayers;
 
+  type AnyPlayer = typeof rows[number];
+
+  // Group by division for staff view
+  const teamGroups: { division: string; players: AnyPlayer[] }[] = isCoachOrAdmin
+    ? TEAM_ORDER
+        .map((div) => ({ division: div, players: rows.filter((p) => p.division === div) as AnyPlayer[] }))
+        .filter((g) => g.players.length > 0)
+    : [{ division: "", players: rows as AnyPlayer[] }];
+
+  const colTemplate = isCoachOrAdmin ? "160px repeat(7, 1fr)" : "1fr repeat(7, 1fr)";
+
+  function PlayerRow({ player }: { player: typeof rows[number] }) {
+    return (
+      <div
+        className="grid items-center border-t border-white/[0.05]"
+        style={{ gridTemplateColumns: colTemplate }}
+      >
+        {isCoachOrAdmin && (
+          <div className="py-2 pr-3">
+            <p className="text-xs text-white/70 font-medium truncate">{player.display_name}</p>
+            <p className="text-[10px] text-white/25 capitalize">{player.role}</p>
+          </div>
+        )}
+        {DAYS.map((day) => {
+          const status = getStatus(player.discord_id, day);
+          const cfg = STATUS_CONFIG[status];
+          const key = `${player.discord_id}-${day}`;
+          const isSaving = saving === key;
+          const canToggle = isCoachOrAdmin || player.discord_id === currentDiscordId;
+
+          return (
+            <div key={day} className="flex items-center justify-center py-1.5 px-0.5">
+              <button
+                onClick={() => toggleStatus(player.discord_id, day)}
+                disabled={!canToggle || isSaving}
+                className="w-full h-10 rounded-lg flex items-center justify-center text-sm font-bold transition-all disabled:cursor-default"
+                style={{
+                  backgroundColor: cfg.bg,
+                  border: `1px solid ${cfg.border}`,
+                  color: cfg.text,
+                  opacity: isSaving ? 0.5 : 1,
+                }}
+                title={canToggle ? `Click to change: ${cfg.label}` : cfg.label}
+              >
+                {isSaving ? <span className="animate-spin text-xs">◌</span> : cfg.emoji}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  function TeamSummary({ teamPlayers }: { teamPlayers: typeof rows }) {
+    return (
+      <div className="grid mt-1 mb-3" style={{ gridTemplateColumns: colTemplate }}>
+        <div className="text-[10px] text-white/25 py-1">Available</div>
+        {DAYS.map((day) => {
+          const count = teamPlayers.filter((p) => getStatus(p.discord_id, day) === "AVAILABLE").length;
+          const total = teamPlayers.length;
+          return (
+            <div key={day} className="text-center py-1">
+              <span
+                className="text-[10px] font-bold"
+                style={{ color: count >= total * 0.7 ? "#27AE60" : count >= total * 0.4 ? "#E67E22" : "#E74C3C" }}
+              >
+                {count}/{total}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <div>
-      {/* Summary legend */}
+      {/* Legend */}
       <div className="flex flex-wrap gap-4 mb-5">
         {(Object.keys(STATUS_CONFIG) as Status[]).map((s) => {
           const cfg = STATUS_CONFIG[s];
@@ -128,11 +205,8 @@ export default function AvailabilityGrid({
       {/* Grid */}
       <div className="overflow-x-auto">
         <div className="min-w-[520px]">
-          {/* Header */}
-          <div
-            className="grid mb-1"
-            style={{ gridTemplateColumns: isCoachOrAdmin ? "160px repeat(7, 1fr)" : "1fr repeat(7, 1fr)" }}
-          >
+          {/* Day headers */}
+          <div className="grid mb-1" style={{ gridTemplateColumns: colTemplate }}>
             {isCoachOrAdmin && <div />}
             {DAYS.map((day, i) => (
               <div key={day} className="text-center text-[11px] font-semibold text-white/35 uppercase tracking-wider pb-2">
@@ -141,77 +215,21 @@ export default function AvailabilityGrid({
             ))}
           </div>
 
-          {/* Rows */}
-          {rows.map((player) => (
-            <div
-              key={player.discord_id}
-              className="grid items-center border-t border-white/[0.05]"
-              style={{ gridTemplateColumns: isCoachOrAdmin ? "160px repeat(7, 1fr)" : "1fr repeat(7, 1fr)" }}
-            >
+          {teamGroups.map((group) => (
+            <div key={group.division} className="mb-2">
               {isCoachOrAdmin && (
-                <div className="py-2 pr-3">
-                  <p className="text-xs text-white/70 font-medium truncate">{player.display_name}</p>
-                  <p className="text-[10px] text-white/25 capitalize">{player.role} · {player.division}</p>
+                <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#c5d400]/70 pt-3 pb-1.5">
+                  {group.division}
                 </div>
               )}
-              {DAYS.map((day) => {
-                const status = getStatus(player.discord_id, day);
-                const cfg = STATUS_CONFIG[status];
-                const key = `${player.discord_id}-${day}`;
-                const isSaving = saving === key;
-                const canToggle = isCoachOrAdmin || player.discord_id === currentDiscordId;
-
-                return (
-                  <div key={day} className="flex items-center justify-center py-1.5 px-0.5">
-                    <button
-                      onClick={() => toggleStatus(player.discord_id, day)}
-                      disabled={!canToggle || isSaving}
-                      className="w-full h-10 rounded-lg flex items-center justify-center text-sm font-bold transition-all disabled:cursor-default"
-                      style={{
-                        backgroundColor: cfg.bg,
-                        border: `1px solid ${cfg.border}`,
-                        color: cfg.text,
-                        opacity: isSaving ? 0.5 : 1,
-                      }}
-                      title={canToggle ? `Click to change: ${cfg.label}` : cfg.label}
-                    >
-                      {isSaving ? (
-                        <span className="animate-spin text-xs">◌</span>
-                      ) : (
-                        cfg.emoji
-                      )}
-                    </button>
-                  </div>
-                );
-              })}
+              {group.players.map((player) => (
+                <PlayerRow key={player.discord_id} player={player} />
+              ))}
+              {isCoachOrAdmin && <TeamSummary teamPlayers={group.players} />}
             </div>
           ))}
         </div>
       </div>
-
-      {/* Summary row for coaches */}
-      {isCoachOrAdmin && rows.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-white/[0.06]">
-          <p className="text-[11px] text-white/30 font-semibold uppercase tracking-widest mb-2">Availability summary</p>
-          <div className="grid" style={{ gridTemplateColumns: "160px repeat(7, 1fr)" }}>
-            <div className="text-xs text-white/25">Players available</div>
-            {DAYS.map((day) => {
-              const count = rows.filter((p) => getStatus(p.discord_id, day) === "AVAILABLE").length;
-              const total = rows.length;
-              return (
-                <div key={day} className="text-center">
-                  <span
-                    className="text-xs font-bold"
-                    style={{ color: count >= total * 0.7 ? "#27AE60" : count >= total * 0.4 ? "#E67E22" : "#E74C3C" }}
-                  >
-                    {count}/{total}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
