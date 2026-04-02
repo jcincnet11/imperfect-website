@@ -81,12 +81,12 @@ export default async function TeamHubLoginPage({
                 <DiscordIcon />
                 Join the Discord
               </a>
-              <button
-                onClick={() => {}}
-                className="w-full mt-3 py-3 rounded-xl text-sm text-white/40 hover:text-white/60 transition-colors"
+              <a
+                href="/team-hub"
+                className="block w-full mt-3 py-3 rounded-xl text-sm text-white/40 hover:text-white/60 transition-colors text-center"
               >
-                <a href="/team-hub">Try a different account</a>
-              </button>
+                Try a different account
+              </a>
             </>
           ) : (
             <>
