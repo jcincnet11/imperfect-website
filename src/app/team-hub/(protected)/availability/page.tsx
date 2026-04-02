@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { getAvailability, getAllPlayers } from "@/lib/db";
+import { resolveOrgRole, can } from "@/lib/permissions";
 import AvailabilityGrid from "@/components/team-hub/AvailabilityGrid";
 
 function getWeekStart(offsetWeeks = 0): string {
@@ -24,8 +25,9 @@ export default async function AvailabilityPage({
 }) {
   const [session, params] = await Promise.all([auth(), searchParams]);
 
-  const user = session!.user as { role?: string; discordId?: string; displayName?: string; name?: string | null };
-  const isCoachOrAdmin = user.role === "admin" || user.role === "coach";
+  const user = session!.user as { role?: string; orgRole?: string; discordId?: string; displayName?: string; name?: string | null };
+  const orgRole = resolveOrgRole(user as Parameters<typeof resolveOrgRole>[0]);
+  const isCoachOrAdmin = can.viewAllRosters(orgRole);
   const discordId = user.discordId ?? "";
 
   const weekStart = params.week ?? getWeekStart();
