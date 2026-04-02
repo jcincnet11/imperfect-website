@@ -1,31 +1,41 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import type { OrgRole } from "@/lib/permissions";
+import { hasRole, ROLE_LABELS } from "@/lib/permissions";
 
 const NAV = [
-  { href: "/team-hub/dashboard", label: "Dashboard", icon: "⬡" },
-  { href: "/team-hub/schedule", label: "Schedule", icon: "▦" },
-  { href: "/team-hub/availability", label: "Availability", icon: "◈" },
+  { href: "/team-hub/dashboard",      label: "Dashboard",      icon: "⬡" },
+  { href: "/team-hub/schedule",       label: "Schedule",       icon: "▦" },
+  { href: "/team-hub/availability",   label: "Availability",   icon: "◈" },
+  { href: "/team-hub/announcements",  label: "Announcements",  icon: "◭" },
+];
+
+const STAFF_NAV = [
+  { href: "/team-hub/roster",  label: "Roster",  icon: "◉", minRole: "HEAD_COACH" as OrgRole },
+  { href: "/team-hub/scrims",  label: "Scrims",  icon: "◫", minRole: "MANAGER"    as OrgRole },
 ];
 
 const ADMIN_NAV = [
-  { href: "/team-hub/players", label: "Manage Players", icon: "◉" },
-];
-
-const MANAGEMENT_NAV = [
-  { href: "/management", label: "Management", icon: "◫" },
+  { href: "/team-hub/admin",   label: "Admin",   icon: "⬟", minRole: "OWNER" as OrgRole },
+  { href: "/management",       label: "Org Mgmt", icon: "◧", minRole: "ORG_ADMIN" as OrgRole },
 ];
 
 type Props = {
   displayName: string;
   avatar?: string | null;
   role: string;
+  orgRole?: OrgRole;
 };
 
-export default function Sidebar({ displayName, avatar, role }: Props) {
+export default function Sidebar({ displayName, avatar, role, orgRole = "PLAYER" }: Props) {
   const pathname = usePathname();
+
+  const staffItems = STAFF_NAV.filter((item) => hasRole(orgRole, item.minRole));
+  const adminItems = ADMIN_NAV.filter((item) => hasRole(orgRole, item.minRole));
 
   return (
     <>
@@ -43,22 +53,25 @@ export default function Sidebar({ displayName, avatar, role }: Props) {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
+        <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
           {NAV.map((item) => (
-            <NavItem key={item.href} {...item} active={pathname === item.href} />
+            <NavItem key={item.href} {...item} active={pathname.startsWith(item.href)} />
           ))}
-          {(role === "admin" || role === "coach") && (
+
+          {staffItems.length > 0 && (
             <div className="mt-4 pt-4 border-t border-white/[0.06] flex flex-col gap-1">
-              <p className="text-[10px] text-white/25 font-semibold tracking-widest uppercase px-3 mb-1">Admin</p>
-              {ADMIN_NAV.map((item) => (
-                <NavItem key={item.href} {...item} active={pathname === item.href} />
+              <p className="text-[10px] text-white/25 font-semibold tracking-widest uppercase px-3 mb-1">Staff</p>
+              {staffItems.map((item) => (
+                <NavItem key={item.href} href={item.href} label={item.label} icon={item.icon} active={pathname.startsWith(item.href)} />
               ))}
             </div>
           )}
-          {role === "admin" && (
-            <div className="mt-2 flex flex-col gap-1">
-              {MANAGEMENT_NAV.map((item) => (
-                <NavItem key={item.href} {...item} active={pathname.startsWith(item.href)} />
+
+          {adminItems.length > 0 && (
+            <div className="mt-2 pt-2 border-t border-white/[0.06] flex flex-col gap-1">
+              <p className="text-[10px] text-white/25 font-semibold tracking-widest uppercase px-3 mb-1">Admin</p>
+              {adminItems.map((item) => (
+                <NavItem key={item.href} href={item.href} label={item.label} icon={item.icon} active={pathname.startsWith(item.href)} />
               ))}
             </div>
           )}
@@ -68,8 +81,7 @@ export default function Sidebar({ displayName, avatar, role }: Props) {
         <div className="px-3 py-4 border-t border-white/[0.06]">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/[0.03]">
             {avatar ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={avatar} alt="" className="w-7 h-7 rounded-full" />
+              <Image src={avatar} alt="" width={28} height={28} className="rounded-full" />
             ) : (
               <div className="w-7 h-7 rounded-full bg-[#c5d400]/20 flex items-center justify-center text-[#c5d400] text-xs font-bold">
                 {displayName.charAt(0).toUpperCase()}
@@ -77,7 +89,7 @@ export default function Sidebar({ displayName, avatar, role }: Props) {
             )}
             <div className="flex-1 min-w-0">
               <p className="text-xs text-white font-medium truncate">{displayName}</p>
-              <p className="text-[10px] text-white/30 capitalize">{role}</p>
+              <p className="text-[10px] text-white/30">{ROLE_LABELS[orgRole] ?? role}</p>
             </div>
           </div>
           <div className="mt-2 flex items-center justify-between px-1">
@@ -94,14 +106,14 @@ export default function Sidebar({ displayName, avatar, role }: Props) {
         </div>
       </aside>
 
-      {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#111] border-t border-white/[0.06] flex">
-        {NAV.map((item) => (
+      {/* Mobile bottom nav — show core items + first staff item if applicable */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#111] border-t border-white/[0.06] flex overflow-x-auto">
+        {[...NAV.slice(0, 3), ...staffItems.slice(0, 1)].map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className={`flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-semibold tracking-widest uppercase transition-colors ${
-              pathname === item.href ? "text-[#c5d400]" : "text-white/30 hover:text-white/60"
+            className={`flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-semibold tracking-widest uppercase transition-colors min-w-[4rem] ${
+              pathname.startsWith(item.href) ? "text-[#c5d400]" : "text-white/30 hover:text-white/60"
             }`}
           >
             <span className="text-base">{item.icon}</span>
