@@ -27,7 +27,11 @@ function blockDateTime(weekStart: string, day: string, timeSlot: string): Date {
   return base;
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
+  const secret = request.headers.get("x-cron-secret");
+  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   if (!supabase) {
     return Response.json({ skipped: "no supabase" });

@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { logRequest } from "@/lib/logger";
 import {
   getScheduleBlocks,
   upsertScheduleBlock,
@@ -10,6 +12,9 @@ import { notifyBlockAdded, notifyBlockUpdated, notifyBlockDeleted } from "@/lib/
 import { randomUUID } from "crypto";
 
 export async function GET(request: NextRequest) {
+  const start = Date.now();
+  if (!checkRateLimit(request)) return Response.json({ error: "Too many requests" }, { status: 429 });
+
   const session = await auth();
   if (!session?.user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -20,7 +25,11 @@ export async function GET(request: NextRequest) {
   const division = searchParams.get("division") ?? "OW2";
 
   const blocks = await getScheduleBlocks(weekStart, division);
-  return Response.json(blocks);
+  const res = Response.json(blocks, {
+    headers: { "Cache-Control": "private, max-age=300, stale-while-revalidate=600" },
+  });
+  logRequest(request, res, start);
+  return res;
 }
 
 export async function POST(request: NextRequest) {

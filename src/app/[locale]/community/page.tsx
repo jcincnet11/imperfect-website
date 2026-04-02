@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const WEEKLY = [
   { day: "MON", type: "Engagement", platform: "Twitter / X",   activity: "This or That poll — hero meta" },
@@ -69,14 +69,14 @@ export default function CommunityPage() {
       {/* Monthly events */}
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
             <span className="eyebrow">Monthly</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>Events Calendar</h2>
             <p style={{ fontSize: "14px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>Every month, every week — something happening for the community.</p>
-          </motion.div>
+          </m.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {MONTHLY_EVENTS.map((event, i) => (
-              <motion.div
+              <m.div
                 key={event.week}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -87,7 +87,7 @@ export default function CommunityPage() {
                 <p className="font-heading font-bold uppercase" style={{ fontSize: "10px", color: "#C8E400", letterSpacing: "0.18em", marginBottom: "8px" }}>{event.week}</p>
                 <h3 className="font-heading font-black uppercase" style={{ fontSize: "18px", color: "#FFFFFF", marginBottom: "8px" }}>{event.title}</h3>
                 <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6 }}>{event.desc}</p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -96,15 +96,15 @@ export default function CommunityPage() {
       {/* Weekly schedule */}
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
             <span className="eyebrow">Weekly</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>Content Schedule</h2>
-          </motion.div>
+          </m.div>
           <div style={{ background: "#222222", border: "1px solid #2A2A2A", borderRadius: "8px", overflow: "hidden" }}>
             {WEEKLY.map((item, i) => {
               const ts = TYPE_STYLE[item.type];
               return (
-                <motion.div
+                <m.div
                   key={`${item.day}-${item.platform}`}
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
@@ -123,7 +123,7 @@ export default function CommunityPage() {
                   </span>
                   <span style={{ fontSize: "12px", color: "#555555", flexShrink: 0, minWidth: "100px" }}>{item.platform}</span>
                   <span style={{ fontSize: "13px", color: "#888888" }}>{item.activity}</span>
-                </motion.div>
+                </m.div>
               );
             })}
           </div>
@@ -133,15 +133,15 @@ export default function CommunityPage() {
       {/* Milestones */}
       <section style={{ padding: "80px 24px" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
             <span className="eyebrow">Growth</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>Discord Milestones</h2>
             <p style={{ fontSize: "14px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>Every milestone unlocks something for the community. Help us get there.</p>
-          </motion.div>
+          </m.div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {MILESTONES.map((m, i) => (
-              <motion.div
-                key={m.count}
+            {MILESTONES.map((milestone, i) => (
+              <m.div
+                key={milestone.count}
                 initial={{ opacity: 0, x: -16 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -149,12 +149,12 @@ export default function CommunityPage() {
                 style={{ display: "flex", alignItems: "center", gap: "24px", padding: "20px 0", borderBottom: i < MILESTONES.length - 1 ? "1px solid #1F1F1F" : "none" }}
               >
                 <div style={{ flexShrink: 0, minWidth: "80px" }}>
-                  <p className="font-heading font-black" style={{ fontSize: "36px", color: "#C8E400", lineHeight: 1 }}>{m.count}</p>
-                  <p style={{ fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.10em" }}>{m.label}</p>
+                  <p className="font-heading font-black" style={{ fontSize: "36px", color: "#C8E400", lineHeight: 1 }}>{milestone.count}</p>
+                  <p style={{ fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.10em" }}>{milestone.label}</p>
                 </div>
                 <div style={{ width: "1px", height: "40px", background: "#2A2A2A", flexShrink: 0 }} />
-                <p style={{ fontSize: "13px", color: "#888888" }}>{m.reward}</p>
-              </motion.div>
+                <p style={{ fontSize: "13px", color: "#888888" }}>{milestone.reward}</p>
+              </m.div>
             ))}
           </div>
         </div>

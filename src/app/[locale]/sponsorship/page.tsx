@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const TIERS = [
   {
@@ -62,15 +62,15 @@ export default function SponsorshipPage() {
       {/* Why us */}
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
             <span className="eyebrow">The Case</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
               Why Partner With Us
             </h2>
-          </motion.div>
+          </m.div>
           <div className="grid sm:grid-cols-2 gap-4">
             {REASONS.map((r, i) => (
-              <motion.div
+              <m.div
                 key={r.number}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -83,7 +83,7 @@ export default function SponsorshipPage() {
                   <h3 className="font-heading font-black uppercase" style={{ fontSize: "18px", color: "#FFFFFF", marginBottom: "8px" }}>{r.title}</h3>
                   <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6 }}>{r.body}</p>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -92,15 +92,15 @@ export default function SponsorshipPage() {
       {/* Tiers */}
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
             <span className="eyebrow">Partnership Tiers</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
               Choose Your Level
             </h2>
-          </motion.div>
+          </m.div>
           <div className="grid md:grid-cols-3 gap-5 items-start">
             {TIERS.map((tier, i) => (
-              <motion.div
+              <m.div
                 key={tier.name}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -137,7 +137,7 @@ export default function SponsorshipPage() {
                     Get Started
                   </a>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -146,7 +146,7 @@ export default function SponsorshipPage() {
       {/* Contact CTA */}
       <section style={{ padding: "80px 24px" }}>
         <div style={{ maxWidth: "640px", margin: "0 auto", textAlign: "center" }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <m.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "16px" }}>Ready to Talk?</h2>
             <p style={{ fontSize: "14px", color: "#888888", marginBottom: "32px", lineHeight: 1.65 }}>
               We keep things simple. Send us an email and we'll get back to you within 48 hours.
@@ -155,7 +155,7 @@ export default function SponsorshipPage() {
             <a href="mailto:sponsorships@imperfectorg.gg" className="btn-primary">
               sponsorships@imperfectorg.gg →
             </a>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

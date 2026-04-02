@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export default function CommunitySection() {
   const t = useTranslations("community");
@@ -12,7 +12,7 @@ export default function CommunitySection() {
   return (
     <section style={{ padding: "80px 0", background: "#1A1A1A" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -54,7 +54,7 @@ export default function CommunitySection() {
               </Link>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

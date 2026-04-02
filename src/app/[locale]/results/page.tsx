@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const ACHIEVEMENTS = [
   { label: "5",     desc: "Tournament Wins" },
@@ -65,7 +65,7 @@ export default function ResultsPage() {
         <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
           <div className="grid grid-cols-2 md:grid-cols-4">
             {ACHIEVEMENTS.map((a, i) => (
-              <motion.div
+              <m.div
                 key={a.desc}
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -82,7 +82,7 @@ export default function ResultsPage() {
                 <span style={{ marginTop: "6px", display: "block", fontSize: "10px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 700 }}>
                   {a.desc}
                 </span>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function ResultsPage() {
       {/* Results */}
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "64px 24px", display: "flex", flexDirection: "column", gap: "48px" }}>
         {RESULTS.map((section, si) => (
-          <motion.div
+          <m.div
             key={section.game}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -113,7 +113,7 @@ export default function ResultsPage() {
             <div style={{ background: "#222222", border: "1px solid #2A2A2A", borderRadius: "8px", overflow: "hidden", position: "relative" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: section.gameColor }} />
               {section.entries.map((entry, ei) => (
-                <motion.div
+                <m.div
                   key={entry.event}
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
@@ -147,14 +147,14 @@ export default function ResultsPage() {
                   >
                     {entry.placement}
                   </span>
-                </motion.div>
+                </m.div>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         ))}
 
         {/* Archive notice */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -163,7 +163,7 @@ export default function ResultsPage() {
           <p className="font-heading font-bold uppercase" style={{ fontSize: "10px", color: "#333333", letterSpacing: "0.18em" }}>
             Full tournament archive coming soon — documenting every run.
           </p>
-        </motion.div>
+        </m.div>
       </div>
     </main>
   );

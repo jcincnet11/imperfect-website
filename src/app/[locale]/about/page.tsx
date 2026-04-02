@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const PHASES = [
   {
@@ -86,15 +86,15 @@ export default function AboutPage() {
       {/* Values */}
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} style={{ marginBottom: "48px" }}>
+          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} style={{ marginBottom: "48px" }}>
             <span className="eyebrow">What We Stand For</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
               Core Values
             </h2>
-          </motion.div>
+          </m.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {VALUES.map((v, i) => (
-              <motion.div
+              <m.div
                 key={v.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -109,7 +109,7 @@ export default function AboutPage() {
                 )}
                 <h3 className="font-heading font-bold uppercase" style={{ fontSize: "18px", color: "#FFFFFF", marginBottom: "8px" }}>{v.title}</h3>
                 <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6 }}>{v.body}</p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -118,7 +118,7 @@ export default function AboutPage() {
       {/* Roadmap */}
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
+          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
             <span className="eyebrow">The Plan</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>
               6-Month Roadmap
@@ -126,7 +126,7 @@ export default function AboutPage() {
             <p style={{ fontSize: "14px", color: "#888888", maxWidth: "420px", lineHeight: 1.65 }}>
               Three phases. Clear milestones. We're executing this publicly so our community can follow the journey.
             </p>
-          </motion.div>
+          </m.div>
 
           <div style={{ position: "relative" }}>
             {/* Connector line desktop */}
@@ -134,7 +134,7 @@ export default function AboutPage() {
 
             <div className="grid md:grid-cols-3 gap-6" style={{ position: "relative", zIndex: 1 }}>
               {PHASES.map((phase, i) => (
-                <motion.div
+                <m.div
                   key={phase.number}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -176,7 +176,7 @@ export default function AboutPage() {
                       ))}
                     </ul>
                   </div>
-                </motion.div>
+                </m.div>
               ))}
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function AboutPage() {
       {/* CTA */}
       <section style={{ padding: "80px 24px" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", textAlign: "center" }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <m.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "16px" }}>Want In?</h2>
             <p style={{ fontSize: "14px", color: "#888888", marginBottom: "32px", maxWidth: "360px", margin: "0 auto 32px" }}>
               Join our Discord community or reach out about sponsorship opportunities.
@@ -195,7 +195,7 @@ export default function AboutPage() {
               <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">Join Discord</Link>
               <Link href={`/${locale}/sponsorship`} className="btn-secondary">Partner With Us</Link>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </main>

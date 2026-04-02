@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export default function AboutSection() {
   const t = useTranslations("about");
@@ -13,7 +13,7 @@ export default function AboutSection() {
     <section style={{ padding: "80px 0", borderBottom: "1px solid #1F1F1F", background: "#1A1A1A" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
         <div className="grid md:grid-cols-2 gap-16 items-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -29,9 +29,9 @@ export default function AboutSection() {
             <Link href={`/${locale}/about`} className="btn-primary">
               {t("cta")}
             </Link>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -93,7 +93,7 @@ export default function AboutSection() {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

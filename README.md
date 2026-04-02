@@ -1,3 +1,28 @@
+# IMPerfect Esports
+
+Puerto Rico's top hero-shooter esports organization — website, team hub, and management platform.
+
+## Commands
+
+```bash
+make run            # Start local dev server (http://localhost:3000)
+make build          # Build for production
+make test           # Run lint + typecheck
+make lint           # Run ESLint
+make typecheck      # Run TypeScript type checking
+make deploy         # Deploy to Vercel production
+make deploy-preview # Deploy to Vercel preview
+make logs           # Tail production logs
+make status         # Show Vercel deployment status
+make db-schema      # Print Supabase schema
+make db-reset       # Reset local Supabase + apply schema
+make docs           # Serve docs/ locally on port 8080
+```
+
+Copy `.env.example` to `.env.local` and fill in values before running locally.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

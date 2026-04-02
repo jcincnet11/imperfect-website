@@ -1,9 +1,12 @@
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
 import { getAvailability, upsertAvailability, getAllPlayers, type Availability } from "@/lib/db";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { randomUUID } from "crypto";
 
 export async function GET(request: NextRequest) {
+  if (!checkRateLimit(request)) return Response.json({ error: "Too many requests" }, { status: 429 });
+
   const session = await auth();
   if (!session?.user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });

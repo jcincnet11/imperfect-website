@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 
@@ -63,8 +64,7 @@ export default function ManagementSidebar({ displayName, avatar }: Props) {
         <div className="px-3 py-4 border-t border-white/[0.06]">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[#c5d400]/[0.05] border border-[#c5d400]/10">
             {avatar ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={avatar} alt="" className="w-7 h-7 rounded-full" />
+              <Image src={avatar} alt="" width={28} height={28} className="rounded-full" />
             ) : (
               <div className="w-7 h-7 rounded-full bg-[#c5d400]/20 flex items-center justify-center text-[#c5d400] text-xs font-bold">
                 {displayName.charAt(0).toUpperCase()}

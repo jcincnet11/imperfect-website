@@ -77,11 +77,16 @@ export type ChecklistItem = {
 
 export async function getTournaments(): Promise<Tournament[]> {
   if (!supabase) return [];
-  const { data } = await supabase
-    .from("tournaments")
-    .select("*")
-    .order("date_start", { ascending: false });
-  return (data as Tournament[]) ?? [];
+  try {
+    const { data } = await supabase
+      .from("tournaments")
+      .select("*")
+      .order("date_start", { ascending: false });
+    return (data as Tournament[]) ?? [];
+  } catch (e) {
+    console.error("[management-db] getTournaments failed:", e);
+    return [];
+  }
 }
 
 export async function createTournament(t: Omit<Tournament, "id" | "created_at">): Promise<Tournament> {
@@ -113,11 +118,16 @@ export async function deleteTournament(id: string): Promise<void> {
 
 export async function getSponsors(): Promise<Sponsor[]> {
   if (!supabase) return [];
-  const { data } = await supabase
-    .from("sponsors")
-    .select("*")
-    .order("created_at", { ascending: false });
-  return (data as Sponsor[]) ?? [];
+  try {
+    const { data } = await supabase
+      .from("sponsors")
+      .select("*")
+      .order("created_at", { ascending: false });
+    return (data as Sponsor[]) ?? [];
+  } catch (e) {
+    console.error("[management-db] getSponsors failed:", e);
+    return [];
+  }
 }
 
 export async function createSponsor(s: Omit<Sponsor, "id" | "created_at">): Promise<Sponsor> {
@@ -149,11 +159,16 @@ export async function deleteSponsor(id: string): Promise<void> {
 
 export async function getRevenue(): Promise<Revenue[]> {
   if (!supabase) return [];
-  const { data } = await supabase
-    .from("revenue")
-    .select("*")
-    .order("date", { ascending: false });
-  return (data as Revenue[]) ?? [];
+  try {
+    const { data } = await supabase
+      .from("revenue")
+      .select("*")
+      .order("date", { ascending: false });
+    return (data as Revenue[]) ?? [];
+  } catch (e) {
+    console.error("[management-db] getRevenue failed:", e);
+    return [];
+  }
 }
 
 export async function createRevenue(r: Omit<Revenue, "id" | "created_at">): Promise<Revenue> {
@@ -185,12 +200,17 @@ export async function deleteRevenue(id: string): Promise<void> {
 
 export async function getChecklist(): Promise<ChecklistItem[]> {
   if (!supabase) return [];
-  const { data } = await supabase
-    .from("checklist_items")
-    .select("*")
-    .order("section")
-    .order("label");
-  return (data as ChecklistItem[]) ?? [];
+  try {
+    const { data } = await supabase
+      .from("checklist_items")
+      .select("*")
+      .order("section")
+      .order("label");
+    return (data as ChecklistItem[]) ?? [];
+  } catch (e) {
+    console.error("[management-db] getChecklist failed:", e);
+    return [];
+  }
 }
 
 export async function updateChecklistItem(
@@ -225,18 +245,19 @@ export type ManagementStats = {
   nextTournamentName: string | null;
 };
 
-export async function getManagementStats(): Promise<ManagementStats> {
-  if (!supabase) {
-    return {
-      totalWins: 0,
-      totalLosses: 0,
-      totalSponsorshipRevenue: 0,
-      outstandingInvoices: 0,
-      nextTournamentDate: null,
-      nextTournamentName: null,
-    };
-  }
+const DEFAULT_STATS: ManagementStats = {
+  totalWins: 0,
+  totalLosses: 0,
+  totalSponsorshipRevenue: 0,
+  outstandingInvoices: 0,
+  nextTournamentDate: null,
+  nextTournamentName: null,
+};
 
+export async function getManagementStats(): Promise<ManagementStats> {
+  if (!supabase) return DEFAULT_STATS;
+
+  try {
   const [tournaments, sponsors, revenue] = await Promise.all([
     supabase.from("tournaments").select("wins,losses,status,date_start,name"),
     supabase.from("sponsors").select("deal_value,paid_to_date,status"),
@@ -275,4 +296,8 @@ export async function getManagementStats(): Promise<ManagementStats> {
     nextTournamentDate,
     nextTournamentName,
   };
+  } catch (e) {
+    console.error("[management-db] getManagementStats failed:", e);
+    return DEFAULT_STATS;
+  }
 }

@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const TIERS = [
   { name: "Associate",    color: "#7F8C8D" },
@@ -19,7 +19,7 @@ export default function SponsorshipTeaser() {
     <section style={{ padding: "80px 0", borderBottom: "1px solid #1F1F1F", background: "#1A1A1A" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
         <div className="grid md:grid-cols-2 gap-16 items-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -47,9 +47,9 @@ export default function SponsorshipTeaser() {
             <Link href={`/${locale}/sponsorship`} className="btn-primary">
               View Partnership Tiers →
             </Link>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -57,7 +57,7 @@ export default function SponsorshipTeaser() {
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
             {TIERS.map((tier, i) => (
-              <motion.div
+              <m.div
                 key={tier.name}
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -77,7 +77,7 @@ export default function SponsorshipTeaser() {
                 <span className="font-heading font-black uppercase" style={{ fontSize: "16px", color: tier.color }}>
                   {tier.name}
                 </span>
-              </motion.div>
+              </m.div>
             ))}
             <div style={{ marginTop: "8px", paddingTop: "16px", borderTop: "1px solid #1F1F1F" }}>
               <a
@@ -90,7 +90,7 @@ export default function SponsorshipTeaser() {
                 <span>→</span>
               </a>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

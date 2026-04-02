@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const GAMES = [
   {
@@ -51,7 +51,7 @@ export default function GamesPage() {
       {/* Game sections */}
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "64px 24px", display: "flex", flexDirection: "column", gap: "24px" }}>
         {GAMES.map((game, gi) => (
-          <motion.div
+          <m.div
             key={game.name}
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -127,7 +127,7 @@ export default function GamesPage() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         ))}
       </div>
     </main>

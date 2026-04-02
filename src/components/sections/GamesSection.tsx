@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const games = [
   {
@@ -44,7 +44,7 @@ export default function GamesSection() {
 
         <div className="grid md:grid-cols-2 gap-5">
           {games.map((game, i) => (
-            <motion.div
+            <m.div
               key={game.key}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -102,7 +102,7 @@ export default function GamesSection() {
                   </span>
                 ))}
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </div>

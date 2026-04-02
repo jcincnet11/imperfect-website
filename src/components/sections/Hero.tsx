@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const STATS = [
   { value: "2017",  label: "Founded" },
@@ -54,7 +54,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" style={{ zIndex: 1 }} />
 
       <div className="w-full" style={{ maxWidth: "1280px", margin: "0 auto", padding: "80px 48px 80px 64px", position: "relative", zIndex: 2 }}>
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
@@ -64,9 +64,9 @@ export default function Hero() {
           <span className="font-heading font-bold uppercase" style={{ fontSize: "11px", letterSpacing: "0.20em", color: "#C8E400" }}>
             Puerto Rico · Est. 2017
           </span>
-        </motion.div>
+        </m.div>
 
-        <motion.h1
+        <m.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -75,9 +75,9 @@ export default function Hero() {
         >
           We Are
           <span style={{ display: "block", color: "#C8E400" }}>IMPerfect.</span>
-        </motion.h1>
+        </m.h1>
 
-        <motion.p
+        <m.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.25 }}
@@ -85,9 +85,9 @@ export default function Hero() {
         >
           Puerto Rico's #1 competitive hero shooter org. Overwatch 2 · Marvel Rivals.
           Built from the island — competing with the world.
-        </motion.p>
+        </m.p>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.35 }}
@@ -95,9 +95,9 @@ export default function Hero() {
         >
           <Link href={`/${locale}/team`} className="btn-primary">Meet the Team</Link>
           <Link href={`/${locale}/sponsorship`} className="btn-secondary">Partner With Us</Link>
-        </motion.div>
+        </m.div>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
@@ -109,7 +109,7 @@ export default function Hero() {
               <p style={{ fontSize: "10px", color: "#666666", textTransform: "uppercase", letterSpacing: "0.12em", marginTop: "4px" }}>{s.label}</p>
             </div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

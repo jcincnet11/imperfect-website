@@ -9,7 +9,7 @@
 import { useState } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 // ── Types ────────────────────────────────────────────────────────
 
@@ -579,6 +579,162 @@ function PlayerCard({ player }: { player: Player }) {
   );
 }
 
+// ── Sub-team coming-soon card ────────────────────────────────────
+
+const MR_SUBTEAMS = [
+  {
+    id: "shadows",
+    name: "Shadows",
+    tagline: "Second squad. Same hunger.",
+    color: "#9B59B6",
+    slots: 6,
+  },
+  {
+    id: "echoes",
+    name: "Echoes",
+    tagline: "Rising talent. Next in line.",
+    color: "#3A7BD5",
+    slots: 6,
+  },
+] as const;
+
+function SubTeamComingSoon({
+  team,
+}: {
+  team: (typeof MR_SUBTEAMS)[number];
+}) {
+  return (
+    <div
+      style={{
+        marginTop: "48px",
+        borderTop: "1px solid #222222",
+        paddingTop: "40px",
+      }}
+    >
+      {/* Sub-team label row */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
+        <span
+          className="font-heading font-bold uppercase"
+          style={{ fontSize: "13px", color: "#FFFFFF", letterSpacing: "0.12em" }}
+        >
+          IMPerfect · {team.name}
+        </span>
+        <span
+          style={{
+            background: `${team.color}18`,
+            border: `1px solid ${team.color}44`,
+            color: team.color,
+            borderRadius: "999px",
+            fontSize: "11px",
+            fontWeight: 700,
+            fontFamily: "var(--font-barlow), sans-serif",
+            padding: "2px 10px",
+          }}
+        >
+          Marvel Rivals
+        </span>
+        <span
+          style={{
+            background: "#C8E40012",
+            border: "1px solid #C8E40030",
+            color: "#C8E400",
+            borderRadius: "999px",
+            fontSize: "11px",
+            fontWeight: 700,
+            fontFamily: "var(--font-barlow), sans-serif",
+            padding: "2px 10px",
+          }}
+        >
+          Roster TBA
+        </span>
+      </div>
+
+      {/* Ghost card grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" style={{ gap: "16px" }}>
+        {Array.from({ length: team.slots }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              background: "#1E1E1E",
+              border: "1px solid #242424",
+              borderTop: `3px solid ${team.color}44`,
+              borderRadius: "8px",
+              padding: "20px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+              minHeight: "120px",
+              opacity: 0.55,
+            }}
+          >
+            {/* Ghost avatar */}
+            <div
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                background: "#2A2A2A",
+                border: `1px dashed ${team.color}55`,
+              }}
+            />
+            <span
+              className="font-heading font-bold uppercase"
+              style={{ fontSize: "10px", color: "#444444", letterSpacing: "0.15em" }}
+            >
+              TBA
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Banner */}
+      <div
+        style={{
+          marginTop: "20px",
+          background: "#1E1E1E",
+          border: `1px solid ${team.color}22`,
+          borderLeft: `3px solid ${team.color}`,
+          borderRadius: "6px",
+          padding: "16px 20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "16px",
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <p
+            className="font-heading font-black uppercase"
+            style={{ fontSize: "16px", color: "#FFFFFF", marginBottom: "4px" }}
+          >
+            {team.tagline}
+          </p>
+          <p style={{ fontSize: "12px", color: "#555555" }}>
+            Roster announcement coming soon — follow us on Discord for updates.
+          </p>
+        </div>
+        <span
+          className="font-heading font-bold uppercase"
+          style={{
+            fontSize: "10px",
+            color: team.color,
+            letterSpacing: "0.15em",
+            padding: "6px 14px",
+            border: `1px solid ${team.color}44`,
+            borderRadius: "3px",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Coming Soon
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────────────────
 
 type Division = "OW2" | "MR";
@@ -667,7 +823,7 @@ export default function TeamPage() {
             className="font-heading font-bold uppercase"
             style={{ fontSize: "13px", color: "#FFFFFF", letterSpacing: "0.12em" }}
           >
-            {divisionLabel}
+            {activeDivision === "MR" ? "IMPerfect · Main Squad" : divisionLabel}
           </span>
           <span
             style={{
@@ -687,26 +843,31 @@ export default function TeamPage() {
 
         {/* Card grid with fade on tab switch */}
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={activeDivision}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="grid grid-cols-1 sm:grid-cols-2"
-            style={{ gap: "16px" }}
           >
-            {roster.map((player, i) => (
-              <motion.div
-                key={player.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.05 }}
-              >
-                <PlayerCard player={player} />
-              </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: "16px" }}>
+              {roster.map((player, i) => (
+                <m.div
+                  key={player.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                >
+                  <PlayerCard player={player} />
+                </m.div>
+              ))}
+            </div>
+
+            {/* Shadows & Echoes sub-teams — MR only */}
+            {activeDivision === "MR" && MR_SUBTEAMS.map((subteam) => (
+              <SubTeamComingSoon key={subteam.id} team={subteam} />
             ))}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
 
@@ -717,7 +878,7 @@ export default function TeamPage() {
             className="font-heading font-bold uppercase"
             style={{ fontSize: "12px", color: "#555555", letterSpacing: "0.15em", textAlign: "center" }}
           >
-            5 OW2 Players · 6 MR Players · PR #1 in Both Titles · Est. 2017
+            5 OW2 Players · 3 MR Rosters · PR #1 in Both Titles · Est. 2017
           </p>
         </div>
       </div>

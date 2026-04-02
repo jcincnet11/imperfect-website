@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const ROLE_COLORS: Record<string, string> = {
   Duelist:    "#E74C3C",
@@ -50,7 +50,7 @@ export default function RosterTeaser() {
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {players.map((player, i) => (
-            <motion.div
+            <m.div
               key={player.tag}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -87,7 +87,7 @@ export default function RosterTeaser() {
                   </span>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </div>
