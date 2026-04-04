@@ -47,7 +47,7 @@ const SOCIALS = [
   },
   {
     label: "Discord",
-    href: "https://discord.gg/VuTAEqPT",
+    href: "https://discord.gg/QgDansRt2p",
     primary: true,
     svg: (
       <svg width="14" height="14" viewBox="0 0 71 55" fill="currentColor">

@@ -107,7 +107,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center" style={{ gap: "8px" }}>
             <LanguageToggle />
             <Link
-              href="https://discord.gg/VuTAEqPT"
+              href="https://discord.gg/QgDansRt2p"
               target="_blank"
               rel="noopener noreferrer"
               className="font-heading font-bold uppercase"
@@ -255,7 +255,7 @@ export default function Navbar() {
         </div>
 
         <Link
-          href="https://discord.gg/VuTAEqPT"
+          href="https://discord.gg/QgDansRt2p"
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => setDrawerOpen(false)}

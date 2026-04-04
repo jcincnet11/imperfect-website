@@ -39,7 +39,7 @@ export default function CommunitySection() {
             </p>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }} className="sm:flex-row sm:justify-center">
               <Link
-                href="https://discord.gg/VuTAEqPT"
+                href="https://discord.gg/QgDansRt2p"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary"

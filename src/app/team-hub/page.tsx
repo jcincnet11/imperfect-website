@@ -77,7 +77,7 @@ export default async function TeamHubLoginPage({
                 </p>
               </div>
               <a
-                href="https://discord.gg/VuTAEqPT"
+                href="https://discord.gg/QgDansRt2p"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full py-3 rounded-xl font-semibold text-sm transition-all bg-[#5865F2] hover:bg-[#4752c4] text-white"

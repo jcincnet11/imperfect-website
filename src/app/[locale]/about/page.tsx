@@ -192,7 +192,7 @@ export default function AboutPage() {
               {t("cta_desc")}
             </p>
             <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">{t("cta_discord")}</Link>
+              <Link href="https://discord.gg/QgDansRt2p" target="_blank" rel="noopener noreferrer" className="btn-primary">{t("cta_discord")}</Link>
               <Link href={`/${locale}/sponsorship`} className="btn-secondary">{t("cta_partner")}</Link>
             </div>
           </m.div>

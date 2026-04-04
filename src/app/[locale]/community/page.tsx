@@ -61,7 +61,7 @@ export default function CommunityPage() {
           <p style={{ fontSize: "15px", color: "#888888", maxWidth: "520px", lineHeight: 1.65, marginBottom: "32px" }}>
             {t("description")}
           </p>
-          <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">
+          <Link href="https://discord.gg/QgDansRt2p" target="_blank" rel="noopener noreferrer" className="btn-primary">
             {t("join_discord")}
           </Link>
         </div>
