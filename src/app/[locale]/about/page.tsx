@@ -4,55 +4,6 @@ import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
-const PHASES = [
-  {
-    number: "01",
-    name: "Foundation & Brand",
-    period: "Months 1–2",
-    status: "In Progress",
-    milestones: [
-      "Finalize brand identity, logo, and visual system",
-      "Build and launch the org website",
-      "Set up all social media channels",
-      "Create sponsorship deck",
-      "Discord server setup",
-    ],
-  },
-  {
-    number: "02",
-    name: "Growth & Competition",
-    period: "Months 3–4",
-    status: "Upcoming",
-    milestones: [
-      "Finalize all team rosters",
-      "Register for 3+ open tournaments",
-      "Launch weekly content schedule",
-      "Close first 2–3 sponsorships",
-      "Reach 1K combined social followers",
-    ],
-  },
-  {
-    number: "03",
-    name: "Scale & Monetize",
-    period: "Months 5–6",
-    status: "Upcoming",
-    milestones: [
-      "Scale to 5–8 active sponsors",
-      "Launch merchandise store",
-      "Enter LAN and regional championships",
-      "Reach 5K+ Discord members",
-      "10K+ combined social followers",
-    ],
-  },
-];
-
-const VALUES = [
-  { icon: null,  title: "Island First",      body: "Every match we play, every tournament we enter — we're representing Puerto Rico. That's not a slogan. It's why this org exists." },
-  { icon: "⚡",  title: "Compete Hard",      body: "We don't show up to participate. We show up to win. Every roster member, every coach, every team — the standard is high." },
-  { icon: "🤝",  title: "Build Together",    body: "This isn't just a team. It's a community. We grow with our players, our fans, and every gamer on the island." },
-  { icon: "📈",  title: "Think Long Term",   body: "We're not a flash in the pan. We're building infrastructure, developing talent, and creating an org that lasts." },
-];
-
 function PageHeader({ locale }: { locale: string }) {
   const t = useTranslations("about_page");
   return (
@@ -78,6 +29,37 @@ function PageHeader({ locale }: { locale: string }) {
 export default function AboutPage() {
   const locale = useLocale();
   const t = useTranslations("about_page");
+
+  const VALUES = [
+    { icon: null,  title: t("value_island_title"),  body: t("value_island_body") },
+    { icon: "⚡",  title: t("value_compete_title"),  body: t("value_compete_body") },
+    { icon: "🤝",  title: t("value_build_title"),    body: t("value_build_body") },
+    { icon: "📈",  title: t("value_long_title"),     body: t("value_long_body") },
+  ];
+
+  const PHASES = [
+    {
+      number: "01",
+      name: t("phase_1_name"),
+      period: t("phase_1_period"),
+      status: "In Progress",
+      milestones: [t("phase_1_m1"), t("phase_1_m2"), t("phase_1_m3"), t("phase_1_m4"), t("phase_1_m5")],
+    },
+    {
+      number: "02",
+      name: t("phase_2_name"),
+      period: t("phase_2_period"),
+      status: "Upcoming",
+      milestones: [t("phase_2_m1"), t("phase_2_m2"), t("phase_2_m3"), t("phase_2_m4"), t("phase_2_m5")],
+    },
+    {
+      number: "03",
+      name: t("phase_3_name"),
+      period: t("phase_3_period"),
+      status: "Upcoming",
+      milestones: [t("phase_3_m1"), t("phase_3_m2"), t("phase_3_m3"), t("phase_3_m4"), t("phase_3_m5")],
+    },
+  ];
 
   return (
     <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>

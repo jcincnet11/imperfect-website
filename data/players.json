@@ -2,15 +2,79 @@
   {
     "discord_id": "000000000000000001",
     "display_name": "Coach Demo",
-    "division": "OW2",
+    "division": "IMPerfect",
     "role": "coach",
-    "is_admin": false
+    "is_admin": false,
+    "org_role": "HEAD_COACH",
+    "game": "MR",
+    "in_game_role": null,
+    "rank": null,
+    "captain_of": null,
+    "archived": false
   },
   {
     "discord_id": "000000000000000002",
     "display_name": "Admin Demo",
-    "division": "OW2",
+    "division": "IMPerfect",
     "role": "admin",
-    "is_admin": true
+    "is_admin": true,
+    "org_role": "ORG_ADMIN",
+    "game": "BOTH",
+    "in_game_role": null,
+    "rank": null,
+    "captain_of": null,
+    "archived": false
+  },
+  {
+    "discord_id": "000000000000000003",
+    "display_name": "PlayerOne",
+    "division": "IMPerfect",
+    "role": "player",
+    "is_admin": false,
+    "org_role": "CAPTAIN",
+    "game": "MR",
+    "in_game_role": "Vanguard",
+    "rank": "Grandmaster",
+    "captain_of": "IMPerfect",
+    "archived": false
+  },
+  {
+    "discord_id": "000000000000000004",
+    "display_name": "PlayerTwo",
+    "division": "IMPerfect",
+    "role": "player",
+    "is_admin": false,
+    "org_role": "PLAYER",
+    "game": "MR",
+    "in_game_role": "Duelist",
+    "rank": "Diamond 1",
+    "captain_of": null,
+    "archived": false
+  },
+  {
+    "discord_id": "000000000000000005",
+    "display_name": "PlayerThree",
+    "division": "Shadows",
+    "role": "player",
+    "is_admin": false,
+    "org_role": "PLAYER",
+    "game": "MR",
+    "in_game_role": "Strategist",
+    "rank": "Diamond 2",
+    "captain_of": null,
+    "archived": false
+  },
+  {
+    "discord_id": "000000000000000006",
+    "display_name": "PlayerFour",
+    "division": "Shadows",
+    "role": "player",
+    "is_admin": false,
+    "org_role": "PLAYER",
+    "game": "MR",
+    "in_game_role": "Duelist",
+    "rank": "Platinum 1",
+    "captain_of": null,
+    "archived": false
   }
 ]

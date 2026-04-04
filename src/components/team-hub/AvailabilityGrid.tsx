@@ -175,6 +175,7 @@ export default function AvailabilityGrid({
                   opacity: isSaving ? 0.5 : 1,
                 }}
                 title={canToggle ? `Click to change: ${cfg.label}` : cfg.label}
+                aria-label={`Toggle ${player.display_name} availability for ${DAY_LABELS[DAYS.indexOf(day)]}: currently ${cfg.label}`}
               >
                 {isSaving ? <span className="animate-spin text-xs">◌</span> : cfg.emoji}
               </button>

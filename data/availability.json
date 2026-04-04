@@ -1,1 +1,16 @@
-[]
+[
+  { "id": "av-001", "week_start": "2026-03-30", "player_discord_id": "000000000000000003", "day": "MON", "status": "AVAILABLE" },
+  { "id": "av-002", "week_start": "2026-03-30", "player_discord_id": "000000000000000003", "day": "TUE", "status": "AVAILABLE" },
+  { "id": "av-003", "week_start": "2026-03-30", "player_discord_id": "000000000000000003", "day": "WED", "status": "UNAVAILABLE" },
+  { "id": "av-004", "week_start": "2026-03-30", "player_discord_id": "000000000000000003", "day": "THU", "status": "AVAILABLE" },
+  { "id": "av-005", "week_start": "2026-03-30", "player_discord_id": "000000000000000003", "day": "FRI", "status": "UNSURE" },
+  { "id": "av-006", "week_start": "2026-03-30", "player_discord_id": "000000000000000004", "day": "MON", "status": "AVAILABLE" },
+  { "id": "av-007", "week_start": "2026-03-30", "player_discord_id": "000000000000000004", "day": "WED", "status": "AVAILABLE" },
+  { "id": "av-008", "week_start": "2026-03-30", "player_discord_id": "000000000000000004", "day": "FRI", "status": "UNAVAILABLE" },
+  { "id": "av-009", "week_start": "2026-03-30", "player_discord_id": "000000000000000005", "day": "MON", "status": "AVAILABLE" },
+  { "id": "av-010", "week_start": "2026-03-30", "player_discord_id": "000000000000000005", "day": "TUE", "status": "UNSURE" },
+  { "id": "av-011", "week_start": "2026-03-30", "player_discord_id": "000000000000000005", "day": "SAT", "status": "AVAILABLE" },
+  { "id": "av-012", "week_start": "2026-03-30", "player_discord_id": "000000000000000006", "day": "MON", "status": "UNAVAILABLE" },
+  { "id": "av-013", "week_start": "2026-03-30", "player_discord_id": "000000000000000006", "day": "THU", "status": "AVAILABLE" },
+  { "id": "av-014", "week_start": "2026-03-30", "player_discord_id": "000000000000000006", "day": "SAT", "status": "AVAILABLE" }
+]

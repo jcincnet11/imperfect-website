@@ -794,6 +794,8 @@ export default function TeamPage() {
                 <button
                   key={div}
                   onClick={() => setActiveDivision(div)}
+                  aria-label={`Switch to ${label}`}
+                  aria-pressed={active}
                   style={{
                     background: active ? "#C8E400" : "#2A2A2A",
                     color: active ? "#2A2A2A" : "#888888",

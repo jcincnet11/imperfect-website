@@ -4,40 +4,40 @@ import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
-const TIERS = [
-  {
-    name: "Associate",
-    color: "#7F8C8D",
-    featured: false,
-    description: "Get your brand in front of our audience with product placement and community exposure.",
-    perks: ["Logo on team social posts", "Discord community shoutout", "Product placement in content", "2 branded posts per month"],
-  },
-  {
-    name: "Partner",
-    color: "#C8E400",
-    featured: true,
-    description: "Full brand integration across stream, jerseys, and regular content — the most popular tier.",
-    perks: ["Jersey logo placement", "Stream overlay branding", "5 branded posts per month", "Tournament coverage mention", "Monthly performance report"],
-  },
-  {
-    name: "Title Sponsor",
-    color: "#E74C3C",
-    featured: false,
-    description: "Maximum exposure. Your brand at the forefront of everything we do.",
-    perks: ["Primary jersey logo", "Naming rights to a team", "Exclusive content series", "Event co-branding", "10 branded posts per month", "Quarterly strategy call"],
-  },
-];
-
-const REASONS = [
-  { number: "01", title: "Early Mover Advantage",   body: "Get in at ground level with an org that's building momentum now — before prices rise." },
-  { number: "02", title: "Hyper-Engaged Audience",  body: "Esports fans are 4× more likely to purchase from sponsors they see in the gaming ecosystem." },
-  { number: "03", title: "Multi-Platform Exposure", body: "Your brand reaches audiences across Twitch, TikTok, Instagram, YouTube, Discord, and live events." },
-  { number: "04", title: "Local & Regional Impact", body: "Build authentic ties with the Puerto Rico gaming community — a passionate and underserved market." },
-];
-
 export default function SponsorshipPage() {
   const locale = useLocale();
   const t = useTranslations("sponsorship_page");
+
+  const TIERS = [
+    {
+      name: t("tier_associate"),
+      color: "#7F8C8D",
+      featured: false,
+      description: t("tier_associate_desc"),
+      perks: [t("tier_associate_perk_1"), t("tier_associate_perk_2"), t("tier_associate_perk_3"), t("tier_associate_perk_4")],
+    },
+    {
+      name: t("tier_partner"),
+      color: "#C8E400",
+      featured: true,
+      description: t("tier_partner_desc"),
+      perks: [t("tier_partner_perk_1"), t("tier_partner_perk_2"), t("tier_partner_perk_3"), t("tier_partner_perk_4"), t("tier_partner_perk_5")],
+    },
+    {
+      name: t("tier_title_sponsor"),
+      color: "#E74C3C",
+      featured: false,
+      description: t("tier_title_sponsor_desc"),
+      perks: [t("tier_title_sponsor_perk_1"), t("tier_title_sponsor_perk_2"), t("tier_title_sponsor_perk_3"), t("tier_title_sponsor_perk_4"), t("tier_title_sponsor_perk_5"), t("tier_title_sponsor_perk_6")],
+    },
+  ];
+
+  const REASONS = [
+    { number: "01", title: t("reason_01_title"), body: t("reason_01_body") },
+    { number: "02", title: t("reason_02_title"), body: t("reason_02_body") },
+    { number: "03", title: t("reason_03_title"), body: t("reason_03_body") },
+    { number: "04", title: t("reason_04_title"), body: t("reason_04_body") },
+  ];
 
   return (
     <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>

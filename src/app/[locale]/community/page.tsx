@@ -25,24 +25,24 @@ const TYPE_STYLE: Record<string, { bg: string; color: string; border: string }> 
   Community:  { bg: "rgba(88,101,242,0.08)",   color: "#5865F2", border: "rgba(88,101,242,0.3)" },
 };
 
-const MONTHLY_EVENTS = [
-  { week: "Week 1", title: "Community Inhouse",  desc: "Org-run 6v6 in Marvel Rivals — open to all Discord members. Announced one week ahead." },
-  { week: "Week 2", title: "Clip of the Month",  desc: "Submit your best plays all month. Staff picks the winner. Prize: shoutout + exclusive Discord role." },
-  { week: "Week 3", title: "Watch Party",         desc: "Watch a major MR or OW2 tournament together in voice. Live reactions and predictions." },
-  { week: "Week 4", title: "Giveaway Drop",       desc: "Sponsor or org giveaway. Entry via Discord reaction or social repost." },
-];
-
-const MILESTONES = [
-  { count: "100",   label: "members", reward: "Community inhouse tournament unlocked" },
-  { count: "250",   label: "members", reward: "Discord-exclusive giveaway + dedicated game channels" },
-  { count: "500",   label: "members", reward: "Monthly sponsor giveaway slot" },
-  { count: "1,000", label: "members", reward: "Press release + partner outreach" },
-  { count: "5,000", label: "members", reward: "Full community tournament series + merch drop" },
-];
-
 export default function CommunityPage() {
   const locale = useLocale();
   const t = useTranslations("community_page");
+
+  const MONTHLY_EVENTS = [
+    { week: t("week_1"), title: t("event_inhouse"),  desc: t("event_inhouse_desc") },
+    { week: t("week_2"), title: t("event_clip"),      desc: t("event_clip_desc") },
+    { week: t("week_3"), title: t("event_watch"),     desc: t("event_watch_desc") },
+    { week: t("week_4"), title: t("event_giveaway"),  desc: t("event_giveaway_desc") },
+  ];
+
+  const MILESTONES = [
+    { count: "100",   reward: t("milestone_100") },
+    { count: "250",   reward: t("milestone_250") },
+    { count: "500",   reward: t("milestone_500") },
+    { count: "1,000", reward: t("milestone_1000") },
+    { count: "5,000", reward: t("milestone_5000") },
+  ];
 
   return (
     <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>

@@ -205,6 +205,10 @@ function Cell({
             }
       }
       onClick={canEdit ? onEdit : undefined}
+      role={canEdit ? "button" : undefined}
+      tabIndex={canEdit ? 0 : undefined}
+      aria-label={block ? `${blockLabel(block.block_type)}${block.notes ? `: ${block.notes}` : ""} — click to edit` : canEdit ? "Empty slot — click to add block" : undefined}
+      onKeyDown={canEdit ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onEdit(); } } : undefined}
     >
       {block ? (
         <>
@@ -246,7 +250,7 @@ function EditModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" role="dialog" aria-modal="true" aria-label={editing.block ? "Edit schedule block" : "Add schedule block"}>
       <div className="bg-[#1a1a1a] border border-white/[0.1] rounded-2xl p-6 w-full max-w-sm">
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -257,7 +261,7 @@ function EditModal({
               {DAY_LABEL_FULL[editing.day]} · {TIME_LABELS[editing.time_slot]}
             </p>
           </div>
-          <button onClick={onClose} className="text-white/30 hover:text-white/60 text-xl transition-colors">×</button>
+          <button onClick={onClose} className="text-white/30 hover:text-white/60 text-xl transition-colors" aria-label="Close dialog">×</button>
         </div>
 
         {/* Block type selector */}
@@ -272,6 +276,8 @@ function EditModal({
                   ? { backgroundColor: `${bt.color}20`, borderColor: `${bt.color}60`, color: bt.color }
                   : { backgroundColor: "transparent", borderColor: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.4)" }
               }
+              aria-label={`Select ${bt.label} block type`}
+              aria-pressed={blockType === bt.value}
             >
               <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: bt.color }} />
               {bt.label}
@@ -296,6 +302,7 @@ function EditModal({
               onClick={() => onDelete(editing.block!.id, editing.day, editing.time_slot)}
               disabled={saving}
               className="flex-1 py-2 rounded-lg text-sm font-semibold text-red-400 border border-red-400/20 hover:bg-red-400/10 transition-colors disabled:opacity-50"
+              aria-label="Remove schedule block"
             >
               Remove
             </button>
@@ -305,6 +312,7 @@ function EditModal({
             disabled={saving}
             className="flex-1 py-2 rounded-lg text-sm font-bold text-dark transition-colors disabled:opacity-50"
             style={{ backgroundColor: "#c5d400" }}
+            aria-label="Save schedule block"
           >
             {saving ? "Saving…" : "Save"}
           </button>

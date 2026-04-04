@@ -6,9 +6,9 @@ Task tracking for IMPerfect esports site. Mark `[~]` when starting, `[x]` when d
 
 - [ ] Fill in real OW2 roster data — 5 players use placeholder names/bios/socials (`src/app/[locale]/team/page.tsx`)
 - [ ] Populate Shadows and Echoes subteam rosters — currently TBA ghost cards (`src/app/[locale]/team/page.tsx`)
-- [ ] Build news article detail pages — cards show "Coming Soon", no `/news/[slug]` route exists
-- [ ] Add TikTok and YouTube handles to Footer — currently hardcoded to `#` with TODO comments
-- [ ] Translate remaining data strings (community events, milestones, game descriptions, tier perks) to Spanish
+- [x] Build news article detail pages — cards show "Coming Soon", no `/news/[slug]` route exists
+- [ ] Add TikTok and YouTube handles to Footer — currently hardcoded to `#` (needs real handles)
+- [x] Translate remaining data strings (community events, milestones, game descriptions, tier perks) to Spanish
 
 ## SEO & Metadata
 
@@ -26,14 +26,14 @@ Task tracking for IMPerfect esports site. Mark `[~]` when starting, `[x]` when d
 ## Accessibility
 
 - [x] Add meaningful alt text to avatar images in Management and Team Hub sidebars
-- [ ] Increase ARIA labels on interactive elements (buttons, toggles, modals) across the site
+- [x] Increase ARIA labels on interactive elements (buttons, toggles, modals) across the site
 - [x] Add `onError` fallback handlers for player profile images
 
 ## Performance & Infra
 
 - [ ] Optimize player profile images in `public/players/` — files are 1.9–2.8 MB each (served via next/image, low priority)
-- [ ] Seed `data/availability.json` and `data/schedule.json` with sample data for local dev
-- [ ] Standardize API error response format across `/api/management/` routes
+- [x] Seed `data/availability.json` and `data/schedule.json` with sample data for local dev
+- [x] Standardize API error response format across `/api/management/` routes
 - [x] Replace `console.error()` calls with structured logger in error boundaries and management-db
 
 ---

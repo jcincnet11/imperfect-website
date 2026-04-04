@@ -1,1 +1,10 @@
-[]
+[
+  { "id": "sb-001", "week_start": "2026-03-30", "division": "IMPerfect", "day": "MON", "time_slot": "19:00", "block_type": "PRACTICE", "notes": "Team practice — ranked queue" },
+  { "id": "sb-002", "week_start": "2026-03-30", "division": "IMPerfect", "day": "WED", "time_slot": "20:00", "block_type": "SCRIM", "notes": "Scrim vs TBD" },
+  { "id": "sb-003", "week_start": "2026-03-30", "division": "IMPerfect", "day": "FRI", "time_slot": "19:00", "block_type": "VOD_REVIEW", "notes": "Review Wednesday scrim" },
+  { "id": "sb-004", "week_start": "2026-03-30", "division": "IMPerfect", "day": "SAT", "time_slot": "18:00", "block_type": "TOURNAMENT", "notes": "PR Open Qualifier" },
+  { "id": "sb-005", "week_start": "2026-03-30", "division": "Shadows", "day": "TUE", "time_slot": "19:00", "block_type": "PRACTICE", "notes": "Shadows practice" },
+  { "id": "sb-006", "week_start": "2026-03-30", "division": "Shadows", "day": "THU", "time_slot": "20:00", "block_type": "SCRIM", "notes": "Scrim vs Echoes" },
+  { "id": "sb-007", "week_start": "2026-03-30", "division": "Echoes", "day": "WED", "time_slot": "18:00", "block_type": "PRACTICE", "notes": "Echoes drill session" },
+  { "id": "sb-008", "week_start": "2026-03-30", "division": "Echoes", "day": "THU", "time_slot": "20:00", "block_type": "SCRIM", "notes": "Scrim vs Shadows" }
+]
