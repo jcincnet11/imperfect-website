@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m, AnimatePresence } from "framer-motion";
 
@@ -379,6 +379,7 @@ function SocialButton({
 }
 
 function PlayerCard({ player }: { player: Player }) {
+  const t = useTranslations("team_page");
   const color = roleColor(player.role);
 
   return (
@@ -489,7 +490,7 @@ function PlayerCard({ player }: { player: Player }) {
             marginBottom: "10px",
           }}
         >
-          Top Heroes
+          {t("top_heroes")}
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -603,6 +604,7 @@ function SubTeamComingSoon({
 }: {
   team: (typeof MR_SUBTEAMS)[number];
 }) {
+  const t = useTranslations("team_page");
   return (
     <div
       style={{
@@ -645,7 +647,7 @@ function SubTeamComingSoon({
             padding: "2px 10px",
           }}
         >
-          Roster TBA
+          {t("roster_tba")}
         </span>
       </div>
 
@@ -713,7 +715,7 @@ function SubTeamComingSoon({
             {team.tagline}
           </p>
           <p style={{ fontSize: "12px", color: "#555555" }}>
-            Roster announcement coming soon — follow us on Discord for updates.
+            {t("coming_soon_desc")}
           </p>
         </div>
         <span
@@ -728,7 +730,7 @@ function SubTeamComingSoon({
             whiteSpace: "nowrap",
           }}
         >
-          Coming Soon
+          {t("coming_soon")}
         </span>
       </div>
     </div>
@@ -741,6 +743,7 @@ type Division = "OW2" | "MR";
 
 export default function TeamPage() {
   const locale = useLocale();
+  const t = useTranslations("team_page");
   const [activeDivision, setActiveDivision] = useState<Division>("OW2");
 
   const roster = activeDivision === "OW2" ? OW2_ROSTER : MR_ROSTER;
@@ -769,18 +772,18 @@ export default function TeamPage() {
             onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}
           >
-            ← Back
+            {t("back")}
           </Link>
 
-          <span className="eyebrow">The Roster</span>
+          <span className="eyebrow">{t("eyebrow")}</span>
           <h1
             className="font-heading font-black uppercase text-white"
             style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "16px" }}
           >
-            Meet the Team
+            {t("title")}
           </h1>
           <p style={{ fontSize: "15px", color: "#888888", maxWidth: "440px", lineHeight: 1.65, marginBottom: "40px" }}>
-            Puerto Rico's premier hero shooter roster — OW2 &amp; Marvel Rivals
+            {t("description")}
           </p>
 
           {/* Division toggle */}
@@ -823,7 +826,7 @@ export default function TeamPage() {
             className="font-heading font-bold uppercase"
             style={{ fontSize: "13px", color: "#FFFFFF", letterSpacing: "0.12em" }}
           >
-            {activeDivision === "MR" ? "IMPerfect · Main Squad" : divisionLabel}
+            {activeDivision === "MR" ? t("main_squad") : divisionLabel}
           </span>
           <span
             style={{
@@ -837,7 +840,7 @@ export default function TeamPage() {
               padding: "2px 10px",
             }}
           >
-            {roster.length} players
+            {roster.length} {t("players_count")}
           </span>
         </div>
 
@@ -878,7 +881,7 @@ export default function TeamPage() {
             className="font-heading font-bold uppercase"
             style={{ fontSize: "12px", color: "#555555", letterSpacing: "0.15em", textAlign: "center" }}
           >
-            5 OW2 Players · 3 MR Rosters · PR #1 in Both Titles · Est. 2017
+            {t("stats_strip")}
           </p>
         </div>
       </div>

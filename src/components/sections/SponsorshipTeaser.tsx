@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
@@ -14,6 +14,7 @@ const PLATFORMS = ["Twitch", "TikTok", "Instagram", "YouTube", "Discord", "Twitt
 
 export default function SponsorshipTeaser() {
   const locale = useLocale();
+  const t = useTranslations("sponsorship_teaser");
 
   return (
     <section style={{ padding: "80px 0", borderBottom: "1px solid #1F1F1F", background: "#1A1A1A" }}>
@@ -25,13 +26,12 @@ export default function SponsorshipTeaser() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className="eyebrow">Partners</span>
+            <span className="eyebrow">{t("eyebrow")}</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "20px" }}>
-              Partner<br />With Us
+              {t("title")}
             </h2>
             <p style={{ fontSize: "14px", color: "#888888", lineHeight: 1.65, marginBottom: "28px", maxWidth: "400px" }}>
-              Puerto Rico's #1 hero shooter org. Reach a passionate, hyper-engaged gaming audience
-              across 6 platforms — streaming, social, Discord, and live events.
+              {t("description")}
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "32px" }}>
               {PLATFORMS.map((p) => (
@@ -45,7 +45,7 @@ export default function SponsorshipTeaser() {
               ))}
             </div>
             <Link href={`/${locale}/sponsorship`} className="btn-primary">
-              View Partnership Tiers →
+              {t("cta")}
             </Link>
           </m.div>
 

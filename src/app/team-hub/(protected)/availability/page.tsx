@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { getAvailability, getAllPlayers } from "@/lib/db";
+import { getAvailability, getAvailabilityForPlayers, getAllPlayers, getPlayerByDiscordId, getScheduleBlocks } from "@/lib/db";
 import { resolveOrgRole, can } from "@/lib/permissions";
 import AvailabilityGrid from "@/components/team-hub/AvailabilityGrid";
 
@@ -33,10 +33,40 @@ export default async function AvailabilityPage({
   const weekStart = params.week ?? getWeekStart();
   const weekLabel = formatWeekLabel(weekStart);
 
-  const [availability, players] = await Promise.all([
-    getAvailability(weekStart, isCoachOrAdmin ? undefined : discordId),
-    getAllPlayers(),
-  ]);
+  // Fetch data scoped by role
+  let availability;
+  let players;
+  let myDivisions: string[] = [];
+  let otherTeamSchedule: { division: string; day: string; block_type: string; time_slot: string; notes?: string }[] = [];
+
+  if (isCoachOrAdmin) {
+    // Coaches/admins see everything
+    [availability, players] = await Promise.all([
+      getAvailability(weekStart),
+      getAllPlayers(),
+    ]);
+  } else {
+    // Players: scope to their own team(s)
+    const allPlayers = await getAllPlayers();
+    const currentPlayer = await getPlayerByDiscordId(discordId);
+    myDivisions = currentPlayer ? [currentPlayer.division] : [];
+
+    // If player is on multiple teams (rare, handle dual-roster)
+    const myTeamPlayers = allPlayers.filter((p) => myDivisions.includes(p.division));
+    const myTeamDiscordIds = myTeamPlayers.map((p) => p.discord_id);
+
+    // Fetch availability only for teammates
+    availability = await getAvailabilityForPlayers(weekStart, myTeamDiscordIds);
+    players = myTeamPlayers;
+
+    // Fetch scheduled events for other teams (read-only display)
+    const otherDivisions = ["IMPerfect", "Shadows", "Echoes"].filter((d) => !myDivisions.includes(d));
+    const schedulePromises = otherDivisions.map((d) => getScheduleBlocks(weekStart, d));
+    const scheduleResults = await Promise.all(schedulePromises);
+    otherTeamSchedule = scheduleResults.flatMap((blocks, i) =>
+      blocks.map((b) => ({ division: otherDivisions[i], day: b.day, block_type: b.block_type, time_slot: b.time_slot, notes: b.notes }))
+    );
+  }
 
   const prevWeek = (() => {
     const d = new Date(weekStart + "T12:00:00");
@@ -56,7 +86,7 @@ export default async function AvailabilityPage({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <p className="text-[11px] text-white/25 font-semibold tracking-[0.2em] uppercase mb-1">
-            {isCoachOrAdmin ? "Team Availability" : "My Availability"}
+            {isCoachOrAdmin ? "Team Availability" : "My Team's Availability"}
           </p>
           <h1 className="font-heading font-black text-3xl text-white tracking-tight">
             {weekLabel}
@@ -99,6 +129,8 @@ export default async function AvailabilityPage({
           weekStart={weekStart}
           currentDiscordId={discordId}
           isCoachOrAdmin={isCoachOrAdmin}
+          myDivisions={myDivisions}
+          otherTeamSchedule={otherTeamSchedule}
         />
       </div>
     </div>

@@ -19,7 +19,7 @@ export default function AboutSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className="eyebrow">Our Story</span>
+            <span className="eyebrow">{t("eyebrow")}</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "24px" }}>
               {t("title")}
             </h2>
@@ -76,15 +76,15 @@ export default function AboutSection() {
                   <span style={{ color: "#C8E400" }}>IM</span>
                   <span style={{ color: "#FFFFFF" }}>PERFECT</span>
                 </span>
-                <p style={{ fontSize: "11px", color: "#444444", textTransform: "uppercase", letterSpacing: "0.15em", marginTop: "4px" }}>Esports Organization</p>
+                <p style={{ fontSize: "11px", color: "#444444", textTransform: "uppercase", letterSpacing: "0.15em", marginTop: "4px" }}>{t("org_label")}</p>
               </div>
 
               {/* Stats */}
               <div style={{ display: "flex", gap: "32px" }}>
                 {[
-                  { value: "2017", label: "Founded" },
-                  { value: "3",    label: "Teams" },
-                  { value: "PR",   label: "Based" },
+                  { value: "2017", label: t("stat_founded") },
+                  { value: "3",    label: t("stat_teams") },
+                  { value: "PR",   label: t("stat_based") },
                 ].map((s) => (
                   <div key={s.label}>
                     <p className="font-heading font-black" style={{ fontSize: "28px", color: "#C8E400", lineHeight: 1 }}>{s.value}</p>

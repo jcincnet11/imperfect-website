@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
@@ -54,22 +54,21 @@ const VALUES = [
 ];
 
 function PageHeader({ locale }: { locale: string }) {
+  const t = useTranslations("about_page");
   return (
     <section style={{ paddingTop: "120px", paddingBottom: "64px", paddingLeft: "24px", paddingRight: "24px", borderBottom: "1px solid #1F1F1F", background: "#1A1A1A", position: "relative" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
         <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#555555", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700, marginBottom: "32px" }}
           onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
           onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
-          ← Back
+          {t("back")}
         </Link>
-        <span className="eyebrow">Our Story</span>
+        <span className="eyebrow">{t("eyebrow")}</span>
         <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "20px" }}>
-          Built in<br />Puerto Rico
+          {t("title")}
         </h1>
         <p style={{ fontSize: "15px", color: "#888888", maxWidth: "520px", lineHeight: 1.65 }}>
-          IMPerfect was born from a simple belief — that Puerto Rico has world-class talent
-          that deserves a world-class stage. We built this org from the ground up, competing,
-          grinding, and representing the island in every match we play.
+          {t("description")}
         </p>
       </div>
     </section>
@@ -78,6 +77,7 @@ function PageHeader({ locale }: { locale: string }) {
 
 export default function AboutPage() {
   const locale = useLocale();
+  const t = useTranslations("about_page");
 
   return (
     <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>
@@ -87,9 +87,9 @@ export default function AboutPage() {
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} style={{ marginBottom: "48px" }}>
-            <span className="eyebrow">What We Stand For</span>
+            <span className="eyebrow">{t("values_eyebrow")}</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
-              Core Values
+              {t("values_title")}
             </h2>
           </m.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -119,12 +119,12 @@ export default function AboutPage() {
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
-            <span className="eyebrow">The Plan</span>
+            <span className="eyebrow">{t("roadmap_eyebrow")}</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>
-              6-Month Roadmap
+              {t("roadmap_title")}
             </h2>
             <p style={{ fontSize: "14px", color: "#888888", maxWidth: "420px", lineHeight: 1.65 }}>
-              Three phases. Clear milestones. We're executing this publicly so our community can follow the journey.
+              {t("roadmap_desc")}
             </p>
           </m.div>
 
@@ -160,7 +160,7 @@ export default function AboutPage() {
                         ),
                       }}
                     >
-                      {phase.status}
+                      {phase.status === "In Progress" ? t("in_progress") : t("upcoming")}
                     </span>
                   </div>
 
@@ -187,13 +187,13 @@ export default function AboutPage() {
       <section style={{ padding: "80px 24px" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", textAlign: "center" }}>
           <m.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "16px" }}>Want In?</h2>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "16px" }}>{t("cta_title")}</h2>
             <p style={{ fontSize: "14px", color: "#888888", marginBottom: "32px", maxWidth: "360px", margin: "0 auto 32px" }}>
-              Join our Discord community or reach out about sponsorship opportunities.
+              {t("cta_desc")}
             </p>
             <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">Join Discord</Link>
-              <Link href={`/${locale}/sponsorship`} className="btn-secondary">Partner With Us</Link>
+              <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">{t("cta_discord")}</Link>
+              <Link href={`/${locale}/sponsorship`} className="btn-secondary">{t("cta_partner")}</Link>
             </div>
           </m.div>
         </div>

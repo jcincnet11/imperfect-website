@@ -30,7 +30,7 @@ export default function CommunitySection() {
         >
           <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
           <div style={{ position: "relative", zIndex: 1 }}>
-            <span className="eyebrow">Community</span>
+            <span className="eyebrow">{t("eyebrow")}</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 7vw, 64px)", marginBottom: "16px" }}>
               {t("title")}
             </h2>

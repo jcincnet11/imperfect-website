@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
@@ -37,6 +37,7 @@ const REASONS = [
 
 export default function SponsorshipPage() {
   const locale = useLocale();
+  const t = useTranslations("sponsorship_page");
 
   return (
     <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>
@@ -46,15 +47,14 @@ export default function SponsorshipPage() {
           <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#555555", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700, marginBottom: "32px" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
-            ← Back
+            {t("back")}
           </Link>
-          <span className="eyebrow">Partners</span>
+          <span className="eyebrow">{t("eyebrow")}</span>
           <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "20px" }}>
-            Partner<br />With Us
+            {t("title")}
           </h1>
           <p style={{ fontSize: "15px", color: "#888888", maxWidth: "520px", lineHeight: 1.65 }}>
-            Puerto Rico's #1 hero shooter org. Three active teams. A growing community.
-            Reach a passionate gaming audience that actually buys.
+            {t("description")}
           </p>
         </div>
       </section>
@@ -62,12 +62,12 @@ export default function SponsorshipPage() {
       {/* Why us */}
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
-            <span className="eyebrow">The Case</span>
+          <div style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">{t("why_eyebrow")}</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
-              Why Partner With Us
+              {t("why_title")}
             </h2>
-          </m.div>
+          </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {REASONS.map((r, i) => (
               <m.div
@@ -92,12 +92,12 @@ export default function SponsorshipPage() {
       {/* Tiers */}
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-          <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
-            <span className="eyebrow">Partnership Tiers</span>
+          <div style={{ marginBottom: "48px" }}>
+            <span className="eyebrow">{t("tiers_eyebrow")}</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
-              Choose Your Level
+              {t("tiers_title")}
             </h2>
-          </m.div>
+          </div>
           <div className="grid md:grid-cols-3 gap-5 items-start">
             {TIERS.map((tier, i) => (
               <m.div
@@ -110,7 +110,7 @@ export default function SponsorshipPage() {
                 {tier.featured && (
                   <div style={{ textAlign: "center", marginBottom: "12px" }}>
                     <span className="font-heading font-bold uppercase" style={{ background: "#C8E400", color: "#1A1A1A", fontSize: "10px", letterSpacing: "0.10em", padding: "3px 12px", borderRadius: "3px" }}>
-                      Most Popular
+                      {t("most_popular")}
                     </span>
                   </div>
                 )}
@@ -122,7 +122,7 @@ export default function SponsorshipPage() {
                   display: "flex",
                   flexDirection: "column",
                 }}>
-                  <span className="font-heading font-bold uppercase" style={{ fontSize: "11px", letterSpacing: "0.18em", color: "#C8E400", marginBottom: "4px" }}>Tier</span>
+                  <span className="font-heading font-bold uppercase" style={{ fontSize: "11px", letterSpacing: "0.18em", color: "#C8E400", marginBottom: "4px" }}>{t("tier_label")}</span>
                   <h3 className="font-heading font-black uppercase" style={{ fontSize: "28px", color: "#FFFFFF", marginBottom: "16px" }}>{tier.name}</h3>
                   <p style={{ fontSize: "13px", color: "#888888", lineHeight: 1.6, marginBottom: "24px" }}>{tier.description}</p>
                   <ul style={{ display: "flex", flexDirection: "column", gap: "10px", flex: 1, marginBottom: "28px" }}>
@@ -134,7 +134,7 @@ export default function SponsorshipPage() {
                     ))}
                   </ul>
                   <a href="mailto:sponsorships@imperfectorg.gg" className="btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-                    Get Started
+                    {t("get_started")}
                   </a>
                 </div>
               </m.div>
@@ -147,9 +147,9 @@ export default function SponsorshipPage() {
       <section style={{ padding: "80px 24px" }}>
         <div style={{ maxWidth: "640px", margin: "0 auto", textAlign: "center" }}>
           <m.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "16px" }}>Ready to Talk?</h2>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "16px" }}>{t("cta_title")}</h2>
             <p style={{ fontSize: "14px", color: "#888888", marginBottom: "32px", lineHeight: 1.65 }}>
-              We keep things simple. Send us an email and we'll get back to you within 48 hours.
+              {t("cta_desc")}
             </p>
             {/* sponsorships@imperfectorg.gg — address to be confirmed with org leadership */}
             <a href="mailto:sponsorships@imperfectorg.gg" className="btn-primary">

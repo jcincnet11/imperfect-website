@@ -16,12 +16,22 @@ const STATUS_CONFIG: Record<Status, { label: string; emoji: string; bg: string; 
 
 const STATUS_CYCLE: Status[] = ["AVAILABLE", "UNAVAILABLE", "UNSURE"];
 
+type ScheduleEvent = {
+  division: string;
+  day: string;
+  block_type: string;
+  time_slot: string;
+  notes?: string;
+};
+
 type Props = {
   initialAvailability: Availability[];
   players: Player[];
   weekStart: string;
   currentDiscordId: string;
   isCoachOrAdmin: boolean;
+  myDivisions?: string[];
+  otherTeamSchedule?: ScheduleEvent[];
 };
 
 export default function AvailabilityGrid({
@@ -30,6 +40,8 @@ export default function AvailabilityGrid({
   weekStart,
   currentDiscordId,
   isCoachOrAdmin,
+  myDivisions = [],
+  otherTeamSchedule = [],
 }: Props) {
   const [availability, setAvailability] = useState<Availability[]>(initialAvailability);
   const [saving, setSaving] = useState<string | null>(null); // key = `discordId-day`
@@ -95,27 +107,39 @@ export default function AvailabilityGrid({
 
   const TEAM_ORDER = ["IMPerfect", "Shadows", "Echoes"];
 
-  // For players, show only their own row
+  // For coaches/admins: all players. For players: their team(s) only.
   const displayPlayers = isCoachOrAdmin
     ? players
-    : players.filter((p) => p.discord_id === currentDiscordId);
+    : players; // Already scoped server-side to the player's team(s)
 
   // If player isn't in the players table yet, show a synthetic row
   const selfInList = displayPlayers.some((p) => p.discord_id === currentDiscordId);
   const rows = !isCoachOrAdmin && !selfInList
-    ? [{ discord_id: currentDiscordId, display_name: "You", division: "—", role: "player" as const, is_admin: false }]
+    ? [{ discord_id: currentDiscordId, display_name: "You", division: myDivisions[0] ?? "—", role: "player" as const, is_admin: false }]
     : displayPlayers;
 
   type AnyPlayer = typeof rows[number];
 
-  // Group by division for staff view
+  // Group by division
   const teamGroups: { division: string; players: AnyPlayer[] }[] = isCoachOrAdmin
     ? TEAM_ORDER
         .map((div) => ({ division: div, players: rows.filter((p) => p.division === div) as AnyPlayer[] }))
         .filter((g) => g.players.length > 0)
-    : [{ division: "", players: rows as AnyPlayer[] }];
+    : TEAM_ORDER
+        .filter((div) => myDivisions.includes(div))
+        .map((div) => ({ division: div, players: rows.filter((p) => p.division === div) as AnyPlayer[] }))
+        .filter((g) => g.players.length > 0);
 
-  const colTemplate = isCoachOrAdmin ? "160px repeat(7, 1fr)" : "1fr repeat(7, 1fr)";
+  // Group other team schedule events by division
+  const otherTeamsByDivision = !isCoachOrAdmin
+    ? [...new Set(otherTeamSchedule.map((e) => e.division))].map((div) => ({
+        division: div,
+        events: otherTeamSchedule.filter((e) => e.division === div),
+      }))
+    : [];
+
+  const showNames = isCoachOrAdmin || (teamGroups.length > 0 && teamGroups[0].players.length > 1);
+  const colTemplate = showNames ? "160px repeat(7, 1fr)" : "1fr repeat(7, 1fr)";
 
   function PlayerRow({ player }: { player: typeof rows[number] }) {
     return (
@@ -123,9 +147,11 @@ export default function AvailabilityGrid({
         className="grid items-center border-t border-white/[0.05]"
         style={{ gridTemplateColumns: colTemplate }}
       >
-        {isCoachOrAdmin && (
+        {showNames && (
           <div className="py-2 pr-3">
-            <p className="text-xs text-white/70 font-medium truncate">{player.display_name}</p>
+            <p className={`text-xs font-medium truncate ${player.discord_id === currentDiscordId ? "text-[#C8E400]" : "text-white/70"}`}>
+              {player.display_name}{player.discord_id === currentDiscordId && !isCoachOrAdmin ? " (you)" : ""}
+            </p>
             <p className="text-[10px] text-white/25 capitalize">{player.role}</p>
           </div>
         )}
@@ -207,7 +233,7 @@ export default function AvailabilityGrid({
         {teamGroups.map((group) => (
           <div key={group.division} className="bg-[#0d0d0d] border border-white/[0.07] rounded-xl overflow-hidden">
             {/* Team header */}
-            {isCoachOrAdmin && (
+            {(isCoachOrAdmin || teamGroups.length > 0) && (
               <div className="px-4 py-3 border-b border-white/[0.07] flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#c5d400]">
                   {group.division}
@@ -220,7 +246,7 @@ export default function AvailabilityGrid({
               <div className="min-w-[520px] p-3">
                 {/* Day headers */}
                 <div className="grid mb-1" style={{ gridTemplateColumns: colTemplate }}>
-                  {isCoachOrAdmin && <div />}
+                  {showNames && <div />}
                   {DAYS.map((day, i) => (
                     <div key={day} className="text-center text-[11px] font-semibold text-white/30 uppercase tracking-wider pb-1">
                       {DAY_LABELS[i]}
@@ -234,12 +260,55 @@ export default function AvailabilityGrid({
                 ))}
 
                 {/* Per-team summary */}
-                {isCoachOrAdmin && <TeamSummary teamPlayers={group.players} />}
+                {(isCoachOrAdmin || teamGroups[0]?.players.length > 1) && <TeamSummary teamPlayers={group.players} />}
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Other Teams — Scheduled Events (player view only) */}
+      {!isCoachOrAdmin && otherTeamsByDivision.length > 0 && (
+        <div className="mt-6">
+          <div className="border-t border-white/[0.07] pt-4 mb-4">
+            <p className="text-[11px] text-white/25 font-semibold tracking-[0.2em] uppercase">
+              Other Teams — Scheduled Events Only
+            </p>
+          </div>
+          <div className="space-y-3">
+            {otherTeamsByDivision.map((teamGroup) => (
+              <div key={teamGroup.division} className="bg-[#0d0d0d] border border-white/[0.07] rounded-xl overflow-hidden">
+                <div className="px-4 py-3 border-b border-white/[0.07] flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-white/40">
+                    {teamGroup.division}
+                  </span>
+                  <span className="text-[10px] text-white/20">Schedule only</span>
+                </div>
+                <div className="p-3">
+                  {teamGroup.events.length === 0 ? (
+                    <p className="text-xs text-white/20 py-2 text-center">No scheduled events this week</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {teamGroup.events.map((event, i) => (
+                        <div key={i} className="flex items-center gap-3 py-2 px-3 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-white/[0.06] text-white/40 px-2 py-0.5 rounded min-w-[36px] text-center">
+                            {event.day}
+                          </span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#C8E400]/60 bg-[#C8E400]/[0.08] border border-[#C8E400]/20 px-2 py-0.5 rounded">
+                            {event.block_type.replace("_", " ")}
+                          </span>
+                          <span className="text-xs text-white/40">{event.time_slot}</span>
+                          {event.notes && <span className="text-xs text-white/25 ml-auto truncate max-w-[200px]">{event.notes}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

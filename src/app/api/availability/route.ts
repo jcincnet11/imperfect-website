@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
-import { getAvailability, upsertAvailability, getAllPlayers, type Availability } from "@/lib/db";
+import { getAvailability, getAvailabilityForPlayers, upsertAvailability, getAllPlayers, getPlayerByDiscordId, type Availability } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { randomUUID } from "crypto";
 
@@ -18,14 +18,28 @@ export async function GET(request: NextRequest) {
   const role = (session.user as Record<string, unknown>).role as string;
   const discordId = (session.user as Record<string, unknown>).discordId as string;
 
-  // Coaches and admins see all; players see only their own
-  const filterById = role === "player" ? discordId : undefined;
-  const [availability, players] = await Promise.all([
-    getAvailability(weekStart, filterById),
-    role !== "player" ? getAllPlayers() : Promise.resolve([]),
-  ]);
+  if (role !== "player") {
+    // Coaches and admins see all
+    const [availability, players] = await Promise.all([
+      getAvailability(weekStart),
+      getAllPlayers(),
+    ]);
+    return Response.json({ availability, players });
+  }
 
-  return Response.json({ availability, players });
+  // Players: scope to their own team
+  const [allPlayers, currentPlayer] = await Promise.all([
+    getAllPlayers(),
+    getPlayerByDiscordId(discordId),
+  ]);
+  const myDivision = currentPlayer?.division;
+  const teamPlayers = myDivision
+    ? allPlayers.filter((p) => p.division === myDivision)
+    : [];
+  const teamDiscordIds = teamPlayers.map((p) => p.discord_id);
+  const availability = await getAvailabilityForPlayers(weekStart, teamDiscordIds);
+
+  return Response.json({ availability, players: teamPlayers });
 }
 
 export async function POST(request: NextRequest) {

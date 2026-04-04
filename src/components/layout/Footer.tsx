@@ -1,16 +1,8 @@
 "use client";
 
 import Link from "next/link";
-
-const NAV_LINKS = [
-  { href: "/team",        label: "Team" },
-  { href: "/games",       label: "Games" },
-  { href: "/results",     label: "Results" },
-  { href: "/community",   label: "Community" },
-  { href: "/news",        label: "News" },
-  { href: "/sponsorship", label: "Sponsorship" },
-  { href: "/about",       label: "About" },
-];
+import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 const SOCIALS = [
   {
@@ -66,6 +58,19 @@ const SOCIALS = [
 ];
 
 export default function Footer() {
+  const t = useTranslations("footer");
+  const locale = useLocale();
+
+  const NAV_LINKS = [
+    { href: `/${locale}/team`,        label: t("links_team") },
+    { href: `/${locale}/games`,       label: t("links_games") },
+    { href: `/${locale}/results`,     label: t("links_results") },
+    { href: `/${locale}/community`,   label: t("links_community") },
+    { href: `/${locale}/news`,        label: t("links_news") },
+    { href: `/${locale}/sponsorship`, label: t("links_sponsorship") },
+    { href: `/${locale}/about`,       label: t("links_about") },
+  ];
+
   return (
     <footer style={{ background: "#111111", borderTop: "1px solid #1F1F1F" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "48px 24px 32px" }}>
@@ -78,14 +83,14 @@ export default function Footer() {
               <span style={{ color: "#FFFFFF" }}>PERFECT</span>
             </span>
             <p style={{ fontSize: "12px", color: "#555555", marginTop: "8px", lineHeight: 1.6 }}>
-              Representing the island · Puerto Rico 🇵🇷
+              {t("tagline_sub")}
             </p>
           </div>
 
           {/* Col 2 — Nav */}
           <div>
             <p className="font-heading font-bold uppercase" style={{ fontSize: "10px", letterSpacing: "0.18em", color: "#C8E400", marginBottom: "12px" }}>
-              Navigate
+              {t("nav_title")}
             </p>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {NAV_LINKS.map((link) => (
@@ -105,7 +110,7 @@ export default function Footer() {
           {/* Col 3 — Socials */}
           <div>
             <p className="font-heading font-bold uppercase" style={{ fontSize: "10px", letterSpacing: "0.18em", color: "#C8E400", marginBottom: "12px" }}>
-              Find Us
+              {t("social_title")}
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
               {SOCIALS.map((s) => (
@@ -147,7 +152,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: "1px solid #1F1F1F", marginTop: "40px", paddingTop: "20px", textAlign: "center" }}>
           <p style={{ fontSize: "12px", color: "#333333" }}>
-            © {new Date().getFullYear()} IMPerfect Esports. All rights reserved.
+            © {new Date().getFullYear()} {t("copyright")}
           </p>
         </div>
       </div>

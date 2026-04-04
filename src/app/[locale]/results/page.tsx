@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
@@ -41,6 +41,7 @@ const PLACEMENT_COLOR: Record<string, string> = {
 
 export default function ResultsPage() {
   const locale = useLocale();
+  const t = useTranslations("results_page");
 
   return (
     <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>
@@ -50,12 +51,12 @@ export default function ResultsPage() {
           <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#555555", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700, marginBottom: "32px" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
-            ← Back
+            {t("back")}
           </Link>
-          <span className="eyebrow">Tournament History</span>
-          <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "16px" }}>Results</h1>
+          <span className="eyebrow">{t("eyebrow")}</span>
+          <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "16px" }}>{t("title")}</h1>
           <p style={{ fontSize: "15px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>
-            Every bracket entered. Every placement earned.
+            {t("description")}
           </p>
         </div>
       </section>
@@ -161,7 +162,7 @@ export default function ResultsPage() {
           style={{ textAlign: "center", paddingTop: "16px" }}
         >
           <p className="font-heading font-bold uppercase" style={{ fontSize: "10px", color: "#333333", letterSpacing: "0.18em" }}>
-            Full tournament archive coming soon — documenting every run.
+            {t("archive_notice")}
           </p>
         </m.div>
       </div>

@@ -238,6 +238,23 @@ export async function getAvailability(weekStart: string, discordId?: string): Pr
   );
 }
 
+/** Get availability for a set of players (team-scoped). */
+export async function getAvailabilityForPlayers(weekStart: string, discordIds: string[]): Promise<Availability[]> {
+  if (discordIds.length === 0) return [];
+  if (supabase) {
+    const { data } = await supabase
+      .from("availability")
+      .select("*")
+      .eq("week_start", weekStart)
+      .in("player_discord_id", discordIds);
+    return (data as Availability[]) ?? [];
+  }
+  const rows = readJson<Availability>("availability.json");
+  return rows.filter(
+    (r) => r.week_start === weekStart && discordIds.includes(r.player_discord_id)
+  );
+}
+
 export async function upsertAvailability(row: Availability): Promise<Availability> {
   if (supabase) {
     const { data } = await supabase

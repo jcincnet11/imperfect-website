@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
@@ -77,6 +77,7 @@ const ARTICLES: Article[] = [
 ];
 
 function ArticleCard({ article, index }: { article: Article; index: number }) {
+  const t = useTranslations("news_page");
   return (
     <m.article
       initial={{ opacity: 0, y: 16 }}
@@ -135,7 +136,7 @@ function ArticleCard({ article, index }: { article: Article; index: number }) {
           className="font-heading font-bold uppercase"
           style={{ fontSize: "10px", color: "#555555", letterSpacing: "0.12em" }}
         >
-          Coming Soon →
+          {t("coming_soon")}
         </span>
       </div>
     </m.article>
@@ -144,6 +145,7 @@ function ArticleCard({ article, index }: { article: Article; index: number }) {
 
 export default function NewsPage() {
   const locale = useLocale();
+  const t = useTranslations("news_page");
 
   const featured = ARTICLES[0];
   const rest = ARTICLES.slice(1);
@@ -159,12 +161,12 @@ export default function NewsPage() {
             onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}
           >
-            ← Back
+            {t("back")}
           </Link>
-          <span className="eyebrow">Latest</span>
-          <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "16px" }}>News</h1>
+          <span className="eyebrow">{t("eyebrow")}</span>
+          <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "16px" }}>{t("title")}</h1>
           <p style={{ fontSize: "15px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>
-            Org updates, tournament recaps, and player news.
+            {t("description")}
           </p>
         </div>
       </section>
@@ -195,7 +197,7 @@ export default function NewsPage() {
               {featured.tag}
             </span>
             <span className="font-heading font-bold uppercase" style={{ fontSize: "9px", letterSpacing: "0.15em", padding: "3px 8px", borderRadius: "2px", color: "#C8E400", background: "rgba(200,228,0,0.08)", border: "1px solid rgba(200,228,0,0.2)" }}>
-              Latest
+              {t("latest_badge")}
             </span>
             <span style={{ fontSize: "10px", color: "#444444", marginLeft: "auto" }}>{featured.date}</span>
           </div>

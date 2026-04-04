@@ -5,14 +5,29 @@
     "games": "Games",
     "results": "Results",
     "community": "Community",
-    "news": "News"
+    "news": "News",
+    "about": "About",
+    "sponsorship": "Sponsorship",
+    "team_hub": "Team Hub",
+    "join_discord": "Join Discord"
   },
   "hero": {
     "tag": "Puerto Rico's #1 Hero Shooter Team",
     "headline": "We Are",
     "subheadline": "Built from the island. Competing with the world.",
     "cta_primary": "Meet the Team",
-    "cta_secondary": "Join the Community"
+    "cta_secondary": "Join the Community",
+    "eyebrow": "Puerto Rico · Est. 2017",
+    "headline_1": "We Are",
+    "headline_2": "IMPerfect.",
+    "description": "Puerto Rico's #1 competitive hero shooter org. Overwatch 2 · Marvel Rivals. Built from the island — competing with the world.",
+    "cta_team": "Meet the Team",
+    "cta_partner": "Partner With Us",
+    "stat_founded": "Founded",
+    "stat_players": "Players",
+    "stat_titles": "Active Titles",
+    "stat_tournaments": "Tournaments",
+    "stat_region": "Both Titles"
   },
   "stats": {
     "founded": "Founded",
@@ -30,23 +45,38 @@
     "mr": {
       "name": "Marvel Rivals",
       "desc": "The newest battlefield. IMPerfect is already making waves in Marvel Rivals ranked and competitive scene."
-    }
+    },
+    "eyebrow": "Competitive",
+    "active": "Active"
   },
   "about": {
     "title": "Built in Puerto Rico",
     "body": "IMPerfect was born from a simple belief — that Puerto Rico has world-class talent that deserves a world-class stage. We built this team from the ground up, competing, grinding, and representing the island in every match we play.",
-    "cta": "Our Story"
+    "cta": "Our Story",
+    "eyebrow": "Our Story",
+    "org_label": "Esports Organization",
+    "stat_founded": "Founded",
+    "stat_teams": "Teams",
+    "stat_based": "Based"
   },
   "roster": {
     "title": "The Roster",
     "subtitle": "Meet the players behind the name.",
-    "cta": "Full Roster"
+    "cta": "Full Roster",
+    "eyebrow": "Players"
   },
   "community": {
     "title": "More Than a Team",
     "subtitle": "We're building the Puerto Rico gaming community — tournaments, events, content, and a place for every gamer on the island.",
     "discord_cta": "Join Our Discord",
-    "events_cta": "View Events"
+    "events_cta": "View Events",
+    "eyebrow": "Community"
+  },
+  "sponsorship_teaser": {
+    "eyebrow": "Partners",
+    "title": "Partner With Us",
+    "description": "Puerto Rico's #1 hero shooter org. Reach a passionate, hyper-engaged gaming audience across 6 platforms — streaming, social, Discord, and live events.",
+    "cta": "View Partnership Tiers →"
   },
   "footer": {
     "tagline": "Puerto Rico's Premier Hero Shooter Team",
@@ -55,6 +85,107 @@
     "links_results": "Results",
     "links_community": "Community",
     "links_news": "News",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "tagline_sub": "Representing the island · Puerto Rico 🇵🇷",
+    "nav_title": "Navigate",
+    "social_title": "Find Us",
+    "links_sponsorship": "Sponsorship",
+    "links_about": "About",
+    "copyright": "IMPerfect Esports. All rights reserved."
+  },
+  "team_page": {
+    "back": "← Back",
+    "eyebrow": "The Roster",
+    "title": "Meet the Team",
+    "description": "Puerto Rico's premier hero shooter roster — OW2 & Marvel Rivals",
+    "top_heroes": "Top Heroes",
+    "players_count": "players",
+    "main_squad": "IMPerfect · Main Squad",
+    "roster_tba": "Roster TBA",
+    "coming_soon": "Coming Soon",
+    "coming_soon_desc": "Roster announcement coming soon — follow us on Discord for updates.",
+    "stats_strip": "5 OW2 Players · 3 MR Rosters · PR #1 in Both Titles · Est. 2017"
+  },
+  "games_page": {
+    "back": "← Back",
+    "eyebrow": "Competitive",
+    "title": "Our Games",
+    "description": "Hero shooters are our home. We compete where the competition is hardest.",
+    "format": "Format",
+    "region": "Region",
+    "teams": "Teams",
+    "roles": "Roles",
+    "highlights": "Highlights",
+    "view_roster": "View Roster →",
+    "active": "Active",
+    "building": "Building"
+  },
+  "results_page": {
+    "back": "← Back",
+    "eyebrow": "Tournament History",
+    "title": "Results",
+    "description": "Every bracket entered. Every placement earned.",
+    "tournament_wins": "Tournament Wins",
+    "active_teams": "Active Teams",
+    "archive_notice": "Full tournament archive coming soon — documenting every run."
+  },
+  "community_page": {
+    "back": "← Back",
+    "eyebrow": "Community",
+    "title": "More Than a Team",
+    "description": "We're building the Puerto Rico gaming community — tournaments, events, content, and a place for every gamer on the island.",
+    "join_discord": "Join Our Discord",
+    "monthly_eyebrow": "Monthly",
+    "monthly_title": "Events Calendar",
+    "monthly_desc": "Every month, every week — something happening for the community.",
+    "weekly_eyebrow": "Weekly",
+    "weekly_title": "Content Schedule",
+    "growth_eyebrow": "Growth",
+    "growth_title": "Discord Milestones",
+    "growth_desc": "Every milestone unlocks something for the community. Help us get there.",
+    "members": "members"
+  },
+  "about_page": {
+    "back": "← Back",
+    "eyebrow": "Our Story",
+    "title": "Built in Puerto Rico",
+    "description": "IMPerfect was born from a simple belief — that Puerto Rico has world-class talent that deserves a world-class stage. We built this org from the ground up, competing, grinding, and representing the island in every match we play.",
+    "values_eyebrow": "What We Stand For",
+    "values_title": "Core Values",
+    "roadmap_eyebrow": "The Plan",
+    "roadmap_title": "6-Month Roadmap",
+    "roadmap_desc": "Three phases. Clear milestones. We're executing this publicly so our community can follow the journey.",
+    "in_progress": "In Progress",
+    "upcoming": "Upcoming",
+    "cta_title": "Want In?",
+    "cta_desc": "Join our Discord community or reach out about sponsorship opportunities.",
+    "cta_discord": "Join Discord",
+    "cta_partner": "Partner With Us"
+  },
+  "news_page": {
+    "back": "← Back",
+    "eyebrow": "Latest",
+    "title": "News",
+    "description": "Org updates, tournament recaps, and player news.",
+    "latest_badge": "Latest",
+    "coming_soon": "Coming Soon →"
+  },
+  "sponsorship_page": {
+    "back": "← Back",
+    "eyebrow": "Partners",
+    "title": "Partner With Us",
+    "description": "Puerto Rico's #1 hero shooter org. Three active teams. A growing community. Reach a passionate gaming audience that actually buys.",
+    "why_eyebrow": "The Case",
+    "why_title": "Why Partner With Us",
+    "tiers_eyebrow": "Partnership Tiers",
+    "tiers_title": "Choose Your Level",
+    "tier_label": "Tier",
+    "most_popular": "Most Popular",
+    "get_started": "Get Started",
+    "cta_title": "Ready to Talk?",
+    "cta_desc": "We keep things simple. Send us an email and we'll get back to you within 48 hours."
+  },
+  "common": {
+    "back": "← Back"
   }
 }

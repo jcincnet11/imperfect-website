@@ -32,7 +32,7 @@ export default function RosterTeaser() {
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "40px" }} className="md:flex-row md:items-end md:justify-between">
           <div>
-            <span className="eyebrow">Players</span>
+            <span className="eyebrow">{t("eyebrow")}</span>
             <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
               {t("title")}
             </h2>

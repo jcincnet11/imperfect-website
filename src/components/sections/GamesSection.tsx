@@ -33,7 +33,7 @@ export default function GamesSection() {
     <section style={{ padding: "80px 0", borderBottom: "1px solid #1F1F1F", background: "#1A1A1A" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
         <div style={{ marginBottom: "48px" }}>
-          <span className="eyebrow">Competitive</span>
+          <span className="eyebrow">{t("eyebrow")}</span>
           <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
             {t("title")}
           </h2>
@@ -69,7 +69,7 @@ export default function GamesSection() {
                 </span>
                 <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: game.color }} />
-                  <span className="font-heading font-bold uppercase" style={{ fontSize: "10px", color: "#555555", letterSpacing: "0.15em" }}>Active</span>
+                  <span className="font-heading font-bold uppercase" style={{ fontSize: "10px", color: "#555555", letterSpacing: "0.15em" }}>{t("active")}</span>
                 </span>
               </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
@@ -42,6 +42,7 @@ const MILESTONES = [
 
 export default function CommunityPage() {
   const locale = useLocale();
+  const t = useTranslations("community_page");
 
   return (
     <main style={{ background: "#1A1A1A", minHeight: "100vh" }}>
@@ -51,17 +52,17 @@ export default function CommunityPage() {
           <Link href={`/${locale}`} style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "#555555", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700, marginBottom: "32px" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}>
-            ← Back
+            {t("back")}
           </Link>
-          <span className="eyebrow">Community</span>
+          <span className="eyebrow">{t("eyebrow")}</span>
           <h1 className="font-heading font-black uppercase text-white" style={{ fontSize: "clamp(48px, 10vw, 88px)", lineHeight: 0.92, marginBottom: "20px" }}>
-            More Than<br />a Team
+            {t("title")}
           </h1>
           <p style={{ fontSize: "15px", color: "#888888", maxWidth: "520px", lineHeight: 1.65, marginBottom: "32px" }}>
-            We're building the Puerto Rico gaming community — tournaments, events, content, and a place for every gamer on the island.
+            {t("description")}
           </p>
           <Link href="https://discord.gg/VuTAEqPT" target="_blank" rel="noopener noreferrer" className="btn-primary">
-            Join Our Discord
+            {t("join_discord")}
           </Link>
         </div>
       </section>
@@ -70,9 +71,9 @@ export default function CommunityPage() {
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
-            <span className="eyebrow">Monthly</span>
-            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>Events Calendar</h2>
-            <p style={{ fontSize: "14px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>Every month, every week — something happening for the community.</p>
+            <span className="eyebrow">{t("monthly_eyebrow")}</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>{t("monthly_title")}</h2>
+            <p style={{ fontSize: "14px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>{t("monthly_desc")}</p>
           </m.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {MONTHLY_EVENTS.map((event, i) => (
@@ -97,8 +98,8 @@ export default function CommunityPage() {
       <section style={{ padding: "80px 24px", borderBottom: "1px solid #1F1F1F" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
-            <span className="eyebrow">Weekly</span>
-            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>Content Schedule</h2>
+            <span className="eyebrow">{t("weekly_eyebrow")}</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>{t("weekly_title")}</h2>
           </m.div>
           <div style={{ background: "#222222", border: "1px solid #2A2A2A", borderRadius: "8px", overflow: "hidden" }}>
             {WEEKLY.map((item, i) => {
@@ -134,9 +135,9 @@ export default function CommunityPage() {
       <section style={{ padding: "80px 24px" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <m.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: "48px" }}>
-            <span className="eyebrow">Growth</span>
-            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>Discord Milestones</h2>
-            <p style={{ fontSize: "14px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>Every milestone unlocks something for the community. Help us get there.</p>
+            <span className="eyebrow">{t("growth_eyebrow")}</span>
+            <h2 className="font-heading font-black uppercase text-white leading-[0.95]" style={{ fontSize: "clamp(28px, 5vw, 48px)", marginBottom: "12px" }}>{t("growth_title")}</h2>
+            <p style={{ fontSize: "14px", color: "#888888", maxWidth: "400px", lineHeight: 1.65 }}>{t("growth_desc")}</p>
           </m.div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             {MILESTONES.map((milestone, i) => (
@@ -150,7 +151,7 @@ export default function CommunityPage() {
               >
                 <div style={{ flexShrink: 0, minWidth: "80px" }}>
                   <p className="font-heading font-black" style={{ fontSize: "36px", color: "#C8E400", lineHeight: 1 }}>{milestone.count}</p>
-                  <p style={{ fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.10em" }}>{milestone.label}</p>
+                  <p style={{ fontSize: "11px", color: "#555555", textTransform: "uppercase", letterSpacing: "0.10em" }}>{t("members")}</p>
                 </div>
                 <div style={{ width: "1px", height: "40px", background: "#2A2A2A", flexShrink: 0 }} />
                 <p style={{ fontSize: "13px", color: "#888888" }}>{milestone.reward}</p>

@@ -3,12 +3,14 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useLocale } from "next-intl";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 
 export default function Navbar() {
   const t = useTranslations("nav");
   const locale = useLocale();
+  const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const mainLinks = [
@@ -16,7 +18,7 @@ export default function Navbar() {
     { href: `/${locale}/games`,     label: t("games") },
     { href: `/${locale}/results`,   label: t("results") },
     { href: `/${locale}/community`, label: t("community") },
-    { href: `/${locale}/about`,     label: "About" },
+    { href: `/${locale}/about`,     label: t("about") },
   ];
 
   return (
@@ -50,32 +52,54 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center" style={{ gap: "24px" }}>
-            {mainLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                style={{ fontSize: "13px", color: "#888888", transition: "color 0.15s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#888888")}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link
-              href={`/${locale}/sponsorship`}
-              style={{ fontSize: "13px", color: "#C8E400", transition: "opacity 0.15s" }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.75")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              Sponsorship
-            </Link>
+            {mainLinks.map((link) => {
+              const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  style={{
+                    fontSize: "13px",
+                    color: isActive ? "#C8E400" : "#888888",
+                    transition: "color 0.15s",
+                    borderBottom: isActive ? "2px solid #C8E400" : "2px solid transparent",
+                    paddingBottom: "4px",
+                  }}
+                  onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = "#FFFFFF"; }}
+                  onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#888888"; }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+            {(() => {
+              const sponsorHref = `/${locale}/sponsorship`;
+              const isActiveSponsor = pathname === sponsorHref || pathname.startsWith(sponsorHref + "/");
+              return (
+                <Link
+                  href={sponsorHref}
+                  style={{
+                    fontSize: "13px",
+                    color: "#C8E400",
+                    transition: "opacity 0.15s",
+                    opacity: isActiveSponsor ? 1 : 0.7,
+                    borderBottom: isActiveSponsor ? "2px solid #C8E400" : "2px solid transparent",
+                    paddingBottom: "4px",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+                  onMouseLeave={(e) => { if (!isActiveSponsor) e.currentTarget.style.opacity = "0.7"; }}
+                >
+                  {t("sponsorship")}
+                </Link>
+              );
+            })()}
             <Link
               href="/team-hub"
               style={{ fontSize: "12px", color: "#555555", transition: "color 0.15s" }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#888888")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}
             >
-              🔒 Team Hub
+              🔒 {t("team_hub")}
             </Link>
           </div>
 
@@ -101,7 +125,7 @@ export default function Navbar() {
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              Join Discord
+              {t("join_discord")}
             </Link>
           </div>
 
@@ -167,40 +191,54 @@ export default function Navbar() {
         </button>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
-          {mainLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setDrawerOpen(false)}
-              className="font-heading font-bold uppercase"
-              style={{
-                fontSize: "18px",
-                color: "#888888",
-                textDecoration: "none",
-                padding: "10px 0",
-                borderBottom: "1px solid #1F1F1F",
-                transition: "color 0.15s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#888888")}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link
-            href={`/${locale}/sponsorship`}
-            onClick={() => setDrawerOpen(false)}
-            className="font-heading font-bold uppercase"
-            style={{
-              fontSize: "18px",
-              color: "#C8E400",
-              textDecoration: "none",
-              padding: "10px 0",
-              borderBottom: "1px solid #1F1F1F",
-            }}
-          >
-            Sponsorship
-          </Link>
+          {mainLinks.map((link) => {
+            const isActive = pathname === link.href || pathname.startsWith(link.href + "/");
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setDrawerOpen(false)}
+                className="font-heading font-bold uppercase"
+                style={{
+                  fontSize: "18px",
+                  color: isActive ? "#C8E400" : "#888888",
+                  textDecoration: "none",
+                  padding: "10px 0",
+                  borderBottom: "1px solid #1F1F1F",
+                  borderLeft: isActive ? "3px solid #C8E400" : "3px solid transparent",
+                  paddingLeft: isActive ? "12px" : "0",
+                  transition: "color 0.15s",
+                }}
+                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = "#FFFFFF"; }}
+                onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#888888"; }}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+          {(() => {
+            const sponsorHref = `/${locale}/sponsorship`;
+            const isActiveSponsor = pathname === sponsorHref || pathname.startsWith(sponsorHref + "/");
+            return (
+              <Link
+                href={sponsorHref}
+                onClick={() => setDrawerOpen(false)}
+                className="font-heading font-bold uppercase"
+                style={{
+                  fontSize: "18px",
+                  color: "#C8E400",
+                  textDecoration: "none",
+                  padding: "10px 0",
+                  borderBottom: "1px solid #1F1F1F",
+                  borderLeft: isActiveSponsor ? "3px solid #C8E400" : "3px solid transparent",
+                  paddingLeft: isActiveSponsor ? "12px" : "0",
+                  opacity: isActiveSponsor ? 1 : 0.7,
+                }}
+              >
+                {t("sponsorship")}
+              </Link>
+            );
+          })()}
           <Link
             href="/team-hub"
             onClick={() => setDrawerOpen(false)}
@@ -212,7 +250,7 @@ export default function Navbar() {
               padding: "10px 0",
             }}
           >
-            🔒 Team Hub
+            🔒 {t("team_hub")}
           </Link>
         </div>
 
@@ -224,7 +262,7 @@ export default function Navbar() {
           className="btn-primary"
           style={{ width: "100%", marginTop: "24px" }}
         >
-          Join Discord
+          {t("join_discord")}
         </Link>
       </div>
     </>

@@ -1,19 +1,20 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m } from "framer-motion";
 
-const STATS = [
-  { value: "2017",  label: "Founded" },
-  { value: "8+",    label: "Players" },
-  { value: "2",     label: "Active Titles" },
-  { value: "20+",   label: "Tournaments" },
-  { value: "PR #1", label: "Both Titles" },
-];
-
 export default function Hero() {
   const locale = useLocale();
+  const t = useTranslations("hero");
+
+  const STATS = [
+    { value: "2017",  label: t("stat_founded") },
+    { value: "8+",    label: t("stat_players") },
+    { value: "2",     label: t("stat_titles") },
+    { value: "20+",   label: t("stat_tournaments") },
+    { value: "PR #1", label: t("stat_region") },
+  ];
 
   return (
     <section
@@ -62,7 +63,7 @@ export default function Hero() {
         >
           <div style={{ width: "28px", height: "2px", background: "#C8E400", flexShrink: 0 }} />
           <span className="font-heading font-bold uppercase" style={{ fontSize: "11px", letterSpacing: "0.20em", color: "#C8E400" }}>
-            Puerto Rico · Est. 2017
+            {t("eyebrow")}
           </span>
         </m.div>
 
@@ -73,8 +74,8 @@ export default function Hero() {
           className="font-heading font-black uppercase"
           style={{ fontSize: "clamp(48px, 10vw, 96px)", lineHeight: 0.92, color: "#FFFFFF", marginBottom: "20px" }}
         >
-          We Are
-          <span style={{ display: "block", color: "#C8E400" }}>IMPerfect.</span>
+          {t("headline_1")}
+          <span style={{ display: "block", color: "#C8E400" }}>{t("headline_2")}</span>
         </m.h1>
 
         <m.p
@@ -83,8 +84,7 @@ export default function Hero() {
           transition={{ duration: 0.4, delay: 0.25 }}
           style={{ fontSize: "15px", color: "#888888", maxWidth: "460px", lineHeight: 1.65, marginBottom: "32px" }}
         >
-          Puerto Rico's #1 competitive hero shooter org. Overwatch 2 · Marvel Rivals.
-          Built from the island — competing with the world.
+          {t("description")}
         </m.p>
 
         <m.div
@@ -93,8 +93,8 @@ export default function Hero() {
           transition={{ duration: 0.4, delay: 0.35 }}
           style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}
         >
-          <Link href={`/${locale}/team`} className="btn-primary">Meet the Team</Link>
-          <Link href={`/${locale}/sponsorship`} className="btn-secondary">Partner With Us</Link>
+          <Link href={`/${locale}/team`} className="btn-primary">{t("cta_team")}</Link>
+          <Link href={`/${locale}/sponsorship`} className="btn-secondary">{t("cta_partner")}</Link>
         </m.div>
 
         <m.div
