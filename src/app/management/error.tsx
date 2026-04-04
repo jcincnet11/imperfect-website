@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { logger } from "@/lib/logger";
 
 export default function ManagementError({
   error,
@@ -10,7 +11,7 @@ export default function ManagementError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[management] page error:", error);
+    logger.error("[management] page error", { error: String(error) });
   }, [error]);
 
   return (

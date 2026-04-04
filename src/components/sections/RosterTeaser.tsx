@@ -65,6 +65,7 @@ export default function RosterTeaser() {
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 sizes="(max-width: 640px) 50vw, 25vw"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
               />
               <div
                 className="absolute inset-0 flex flex-col justify-end"

@@ -10,6 +10,13 @@ export const metadata: Metadata = {
       "Competing at the highest level in Overwatch 2 and Marvel Rivals. Three active rosters.",
     type: "website",
   },
+  alternates: {
+    canonical: "https://imperfect-sage.vercel.app/en/games",
+    languages: {
+      en: "https://imperfect-sage.vercel.app/en/games",
+      es: "https://imperfect-sage.vercel.app/es/games",
+    },
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

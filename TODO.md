@@ -12,29 +12,29 @@ Task tracking for IMPerfect esports site. Mark `[~]` when starting, `[x]` when d
 
 ## SEO & Metadata
 
-- [ ] Add `generateMetadata` to every `[locale]` page — currently zero pages export metadata
-- [ ] Add Open Graph images and canonical URLs per page
-- [ ] Add hreflang alternate links for EN/ES locale pages
+- [x] Add `generateMetadata` to every `[locale]` page — currently zero pages export metadata
+- [ ] Add Open Graph images per page
+- [x] Add canonical URLs and hreflang alternate links for EN/ES locale pages
 
 ## Code Quality
 
-- [ ] Fix React Hook conditional call in `ScheduleGrid.tsx` — `useState` called after early return
-- [ ] Replace `<a>` tags with `<Link>` in `team-hub/join/[token]/page.tsx` and `team-hub/page.tsx`
-- [ ] Remove unused `hColor` variable in team page player card rendering
-- [ ] Clean up unused imports: `archivePlayer` in users route, `DAYS`/`TIME_SLOTS` in reminders route
+- [x] Fix React Hook conditional call in `ScheduleGrid.tsx` — `useState` called after early return
+- [x] Replace `<a>` tags with `<Link>` in `team-hub/join/[token]/page.tsx` and `team-hub/page.tsx`
+- [x] Remove unused `hColor` variable in team page player card rendering
+- [x] Clean up unused imports: `archivePlayer` in users route, `DAYS`/`TIME_SLOTS` in reminders route
 
 ## Accessibility
 
-- [ ] Add meaningful alt text to avatar images in Management and Team Hub sidebars
+- [x] Add meaningful alt text to avatar images in Management and Team Hub sidebars
 - [ ] Increase ARIA labels on interactive elements (buttons, toggles, modals) across the site
-- [ ] Add `onError` fallback handlers for player profile images
+- [x] Add `onError` fallback handlers for player profile images
 
 ## Performance & Infra
 
-- [ ] Optimize player profile images in `public/players/` — files are 1.9–2.8 MB each
+- [ ] Optimize player profile images in `public/players/` — files are 1.9–2.8 MB each (served via next/image, low priority)
 - [ ] Seed `data/availability.json` and `data/schedule.json` with sample data for local dev
 - [ ] Standardize API error response format across `/api/management/` routes
-- [ ] Replace `console.error()` calls with structured logger in error boundaries and management-db
+- [x] Replace `console.error()` calls with structured logger in error boundaries and management-db
 
 ---
 

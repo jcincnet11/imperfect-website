@@ -10,6 +10,13 @@ export const metadata: Metadata = {
       "Puerto Rico's gaming community hub. Events, content, Discord, and more.",
     type: "website",
   },
+  alternates: {
+    canonical: "https://imperfect-sage.vercel.app/en/community",
+    languages: {
+      en: "https://imperfect-sage.vercel.app/en/community",
+      es: "https://imperfect-sage.vercel.app/es/community",
+    },
+  },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

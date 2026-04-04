@@ -3,6 +3,7 @@
  * tournaments, sponsors, revenue, checklist_items
  */
 import { supabase } from "./supabase";
+import { logger } from "@/lib/logger";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -84,7 +85,7 @@ export async function getTournaments(): Promise<Tournament[]> {
       .order("date_start", { ascending: false });
     return (data as Tournament[]) ?? [];
   } catch (e) {
-    console.error("[management-db] getTournaments failed:", e);
+    logger.error("[management-db] getTournaments failed", { error: String(e) });
     return [];
   }
 }
@@ -125,7 +126,7 @@ export async function getSponsors(): Promise<Sponsor[]> {
       .order("created_at", { ascending: false });
     return (data as Sponsor[]) ?? [];
   } catch (e) {
-    console.error("[management-db] getSponsors failed:", e);
+    logger.error("[management-db] getSponsors failed", { error: String(e) });
     return [];
   }
 }
@@ -166,7 +167,7 @@ export async function getRevenue(): Promise<Revenue[]> {
       .order("date", { ascending: false });
     return (data as Revenue[]) ?? [];
   } catch (e) {
-    console.error("[management-db] getRevenue failed:", e);
+    logger.error("[management-db] getRevenue failed", { error: String(e) });
     return [];
   }
 }
@@ -208,7 +209,7 @@ export async function getChecklist(): Promise<ChecklistItem[]> {
       .order("label");
     return (data as ChecklistItem[]) ?? [];
   } catch (e) {
-    console.error("[management-db] getChecklist failed:", e);
+    logger.error("[management-db] getChecklist failed", { error: String(e) });
     return [];
   }
 }
@@ -297,7 +298,7 @@ export async function getManagementStats(): Promise<ManagementStats> {
     nextTournamentName,
   };
   } catch (e) {
-    console.error("[management-db] getManagementStats failed:", e);
+    logger.error("[management-db] getManagementStats failed", { error: String(e) });
     return DEFAULT_STATS;
   }
 }
