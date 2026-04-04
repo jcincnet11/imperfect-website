@@ -3,9 +3,9 @@ import { redirect } from "next/navigation";
 import { resolveOrgRole, can } from "@/lib/permissions";
 import { getScrims, getAllPlayers, getAvailability } from "@/lib/db";
 import ScrimsPanel from "@/components/team-hub/ScrimsPanel";
-import AccessDenied from "@/components/team-hub/AccessDenied";
 
-export const metadata = { title: "Scrims — IMPerfect Team Hub" };
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Scrims — IMPerfect Team Hub" };
 
 // Get Monday of current week
 function getMondayOfWeek(date = new Date()) {

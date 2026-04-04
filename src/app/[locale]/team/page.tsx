@@ -495,7 +495,6 @@ function PlayerCard({ player }: { player: Player }) {
 
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
           {player.topHeroes.map((hero, i) => {
-            const hColor = roleColor(hero.role);
             const isTop = i === 0;
             return (
               <div

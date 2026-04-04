@@ -233,11 +233,12 @@ function EditModal({
   onDelete: (id: string, day: string, time_slot: string) => Promise<void>;
   onClose: () => void;
 }) {
-  if (!editing) return null;
   const [blockType, setBlockType] = useState<BlockType>(
-    (editing.block?.block_type as BlockType) ?? "PRACTICE"
+    (editing?.block?.block_type as BlockType) ?? "PRACTICE"
   );
-  const [notes, setNotes] = useState(editing.block?.notes ?? "");
+  const [notes, setNotes] = useState(editing?.block?.notes ?? "");
+
+  if (!editing) return null;
 
   const DAY_LABEL_FULL: Record<string, string> = {
     MON: "Monday", TUE: "Tuesday", WED: "Wednesday",

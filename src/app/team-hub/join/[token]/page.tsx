@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getInviteByToken, upsertPlayer, appendAuditLog } from "@/lib/db";
 
 export const metadata = { title: "Join Team Hub — IMPerfect" };
@@ -67,7 +68,7 @@ function ErrorPage({ message }: { message: string }) {
         </div>
         <h2 className="font-heading text-xl text-white font-bold mb-2">Invalid Invite</h2>
         <p className="text-white/40 text-sm">{message}</p>
-        <a href="/team-hub" className="mt-6 inline-block text-sm text-[#c5d400] hover:underline">Back to Team Hub</a>
+        <Link href="/team-hub" className="mt-6 inline-block text-sm text-[#c5d400] hover:underline">Back to Team Hub</Link>
       </div>
     </div>
   );

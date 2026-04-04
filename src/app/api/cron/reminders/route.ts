@@ -5,9 +5,6 @@ import type { ScheduleBlock } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-const TIME_SLOTS = ["16:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
-
 function currentWeekStart(): string {
   const d = new Date();
   const day = d.getDay();

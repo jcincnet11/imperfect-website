@@ -2,54 +2,98 @@
 
 Task tracking for IMPerfect esports site. Mark `[~]` when starting, `[x]` when done.
 
-## Security & Auth
+## Content & Features
 
-- [x] Move `APPROVED_DISCORD_IDS` to Supabase `players` table lookup — env var approach breaks when roster changes and requires a redeploy
-- [x] Add CSRF protection to all management API routes (currently unauthenticated POST/PATCH/DELETE)
-- [x] Validate and sanitize all API route inputs — `src/app/api/management/` routes accept raw request body with no schema validation
-- [x] Add rate limiting to public API routes (`/api/players`, `/api/schedule`) to prevent scraping/abuse
-- [x] Audit management routes for authorization checks — all `/api/management/*` routes verified; fixed unprotected `/api/cron/reminders` (add `CRON_SECRET` env var + pass as `x-cron-secret` header from your cron scheduler)
+- [ ] Fill in real OW2 roster data — 5 players use placeholder names/bios/socials (`src/app/[locale]/team/page.tsx`)
+- [ ] Populate Shadows and Echoes subteam rosters — currently TBA ghost cards (`src/app/[locale]/team/page.tsx`)
+- [ ] Build news article detail pages — cards show "Coming Soon", no `/news/[slug]` route exists
+- [ ] Add TikTok and YouTube handles to Footer — currently hardcoded to `#` with TODO comments
+- [ ] Translate remaining data strings (community events, milestones, game descriptions, tier perks) to Spanish
 
-## Core Reliability
+## SEO & Metadata
 
-- [x] Add error boundaries around Team Hub and Management dashboard pages so a data fetch failure doesn't crash the whole page
-- [x] Handle Supabase connection failures gracefully in `management-db.ts` — currently throws uncaught errors
-- [x] Add a `/api/health` route that checks Supabase connectivity — needed for uptime monitoring
-- [x] Fix data fallback behavior: `db.ts` JSON fallback silently serves stale data in prod if env vars are misconfigured — add a warning or hard fail in non-dev environments
+- [ ] Add `generateMetadata` to every `[locale]` page — currently zero pages export metadata
+- [ ] Add Open Graph images and canonical URLs per page
+- [ ] Add hreflang alternate links for EN/ES locale pages
 
-## Testing
+## Code Quality
 
-- [x] Add unit tests for `src/lib/db.ts` and `src/lib/management-db.ts` data layer functions
-- [x] Add integration tests for critical API routes (`/api/auth`, `/api/players`, `/api/availability`)
-- [x] Add E2E test for Team Hub login flow (Discord OAuth → dashboard)
+- [ ] Fix React Hook conditional call in `ScheduleGrid.tsx` — `useState` called after early return
+- [ ] Replace `<a>` tags with `<Link>` in `team-hub/join/[token]/page.tsx` and `team-hub/page.tsx`
+- [ ] Remove unused `hColor` variable in team page player card rendering
+- [ ] Clean up unused imports: `archivePlayer` in users route, `DAYS`/`TIME_SLOTS` in reminders route
 
-## CI/CD
+## Accessibility
 
-- [x] Create GitHub Actions workflow: run `make test` (lint + typecheck) on every PR
-- [x] Add Vercel preview deployment check to PRs
-- [x] Add `supabase-schema.sql` migration tracking — currently the schema file is the only source of truth with no migration history
+- [ ] Add meaningful alt text to avatar images in Management and Team Hub sidebars
+- [ ] Increase ARIA labels on interactive elements (buttons, toggles, modals) across the site
+- [ ] Add `onError` fallback handlers for player profile images
 
-## Observability
+## Performance & Infra
 
-- [x] Add error tracking (Sentry or Vercel error monitoring) — currently no visibility into runtime exceptions
-- [x] Add structured logging to API routes — request/response logging for debugging production issues
-- [x] Set up uptime monitoring on `imperfect-sage.vercel.app` (e.g., Better Uptime, UptimeRobot)
+- [ ] Optimize player profile images in `public/players/` — files are 1.9–2.8 MB each
+- [ ] Seed `data/availability.json` and `data/schedule.json` with sample data for local dev
+- [ ] Standardize API error response format across `/api/management/` routes
+- [ ] Replace `console.error()` calls with structured logger in error boundaries and management-db
 
-## Performance
+---
 
-- [x] Add `next/image` optimization to player profile photos in `public/players/` — currently using plain `<img>` tags
-- [x] Implement caching headers on `/api/players` and `/api/schedule` — data changes infrequently
-- [x] Lazy-load Framer Motion animations — the bundle includes the full library even on pages with no animation
+## Completed (previous sprint)
 
-## UX Polish
+<details>
+<summary>30+ items — click to expand</summary>
 
-- [x] Build out the News page — currently "coming soon"
-- [x] Build out Shadows and Echoes team rosters on the Team page — currently placeholders
-- [x] Add loading states to Team Hub data fetches — no skeleton/spinner shown while schedule and availability load
-- [x] Add mobile navigation menu — Navbar has no hamburger/drawer on small screens
+### Security & Auth
+- [x] Move `APPROVED_DISCORD_IDS` to Supabase `players` table lookup
+- [x] Add CSRF protection to all management API routes
+- [x] Validate and sanitize all API route inputs
+- [x] Add rate limiting to public API routes
+- [x] Audit management routes for authorization checks
 
-## Developer Experience
+### Core Reliability
+- [x] Add error boundaries around Team Hub and Management dashboard
+- [x] Handle Supabase connection failures gracefully in `management-db.ts`
+- [x] Add `/api/health` route for uptime monitoring
+- [x] Fix data fallback behavior in `db.ts`
 
-- [x] Add `npm run typecheck` script to `package.json` so it works without `npx`
-- [x] Create `.env.example` with all required variables documented (already exists — verify it's up to date)
-- [x] Add seed script for local Supabase dev data (`data/*.json` files are already there — automate the import)
+### Testing
+- [x] Add unit tests for `db.ts` and `management-db.ts`
+- [x] Add integration tests for critical API routes
+- [x] Add E2E test for Team Hub login flow
+
+### CI/CD
+- [x] Create GitHub Actions workflow for PRs
+- [x] Add Vercel preview deployment check
+- [x] Add `supabase-schema.sql` migration tracking
+
+### Observability
+- [x] Add Sentry error tracking
+- [x] Add structured logging to API routes
+- [x] Set up uptime monitoring
+
+### Performance
+- [x] Add `next/image` optimization to player photos
+- [x] Implement caching headers on public API routes
+- [x] Lazy-load Framer Motion animations
+
+### UX Polish
+- [x] Build out News page
+- [x] Build out Shadows and Echoes team sections
+- [x] Add loading states to Team Hub data fetches
+- [x] Add mobile navigation menu
+
+### Developer Experience
+- [x] Add `npm run typecheck` script
+- [x] Create `.env.example`
+- [x] Add seed script for local dev data
+
+### Bug Fixes (April 2026)
+- [x] Fix language switch — full i18n across all pages
+- [x] Fix active nav highlight (#C8E400)
+- [x] Fix sponsorship page blank render
+- [x] Fix availability team scoping for players
+- [x] Update Discord invite link
+
+</details>
+</content>
+</invoke>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { getAllPlayers, updatePlayerRole, archivePlayer, appendAuditLog } from "@/lib/db";
+import { getAllPlayers, updatePlayerRole, appendAuditLog } from "@/lib/db";
 import { resolveOrgRole, can } from "@/lib/permissions";
 import type { OrgRole } from "@/lib/permissions";
 
