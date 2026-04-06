@@ -217,7 +217,7 @@ const MR_ROSTER: Player[] = [
   {
     id: 7,
     name: "lblazerowl",
-    ign: "lblazerowl",
+    ign: "BŁXZER",
     role: "Strategist",
     division: "MR",
     rank: "",
