@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { transformApiResponse, PlayerStats } from "@/lib/mr-stats";
+import { transformApiResponse, mrHeroPortrait, PlayerStats } from "@/lib/mr-stats";
 import { getStatsOverride } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -57,7 +57,7 @@ export async function GET(
           matchesPlayed: h.matchesPlayed,
           winRate: h.winRate / 100,
           kda: h.kda,
-          portraitUrl: null,
+          portraitUrl: mrHeroPortrait(h.name),
         })),
         dataSource: "manual",
         lastUpdated: new Date().toISOString(),

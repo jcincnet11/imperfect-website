@@ -86,6 +86,12 @@ function heroRole(name: string): "Vanguard" | "Duelist" | "Strategist" | string 
   return HERO_ROLES[name.toLowerCase()] ?? "Unknown";
 }
 
+/** Build a reliable portrait URL from a hero name using the card image endpoint. */
+export function mrHeroPortrait(heroName: string): string {
+  const slug = heroName.toLowerCase().replace(/\./g, "").replace(/\s+/g, "-");
+  return `https://marvelrivalsapi.com/rivals/heroes/card/${slug}.png`;
+}
+
 function rankFromLevel(level: number): string {
   if (level >= 25) return "One Above All";
   if (level >= 21) return "Eternity";
@@ -153,9 +159,7 @@ export function transformApiResponse(
       matchesPlayed: heroMatches,
       winRate: heroMatches > 0 ? heroWins / heroMatches : 0,
       kda: (heroKills + heroAssists) / Math.max(heroDeaths, 1),
-      portraitUrl: h.hero_thumbnail
-        ? `https://marvelrivalsapi.com${h.hero_thumbnail}`
-        : null,
+      portraitUrl: h.hero_name ? mrHeroPortrait(h.hero_name) : null,
     };
   });
 

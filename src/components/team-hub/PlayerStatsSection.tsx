@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 // ---------------------------------------------------------------------------
 // Types (mirrors the API response shape from /api/marvel-rivals/player/[ign])
@@ -162,44 +161,76 @@ export default function PlayerStatsSection({
 
         {/* ── Top 3 heroes (live) ── */}
         {stats.topHeroes.length > 0 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            {stats.topHeroes.slice(0, 3).map((hero) => (
-              <div
-                key={hero.name}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                }}
-              >
-                {hero.portraitUrl ? (
-                  <Image
-                    src={hero.portraitUrl}
+          <div>
+            <p style={{
+              fontSize: "10px",
+              color: "#C8E400",
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+              fontWeight: 700,
+              fontFamily: "var(--font-barlow), sans-serif",
+              marginBottom: "8px",
+              margin: 0,
+              marginTop: "4px",
+            }}>
+              Top Heroes
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "8px" }}>
+              {stats.topHeroes.slice(0, 3).map((hero, i) => (
+                <div
+                  key={hero.name}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    paddingLeft: i === 0 ? "8px" : "0",
+                    borderLeft: i === 0 ? "3px solid #C8E400" : "3px solid transparent",
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={hero.portraitUrl ?? ""}
                     alt={hero.name}
-                    width={20}
-                    height={20}
-                    style={{ borderRadius: "50%", objectFit: "cover" }}
-                    unoptimized
-                  />
-                ) : (
-                  <div
+                    width={i === 0 ? 28 : 24}
+                    height={i === 0 ? 28 : 24}
                     style={{
-                      width: "20px",
-                      height: "20px",
                       borderRadius: "50%",
-                      background: "#2A2A2A",
+                      objectFit: "cover",
+                      objectPosition: "top",
                       flexShrink: 0,
+                      background: "#2A2A2A",
                     }}
+                    onError={(e) => { e.currentTarget.style.visibility = "hidden"; }}
                   />
-                )}
-                <span style={{ fontSize: "11px", color: "#888888", flex: 1, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                  {hero.name}
-                </span>
-                <span style={{ fontSize: "11px", color: "#C8E400", fontWeight: 700, whiteSpace: "nowrap" }}>
-                  {Math.round(hero.winRate * 100)}%
-                </span>
-              </div>
-            ))}
+                  <span className="font-heading font-bold" style={{
+                    fontSize: i === 0 ? "13px" : "11px",
+                    color: "#FFFFFF",
+                    flex: 1,
+                    minWidth: 0,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    textTransform: "capitalize",
+                  }}>
+                    {hero.name}
+                  </span>
+                  <span style={{ fontSize: "10px", color: "#555555", whiteSpace: "nowrap" }}>
+                    {hero.matchesPlayed}m
+                  </span>
+                  <span style={{
+                    fontSize: "11px",
+                    color: "#C8E400",
+                    fontWeight: 700,
+                    whiteSpace: "nowrap",
+                    fontFamily: "var(--font-barlow), sans-serif",
+                    minWidth: "30px",
+                    textAlign: "right",
+                  }}>
+                    {Math.round(hero.winRate * 100)}%
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
