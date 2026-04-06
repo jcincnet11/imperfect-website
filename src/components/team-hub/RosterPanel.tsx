@@ -113,14 +113,14 @@ export default function RosterPanel({ grouped, orgRole, currentDiscordId, captai
             <div>
               <label className="text-xs text-white/40 uppercase tracking-widest font-semibold block mb-1.5">Team</label>
               <select value={newPlayer.division} onChange={(e) => setNewPlayer((p) => ({ ...p, division: e.target.value }))}
-                className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40">
+                className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40 [&>option]:bg-[#1a1a1a] [&>option]:text-white">
                 {Object.keys(localGrouped).map((div) => <option key={div} value={div}>{div}</option>)}
               </select>
             </div>
             <div>
               <label className="text-xs text-white/40 uppercase tracking-widest font-semibold block mb-1.5">Game</label>
               <select value={newPlayer.game} onChange={(e) => setNewPlayer((p) => ({ ...p, game: e.target.value }))}
-                className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40">
+                className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40 [&>option]:bg-[#1a1a1a] [&>option]:text-white">
                 <option value="OW2">Overwatch 2</option>
                 <option value="MR">Marvel Rivals</option>
                 <option value="BOTH">Both</option>
@@ -129,7 +129,7 @@ export default function RosterPanel({ grouped, orgRole, currentDiscordId, captai
             <div>
               <label className="text-xs text-white/40 uppercase tracking-widest font-semibold block mb-1.5">In-Game Role</label>
               <select value={newPlayer.in_game_role} onChange={(e) => setNewPlayer((p) => ({ ...p, in_game_role: e.target.value }))}
-                className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40">
+                className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40 [&>option]:bg-[#1a1a1a] [&>option]:text-white">
                 {IN_GAME_ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
             </div>
@@ -288,7 +288,7 @@ function EditModal({ player, saving, onSave, onClose, divisions, canMoveTeams }:
             <div>
               <label className="text-xs text-white/40 uppercase tracking-widest font-semibold block mb-1.5">Team</label>
               <select value={form.division} onChange={(e) => setForm((f) => ({ ...f, division: e.target.value }))}
-                className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40">
+                className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40 [&>option]:bg-[#1a1a1a] [&>option]:text-white">
                 {divisions.map((d) => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
@@ -296,14 +296,14 @@ function EditModal({ player, saving, onSave, onClose, divisions, canMoveTeams }:
           <div>
             <label className="text-xs text-white/40 uppercase tracking-widest font-semibold block mb-1.5">Game</label>
             <select value={form.game} onChange={(e) => setForm((f) => ({ ...f, game: e.target.value }))}
-              className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40">
+              className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40 [&>option]:bg-[#1a1a1a] [&>option]:text-white">
               <option value="OW2">Overwatch 2</option><option value="MR">Marvel Rivals</option><option value="BOTH">Both</option>
             </select>
           </div>
           <div>
             <label className="text-xs text-white/40 uppercase tracking-widest font-semibold block mb-1.5">In-Game Role</label>
             <select value={form.in_game_role} onChange={(e) => setForm((f) => ({ ...f, in_game_role: e.target.value }))}
-              className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40">
+              className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40 [&>option]:bg-[#1a1a1a] [&>option]:text-white">
               {IN_GAME_ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </div>

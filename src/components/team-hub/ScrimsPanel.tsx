@@ -422,7 +422,7 @@ function FormSelect({ label, value, onChange, children }: { label: string; value
     <div>
       <label className="text-xs text-white/40 uppercase tracking-widest font-semibold block mb-1.5">{label}</label>
       <select value={value} onChange={(e) => onChange(e.target.value)}
-        className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40">
+        className="w-full bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5d400]/40 [&>option]:bg-[#1a1a1a] [&>option]:text-white">
         {children}
       </select>
     </div>
