@@ -86,10 +86,62 @@ function heroRole(name: string): "Vanguard" | "Duelist" | "Strategist" | string 
   return HERO_ROLES[name.toLowerCase()] ?? "Unknown";
 }
 
-/** Build a reliable portrait URL from a hero name using the card image endpoint. */
-export function mrHeroPortrait(heroName: string): string {
-  const slug = heroName.toLowerCase().replace(/\./g, "").replace(/\s+/g, "-");
-  return `https://marvelrivalsapi.com/rivals/heroes/card/${slug}.png`;
+// Hero name → square headshot icon (344x344 webp from marvelrivalsapi.com)
+const MR_HERO_ICON: Record<string, string> = {
+  "hulk": "https://marvelrivalsapi.com/rivals/heroes/transformations/bruce-banner-headbig-0.webp",
+  "the punisher": "https://marvelrivalsapi.com/rivals/heroes/transformations/the-punisher-headbig-0.webp",
+  "storm": "https://marvelrivalsapi.com/rivals/heroes/transformations/storm-headbig-0.webp",
+  "loki": "https://marvelrivalsapi.com/rivals/heroes/transformations/loki-headbig-0.webp",
+  "human torch": "https://marvelrivalsapi.com/rivals/heroes/transformations/human-torch-headbig-0.webp",
+  "doctor strange": "https://marvelrivalsapi.com/rivals/heroes/transformations/doctor-strange-headbig-0.webp",
+  "mantis": "https://marvelrivalsapi.com/rivals/heroes/transformations/mantis-headbig-0.webp",
+  "hawkeye": "https://marvelrivalsapi.com/rivals/heroes/transformations/hawkeye-headbig-0.webp",
+  "captain america": "https://marvelrivalsapi.com/rivals/heroes/transformations/captain-america-headbig-0.webp",
+  "rocket raccoon": "https://marvelrivalsapi.com/rivals/heroes/transformations/rocket-raccoon-headbig-0.webp",
+  "hela": "https://marvelrivalsapi.com/rivals/heroes/transformations/hela-headbig-0.webp",
+  "cloak & dagger": "https://marvelrivalsapi.com/rivals/heroes/transformations/cloak-dagger-headbig-0.webp",
+  "black panther": "https://marvelrivalsapi.com/rivals/heroes/transformations/black-panther-headbig-0.webp",
+  "groot": "https://marvelrivalsapi.com/rivals/heroes/transformations/groot-headbig-0.webp",
+  "ultron": "https://marvelrivalsapi.com/rivals/heroes/transformations/ultron-headbig-0.webp",
+  "magik": "https://marvelrivalsapi.com/rivals/heroes/transformations/magik-headbig-0.webp",
+  "moon knight": "https://marvelrivalsapi.com/rivals/heroes/transformations/moon-knight-headbig-0.webp",
+  "luna snow": "https://marvelrivalsapi.com/rivals/heroes/transformations/luna-snow-headbig-0.webp",
+  "squirrel girl": "https://marvelrivalsapi.com/rivals/heroes/transformations/squirrel-girl-headbig-0.webp",
+  "black widow": "https://marvelrivalsapi.com/rivals/heroes/transformations/black-widow-headbig-0.webp",
+  "iron man": "https://marvelrivalsapi.com/rivals/heroes/transformations/iron-man-headbig-0.webp",
+  "venom": "https://marvelrivalsapi.com/rivals/heroes/transformations/venom-headbig-0.webp",
+  "spider-man": "https://marvelrivalsapi.com/rivals/heroes/transformations/spider-man-headbig-0.webp",
+  "magneto": "https://marvelrivalsapi.com/rivals/heroes/transformations/magneto-headbig-0.webp",
+  "scarlet witch": "https://marvelrivalsapi.com/rivals/heroes/transformations/scarlet-witch-headbig-0.webp",
+  "thor": "https://marvelrivalsapi.com/rivals/heroes/transformations/thor-headbig-0.webp",
+  "mister fantastic": "https://marvelrivalsapi.com/rivals/heroes/transformations/mister-fantastic-headbig-0.webp",
+  "winter soldier": "https://marvelrivalsapi.com/rivals/heroes/transformations/winter-soldier-headbig-0.webp",
+  "peni parker": "https://marvelrivalsapi.com/rivals/heroes/transformations/peni-parker-headbig-0.webp",
+  "star-lord": "https://marvelrivalsapi.com/rivals/heroes/transformations/star-lord-headbig-0.webp",
+  "namor": "https://marvelrivalsapi.com/rivals/heroes/transformations/namor-headbig-0.webp",
+  "adam warlock": "https://marvelrivalsapi.com/rivals/heroes/transformations/adam-warlock-headbig-0.webp",
+  "jeff the land shark": "https://marvelrivalsapi.com/rivals/heroes/transformations/jeff-the-land-shark-headbig-0.webp",
+  "psylocke": "https://marvelrivalsapi.com/rivals/heroes/transformations/psylocke-headbig-0.webp",
+  "wolverine": "https://marvelrivalsapi.com/rivals/heroes/transformations/wolverine-headbig-0.webp",
+  "invisible woman": "https://marvelrivalsapi.com/rivals/heroes/transformations/invisible-woman-headbig-0.webp",
+  "the thing": "https://marvelrivalsapi.com/rivals/heroes/transformations/the-thing-headbig-0.webp",
+  "iron fist": "https://marvelrivalsapi.com/rivals/heroes/transformations/iron-fist-headbig-0.webp",
+  "emma frost": "https://marvelrivalsapi.com/rivals/heroes/transformations/emma-frost-headbig-0.webp",
+  "phoenix": "https://marvelrivalsapi.com/rivals/heroes/transformations/phoenix-headbig-0.webp",
+  "blade": "https://marvelrivalsapi.com/rivals/heroes/transformations/blade-headbig-0.webp",
+  "captain marvel": "https://marvelrivalsapi.com/rivals/heroes/transformations/captain-marvel-headbig-0.webp",
+  "the hood": "https://marvelrivalsapi.com/rivals/heroes/transformations/the-hood-headbig-0.webp",
+  "white fox": "https://marvelrivalsapi.com/rivals/heroes/transformations/white-fox-headbig-0.webp",
+  "daredevil": "https://marvelrivalsapi.com/rivals/heroes/transformations/daredevil-headbig-0.webp",
+  "gambit": "https://marvelrivalsapi.com/rivals/heroes/transformations/gambit-headbig-0.webp",
+  "black bolt": "https://marvelrivalsapi.com/rivals/heroes/transformations/black-bolt-headbig-0.webp",
+  "mr. negative": "https://marvelrivalsapi.com/rivals/heroes/transformations/mr-negative-headbig-0.webp",
+  "taskmaster": "https://marvelrivalsapi.com/rivals/heroes/transformations/taskmaster-headbig-0.webp",
+};
+
+/** Get the square headshot icon URL for a Marvel Rivals hero. */
+export function mrHeroPortrait(heroName: string): string | null {
+  return MR_HERO_ICON[heroName.toLowerCase()] ?? null;
 }
 
 function rankFromLevel(level: number): string {

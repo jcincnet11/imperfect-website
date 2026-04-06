@@ -187,21 +187,32 @@ export default function PlayerStatsSection({
                     borderLeft: i === 0 ? "3px solid #C8E400" : "3px solid transparent",
                   }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={hero.portraitUrl ?? ""}
-                    alt={hero.name}
-                    width={i === 0 ? 28 : 24}
-                    height={i === 0 ? 28 : 24}
-                    style={{
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      objectPosition: "top",
+                  {hero.portraitUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={hero.portraitUrl}
+                      alt={hero.name}
+                      width={i === 0 ? 30 : 26}
+                      height={i === 0 ? 30 : 26}
+                      style={{
+                        borderRadius: "6px",
+                        objectFit: "cover",
+                        flexShrink: 0,
+                        background: "#1A1A1A",
+                        border: "1px solid #2A2A2A",
+                      }}
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: i === 0 ? 30 : 26,
+                      height: i === 0 ? 30 : 26,
+                      borderRadius: "6px",
+                      background: "#1A1A1A",
+                      border: "1px solid #2A2A2A",
                       flexShrink: 0,
-                      background: "#2A2A2A",
-                    }}
-                    onError={(e) => { e.currentTarget.style.visibility = "hidden"; }}
-                  />
+                    }} />
+                  )}
                   <span className="font-heading font-bold" style={{
                     fontSize: i === 0 ? "13px" : "11px",
                     color: "#FFFFFF",
