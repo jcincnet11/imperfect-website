@@ -335,7 +335,7 @@ const SHADOWS_ROSTER: Player[] = [
   {
     id: 23,
     name: "shokwave10",
-    ign: "shokwave10",
+    ign: "Shockwave",
     role: "Duelist",
     division: "MR",
     rank: "Diamond",
@@ -351,7 +351,7 @@ const SHADOWS_ROSTER: Player[] = [
   {
     id: 24,
     name: "silenustv",
-    ign: "silenustv",
+    ign: "Silenusᵗᵛ",
     role: "Support",
     division: "MR",
     rank: "Diamond",
@@ -367,7 +367,7 @@ const SHADOWS_ROSTER: Player[] = [
   {
     id: 25,
     name: "vhaze21",
-    ign: "vhaze21",
+    ign: "vHaze",
     role: "Duelist",
     division: "MR",
     rank: "Diamond",
