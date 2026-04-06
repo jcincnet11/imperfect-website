@@ -86,6 +86,19 @@ function heroRole(name: string): "Vanguard" | "Duelist" | "Strategist" | string 
   return HERO_ROLES[name.toLowerCase()] ?? "Unknown";
 }
 
+function rankFromLevel(level: number): string {
+  if (level >= 25) return "One Above All";
+  if (level >= 21) return "Eternity";
+  if (level >= 18) return "Celestial";
+  if (level >= 15) return "Grandmaster";
+  if (level >= 12) return "Diamond";
+  if (level >= 9) return "Platinum";
+  if (level >= 6) return "Gold";
+  if (level >= 3) return "Silver";
+  if (level >= 1) return "Bronze";
+  return "Unranked";
+}
+
 // ---------------------------------------------------------------------------
 // Transform raw API response -> PlayerStats
 // ---------------------------------------------------------------------------
@@ -109,17 +122,16 @@ export function transformApiResponse(
   const winRate = totalMatches > 0 ? totalWins / totalMatches : 0;
   const kda = (totalKills + totalAssists) / Math.max(totalDeaths, 1);
 
-  // Rank info
+  // Rank info — decode from season data since rankData.rank is often "Invalid level"
   const rankData = data?.player?.rank;
-  const rankName = rankData?.rank ?? "Unranked";
-  // Derive tier from rank string (e.g. "Diamond 3" -> tier "3", "Eternity" -> "")
-  const tierMatch = rankName.match(/\s(\S+)$/);
-  const tier = tierMatch ? tierMatch[1] : "";
-  const baseName = tier ? rankName.replace(/\s\S+$/, "") : rankName;
+  const seasons = data?.player?.info?.rank_game_season ?? {};
+  const latestSeason = Object.keys(seasons).sort().pop();
+  const seasonData = latestSeason ? seasons[latestSeason] : null;
+  const maxLevel = seasonData?.max_level ?? 0;
 
   const rank = {
-    name: baseName,
-    tier,
+    name: rankFromLevel(maxLevel),
+    tier: maxLevel > 0 ? String(maxLevel) : "",
     iconUrl: rankData?.image ?? null,
   };
 

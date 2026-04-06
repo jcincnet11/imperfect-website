@@ -159,7 +159,7 @@ const MR_ROSTER: Player[] = [
     ign: "iaguacate",
     role: "Strategist",
     division: "MR",
-    rank: "Grandmaster",
+    rank: "",
     flag: "🇵🇷",
     bio: "Head Coach and Strategist. The brain behind the gameplan — sees three plays ahead.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -175,7 +175,7 @@ const MR_ROSTER: Player[] = [
     ign: "lblazerowl",
     role: "Strategist",
     division: "MR",
-    rank: "Grandmaster",
+    rank: "",
     flag: "🇵🇷",
     bio: "Captain and Strategist. Calls the shots and keeps the squad locked in.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -191,7 +191,7 @@ const MR_ROSTER: Player[] = [
     ign: "crazyturnx",
     role: "Vanguard",
     division: "MR",
-    rank: "Diamond 1",
+    rank: "",
     flag: "🇵🇷",
     bio: "High-mobility duelist. Finds the angle before you know it exists.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -207,7 +207,7 @@ const MR_ROSTER: Player[] = [
     ign: "georgierican",
     role: "Strategist",
     division: "MR",
-    rank: "Diamond 1",
+    rank: "",
     flag: "🇵🇷",
     bio: "Flex strategist. Adapts the kit to whatever the team needs in the moment.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -223,7 +223,7 @@ const MR_ROSTER: Player[] = [
     ign: "spooit",
     role: "Vanguard",
     division: "MR",
-    rank: "Grandmaster",
+    rank: "",
     flag: "🇵🇷",
     bio: "Front line enforcer. Sets the pace and controls the space.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -239,7 +239,7 @@ const MR_ROSTER: Player[] = [
     ign: "the_mofn_ninja",
     role: "Duelist",
     division: "MR",
-    rank: "Diamond 1",
+    rank: "",
     flag: "🇵🇷",
     bio: "Dive duelist. If you blinked, you already lost the 1v1.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -255,7 +255,7 @@ const MR_ROSTER: Player[] = [
     ign: "tides100ping",
     role: "Duelist",
     division: "MR",
-    rank: "Diamond 1",
+    rank: "",
     flag: "🇵🇷",
     bio: "Ranged duelist. Consistent damage. Never out of position.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -271,7 +271,7 @@ const MR_ROSTER: Player[] = [
     ign: "zoivanni",
     role: "Vanguard",
     division: "MR",
-    rank: "Diamond 1",
+    rank: "",
     flag: "🇵🇷",
     bio: "Anchor vanguard. Holds the line and creates space for the team.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -290,7 +290,7 @@ const SHADOWS_ROSTER: Player[] = [
     ign: "filthypryde",
     role: "Duelist",
     division: "MR",
-    rank: "Diamond",
+    rank: "",
     flag: "🇵🇷",
     bio: "Aggressive duelist. Sharp reads and sharper plays.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -306,7 +306,7 @@ const SHADOWS_ROSTER: Player[] = [
     ign: "Oxarian",
     role: "Strategist",
     division: "MR",
-    rank: "Diamond",
+    rank: "",
     flag: "🇵🇷",
     bio: "Strategist with 140+ ranked matches. Controls the flow of every fight.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -322,7 +322,7 @@ const SHADOWS_ROSTER: Player[] = [
     ign: "Shockwave",
     role: "Duelist",
     division: "MR",
-    rank: "Diamond",
+    rank: "",
     flag: "🇵🇷",
     bio: "Duelist with explosive plays. High risk, high reward.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -338,7 +338,7 @@ const SHADOWS_ROSTER: Player[] = [
     ign: "Silenusᵗᵛ",
     role: "Vanguard",
     division: "MR",
-    rank: "Diamond",
+    rank: "",
     flag: "🇵🇷",
     bio: "Vanguard anchor. Sets the pace and holds the line for the squad.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -354,7 +354,7 @@ const SHADOWS_ROSTER: Player[] = [
     ign: "vHaze",
     role: "Vanguard",
     division: "MR",
-    rank: "Diamond",
+    rank: "",
     flag: "🇵🇷",
     bio: "Front line vanguard. Creates space and never backs down.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -370,7 +370,7 @@ const SHADOWS_ROSTER: Player[] = [
     ign: "DerekVieraPR",
     role: "Strategist",
     division: "MR",
-    rank: "Diamond",
+    rank: "",
     flag: "🇵🇷",
     bio: "Strategist with versatile reads. Controls the fight from every angle.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -386,7 +386,7 @@ const SHADOWS_ROSTER: Player[] = [
     ign: "ABJ.",
     role: "Strategist",
     division: "MR",
-    rank: "Diamond",
+    rank: "",
     flag: "🇵🇷",
     bio: "Flex strategist. Reads the game and adapts — 96 ranked matches deep.",
     socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
@@ -560,22 +560,24 @@ function PlayerCard({ player }: { player: Player }) {
         {/* Flag + rank badge */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px", flexShrink: 0 }}>
           <span style={{ fontSize: "16px", lineHeight: 1 }}>{player.flag}</span>
-          <span
-            style={{
-              background: color,
-              color: "#111111",
-              borderRadius: "999px",
-              fontSize: "10px",
-              fontWeight: 700,
-              fontFamily: "var(--font-barlow), sans-serif",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              padding: "2px 8px",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {player.rank}
-          </span>
+          {player.rank && (
+            <span
+              style={{
+                background: color,
+                color: "#111111",
+                borderRadius: "999px",
+                fontSize: "10px",
+                fontWeight: 700,
+                fontFamily: "var(--font-barlow), sans-serif",
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                padding: "2px 8px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {player.rank}
+            </span>
+          )}
         </div>
       </div>
 

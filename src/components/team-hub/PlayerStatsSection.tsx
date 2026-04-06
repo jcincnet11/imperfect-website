@@ -18,6 +18,7 @@ type HeroStat = {
 
 type PlayerStats = {
   username: string;
+  rank?: { name: string; tier: string; iconUrl: string | null };
   winRate: number;
   kda: number;
   matchesPlayed: number;
@@ -131,6 +132,25 @@ export default function PlayerStatsSection({
           gap: "8px",
         }}
       >
+        {/* ── Rank badge ── */}
+        {stats.rank && stats.rank.name && stats.rank.name !== "Unranked" && (
+          <span style={{
+            display: "inline-block",
+            background: "#C8E400",
+            color: "#111111",
+            borderRadius: "999px",
+            fontSize: "10px",
+            fontWeight: 700,
+            fontFamily: "var(--font-barlow), sans-serif",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            padding: "2px 8px",
+            width: "fit-content",
+          }}>
+            {stats.rank.name}
+          </span>
+        )}
+
         {/* ── Summary line ── */}
         <p style={{ margin: 0, fontSize: "12px", lineHeight: 1.4 }}>
           <span style={{ color: "#C8E400", fontWeight: 700 }}>{winPct}% WR</span>
