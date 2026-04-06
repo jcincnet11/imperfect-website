@@ -332,7 +332,7 @@ const SHADOWS_ROSTER: Player[] = [
   {
     id: 21,
     name: "filthypryde",
-    ign: "filthypryde",
+    ign: "FifiPryde",
     role: "Duelist",
     division: "MR",
     rank: "",
