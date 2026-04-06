@@ -4,8 +4,9 @@ Task tracking for IMPerfect esports site. Mark `[~]` when starting, `[x]` when d
 
 ## Content & Features
 
-- [ ] Fill in real OW2 roster data — 5 players use placeholder names/bios/socials (`src/app/[locale]/team/page.tsx`)
-- [ ] Populate Shadows and Echoes subteam rosters — currently TBA ghost cards (`src/app/[locale]/team/page.tsx`)
+- [ ] Fill in real OW2 roster data — currently placeholder (OW2 division rebuilding, no players in DB)
+- [x] Populate Shadows roster with real player data from Supabase (6 players)
+- [ ] Populate Echoes subteam roster — currently TBA ghost cards (no players in DB yet)
 - [x] Build news article detail pages — cards show "Coming Soon", no `/news/[slug]` route exists
 - [ ] Add TikTok and YouTube handles to Footer — currently hardcoded to `#` (needs real handles)
 - [x] Translate remaining data strings (community events, milestones, game descriptions, tier perks) to Spanish

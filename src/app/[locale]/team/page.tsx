@@ -42,6 +42,7 @@ type Player = {
 
 // ── Roster Data ──────────────────────────────────────────────────
 
+// NOTE: OW2 division is being rebuilt — these are placeholder players for now.
 const OW2_ROSTER: Player[] = [
   {
     id: 1,
@@ -153,40 +154,46 @@ const OW2_ROSTER: Player[] = [
 const MR_ROSTER: Player[] = [
   {
     id: 6,
-    name: "Player Six",
-    ign: "IronFistPR",
-    role: "Vanguard",
+    name: "iaguacate",
+    ign: "iaguacate",
+    role: "Strategist",
     division: "MR",
     rank: "Grandmaster",
     flag: "🇵🇷",
-    bio: "Front line enforcer. Sets the pace and controls the space.",
-    socials: {
-      twitter: "https://twitter.com/placeholder",
-      instagram: null,
-      tiktok: null,
-      twitch: null,
-    },
+    bio: "Head Coach and Strategist. The brain behind the gameplan — sees three plays ahead.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
     topHeroes: [
-      { name: "Magneto",  role: "Vanguard", winRate: "72%", timePlayed: "95h"  },
-      { name: "Thor",     role: "Vanguard", winRate: "65%", timePlayed: "70h"  },
-      { name: "Iron Man", role: "Duelist",  winRate: "58%", timePlayed: "40h"  },
+      { name: "Loki",         role: "Strategist", winRate: "71%", timePlayed: "110h" },
+      { name: "Luna Snow",    role: "Strategist", winRate: "64%", timePlayed: "85h"  },
+      { name: "Adam Warlock", role: "Strategist", winRate: "59%", timePlayed: "60h"  },
     ],
   },
   {
     id: 7,
-    name: "Player Seven",
-    ign: "SpiderGang",
-    role: "Duelist",
+    name: "lblazerowl",
+    ign: "lblazerowl",
+    role: "Strategist",
     division: "MR",
     rank: "Grandmaster",
     flag: "🇵🇷",
+    bio: "Captain and Strategist. Calls the shots and keeps the squad locked in.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Mantis",        role: "Strategist", winRate: "68%", timePlayed: "100h" },
+      { name: "Luna Snow",     role: "Strategist", winRate: "62%", timePlayed: "75h"  },
+      { name: "Cloak & Dagger", role: "Strategist", winRate: "57%", timePlayed: "45h" },
+    ],
+  },
+  {
+    id: 8,
+    name: "crazyturnx",
+    ign: "crazyturnx",
+    role: "Duelist",
+    division: "MR",
+    rank: "Diamond 1",
+    flag: "🇵🇷",
     bio: "High-mobility duelist. Finds the angle before you know it exists.",
-    socials: {
-      twitter: "https://twitter.com/placeholder",
-      instagram: "https://instagram.com/placeholder",
-      tiktok: "https://tiktok.com/@placeholder",
-      twitch: null,
-    },
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
     topHeroes: [
       { name: "Spider-Man",    role: "Duelist", winRate: "74%", timePlayed: "120h" },
       { name: "Black Panther", role: "Duelist", winRate: "66%", timePlayed: "80h"  },
@@ -194,87 +201,182 @@ const MR_ROSTER: Player[] = [
     ],
   },
   {
-    id: 8,
-    name: "Player Eight",
-    ign: "StarlordPR",
-    role: "Duelist",
+    id: 9,
+    name: "georgierican",
+    ign: "georgierican",
+    role: "Strategist",
     division: "MR",
     rank: "Diamond 1",
     flag: "🇵🇷",
-    bio: "Ranged duelist. Consistent damage. Never out of position.",
-    socials: {
-      twitter: null,
-      instagram: "https://instagram.com/placeholder",
-      tiktok: null,
-      twitch: "https://twitch.tv/placeholder",
-    },
+    bio: "Flex strategist. Adapts the kit to whatever the team needs in the moment.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
     topHeroes: [
-      { name: "Star-Lord", role: "Duelist", winRate: "69%", timePlayed: "100h" },
-      { name: "Hawkeye",   role: "Duelist", winRate: "62%", timePlayed: "65h"  },
-      { name: "Punisher",  role: "Duelist", winRate: "57%", timePlayed: "45h"  },
+      { name: "Mantis",     role: "Strategist", winRate: "68%", timePlayed: "100h" },
+      { name: "Loki",       role: "Strategist", winRate: "62%", timePlayed: "75h"  },
+      { name: "Luna Snow",  role: "Strategist", winRate: "57%", timePlayed: "45h"  },
     ],
   },
   {
-    id: 9,
-    name: "Player Nine",
-    ign: "NightcrawlerX",
+    id: 10,
+    name: "spooit",
+    ign: "spooit",
+    role: "Vanguard",
+    division: "MR",
+    rank: "Grandmaster",
+    flag: "🇵🇷",
+    bio: "Front line enforcer. Sets the pace and controls the space.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Magneto",         role: "Vanguard", winRate: "72%", timePlayed: "95h" },
+      { name: "Thor",            role: "Vanguard", winRate: "65%", timePlayed: "70h" },
+      { name: "Captain America", role: "Vanguard", winRate: "58%", timePlayed: "40h" },
+    ],
+  },
+  {
+    id: 11,
+    name: "the_mofn_ninja",
+    ign: "the_mofn_ninja",
     role: "Duelist",
     division: "MR",
     rank: "Diamond 1",
     flag: "🇵🇷",
     bio: "Dive duelist. If you blinked, you already lost the 1v1.",
-    socials: {
-      twitter: "https://twitter.com/placeholder",
-      instagram: null,
-      tiktok: "https://tiktok.com/@placeholder",
-      twitch: null,
-    },
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
     topHeroes: [
-      { name: "Black Widow",    role: "Duelist", winRate: "67%", timePlayed: "90h"  },
-      { name: "Psylocke",       role: "Duelist", winRate: "63%", timePlayed: "70h"  },
-      { name: "Winter Soldier", role: "Duelist", winRate: "58%", timePlayed: "50h"  },
+      { name: "Black Panther", role: "Duelist", winRate: "67%", timePlayed: "90h" },
+      { name: "Wolverine",     role: "Duelist", winRate: "63%", timePlayed: "70h" },
+      { name: "Spider-Man",    role: "Duelist", winRate: "58%", timePlayed: "50h" },
     ],
   },
   {
-    id: 10,
-    name: "Player Ten",
-    ign: "DrStrangeVibes",
-    role: "Strategist",
-    division: "MR",
-    rank: "Grandmaster",
-    flag: "🇵🇷",
-    bio: "Main strategist. The IQ of the team. Sees three plays ahead.",
-    socials: {
-      twitter: "https://twitter.com/placeholder",
-      instagram: "https://instagram.com/placeholder",
-      tiktok: null,
-      twitch: null,
-    },
-    topHeroes: [
-      { name: "Doctor Strange", role: "Vanguard",   winRate: "71%", timePlayed: "110h" },
-      { name: "Loki",           role: "Strategist", winRate: "64%", timePlayed: "85h"  },
-      { name: "Adam Warlock",   role: "Strategist", winRate: "59%", timePlayed: "60h"  },
-    ],
-  },
-  {
-    id: 11,
-    name: "Player Eleven",
-    ign: "MantisMain",
-    role: "Strategist",
+    id: 12,
+    name: "tides100ping",
+    ign: "tides100ping",
+    role: "Duelist",
     division: "MR",
     rank: "Diamond 1",
     flag: "🇵🇷",
-    bio: "Flex strategist. Adapts her kit to whatever the team needs in the moment.",
-    socials: {
-      twitter: null,
-      instagram: "https://instagram.com/placeholder",
-      tiktok: "https://tiktok.com/@placeholder",
-      twitch: null,
-    },
+    bio: "Ranged duelist. Consistent damage. Never out of position.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
     topHeroes: [
-      { name: "Mantis",          role: "Strategist", winRate: "68%", timePlayed: "100h" },
-      { name: "Luna Snow",       role: "Strategist", winRate: "62%", timePlayed: "75h"  },
-      { name: "Cloak & Dagger",  role: "Strategist", winRate: "57%", timePlayed: "45h"  },
+      { name: "Star-Lord", role: "Duelist", winRate: "69%", timePlayed: "100h" },
+      { name: "Hawkeye",   role: "Duelist", winRate: "62%", timePlayed: "65h"  },
+      { name: "Spider-Man", role: "Duelist", winRate: "57%", timePlayed: "45h" },
+    ],
+  },
+  {
+    id: 13,
+    name: "zoivanni",
+    ign: "zoivanni",
+    role: "Vanguard",
+    division: "MR",
+    rank: "Diamond 1",
+    flag: "🇵🇷",
+    bio: "Anchor vanguard. Holds the line and creates space for the team.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Thor",            role: "Vanguard", winRate: "70%", timePlayed: "90h" },
+      { name: "Magneto",         role: "Vanguard", winRate: "64%", timePlayed: "75h" },
+      { name: "Captain America", role: "Vanguard", winRate: "59%", timePlayed: "55h" },
+    ],
+  },
+];
+
+const SHADOWS_ROSTER: Player[] = [
+  {
+    id: 20,
+    name: "azul1to",
+    ign: "azul1to",
+    role: "Vanguard",
+    division: "MR",
+    rank: "Diamond",
+    flag: "🇵🇷",
+    bio: "Vanguard holding it down. Creates space and never backs off.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Magneto",         role: "Vanguard", winRate: "68%", timePlayed: "80h" },
+      { name: "Thor",            role: "Vanguard", winRate: "62%", timePlayed: "60h" },
+      { name: "Captain America", role: "Vanguard", winRate: "56%", timePlayed: "40h" },
+    ],
+  },
+  {
+    id: 21,
+    name: "filthypryde",
+    ign: "filthypryde",
+    role: "Strategist",
+    division: "MR",
+    rank: "Diamond",
+    flag: "🇵🇷",
+    bio: "Strategist with sharp reads. Keeps the team alive and in control.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Mantis",    role: "Strategist", winRate: "66%", timePlayed: "75h" },
+      { name: "Luna Snow", role: "Strategist", winRate: "60%", timePlayed: "55h" },
+      { name: "Loki",      role: "Strategist", winRate: "55%", timePlayed: "40h" },
+    ],
+  },
+  {
+    id: 22,
+    name: "oxarianz",
+    ign: "oxarianz",
+    role: "Duelist",
+    division: "MR",
+    rank: "Diamond",
+    flag: "🇵🇷",
+    bio: "Aggressive duelist. Gets in, gets the pick, gets out.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Spider-Man",    role: "Duelist", winRate: "70%", timePlayed: "85h" },
+      { name: "Black Panther", role: "Duelist", winRate: "63%", timePlayed: "60h" },
+      { name: "Wolverine",     role: "Duelist", winRate: "57%", timePlayed: "45h" },
+    ],
+  },
+  {
+    id: 23,
+    name: "shokwave10",
+    ign: "shokwave10",
+    role: "Duelist",
+    division: "MR",
+    rank: "Diamond",
+    flag: "🇵🇷",
+    bio: "Duelist with explosive plays. High risk, high reward.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Wolverine",     role: "Duelist", winRate: "68%", timePlayed: "80h" },
+      { name: "Hawkeye",       role: "Duelist", winRate: "61%", timePlayed: "55h" },
+      { name: "Black Panther", role: "Duelist", winRate: "56%", timePlayed: "40h" },
+    ],
+  },
+  {
+    id: 24,
+    name: "silenustv",
+    ign: "silenustv",
+    role: "Support",
+    division: "MR",
+    rank: "Diamond",
+    flag: "🇵🇷",
+    bio: "Support backbone. Silent but essential — always in the right spot.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Mantis",    role: "Strategist", winRate: "65%", timePlayed: "70h" },
+      { name: "Luna Snow", role: "Strategist", winRate: "59%", timePlayed: "50h" },
+      { name: "Loki",      role: "Strategist", winRate: "54%", timePlayed: "35h" },
+    ],
+  },
+  {
+    id: 25,
+    name: "vhaze21",
+    ign: "vhaze21",
+    role: "Duelist",
+    division: "MR",
+    rank: "Diamond",
+    flag: "🇵🇷",
+    bio: "Versatile duelist. Adapts to any matchup and delivers.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Star-Lord",  role: "Duelist", winRate: "67%", timePlayed: "75h" },
+      { name: "Spider-Man", role: "Duelist", winRate: "61%", timePlayed: "55h" },
+      { name: "Hawkeye",    role: "Duelist", winRate: "55%", timePlayed: "40h" },
     ],
   },
 ];
@@ -583,13 +685,6 @@ function PlayerCard({ player }: { player: Player }) {
 
 const MR_SUBTEAMS = [
   {
-    id: "shadows",
-    name: "Shadows",
-    tagline: "Second squad. Same hunger.",
-    color: "#9B59B6",
-    slots: 6,
-  },
-  {
     id: "echoes",
     name: "Echoes",
     tagline: "Rising talent. Next in line.",
@@ -867,7 +962,70 @@ export default function TeamPage() {
               ))}
             </div>
 
-            {/* Shadows & Echoes sub-teams — MR only */}
+            {/* Shadows roster — MR only */}
+            {activeDivision === "MR" && (
+              <div
+                style={{
+                  marginTop: "48px",
+                  borderTop: "1px solid #222222",
+                  paddingTop: "40px",
+                }}
+              >
+                {/* Shadows section label */}
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "32px" }}>
+                  <span
+                    className="font-heading font-bold uppercase"
+                    style={{ fontSize: "13px", color: "#FFFFFF", letterSpacing: "0.12em" }}
+                  >
+                    IMPerfect · Shadows
+                  </span>
+                  <span
+                    style={{
+                      background: "#9B59B618",
+                      border: "1px solid #9B59B644",
+                      color: "#9B59B6",
+                      borderRadius: "999px",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      fontFamily: "var(--font-barlow), sans-serif",
+                      padding: "2px 10px",
+                    }}
+                  >
+                    Marvel Rivals
+                  </span>
+                  <span
+                    style={{
+                      background: "#C8E40022",
+                      border: "1px solid #C8E40044",
+                      color: "#C8E400",
+                      borderRadius: "999px",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      fontFamily: "var(--font-barlow), sans-serif",
+                      padding: "2px 10px",
+                    }}
+                  >
+                    {SHADOWS_ROSTER.length} {t("players_count")}
+                  </span>
+                </div>
+
+                {/* Shadows card grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: "16px" }}>
+                  {SHADOWS_ROSTER.map((player, i) => (
+                    <m.div
+                      key={player.id}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.05 }}
+                    >
+                      <PlayerCard player={player} />
+                    </m.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Echoes sub-team — MR only */}
             {activeDivision === "MR" && MR_SUBTEAMS.map((subteam) => (
               <SubTeamComingSoon key={subteam.id} team={subteam} />
             ))}
