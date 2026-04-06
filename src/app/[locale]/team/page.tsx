@@ -441,6 +441,22 @@ const SHADOWS_ROSTER: Player[] = [
       { name: "Mantis",         role: "Strategist", winRate: "52%", timePlayed: "35h" },
     ],
   },
+  {
+    id: 28,
+    name: "PapitaSlayër",
+    ign: "PapitaSlayër",
+    role: "Duelist",
+    division: "MR",
+    rank: "",
+    flag: "🇵🇷",
+    bio: "Duelist with 94 ranked matches. Psylocke main — sharp and relentless.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Psylocke",  role: "Duelist", winRate: "62%", timePlayed: "50h" },
+      { name: "Star-Lord", role: "Duelist", winRate: "58%", timePlayed: "35h" },
+      { name: "Magik",     role: "Duelist", winRate: "55%", timePlayed: "25h" },
+    ],
+  },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────
