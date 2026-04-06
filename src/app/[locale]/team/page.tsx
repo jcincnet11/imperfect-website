@@ -380,6 +380,38 @@ const SHADOWS_ROSTER: Player[] = [
       { name: "Hawkeye",    role: "Duelist", winRate: "55%", timePlayed: "40h" },
     ],
   },
+  {
+    id: 26,
+    name: "DerekVieraPR",
+    ign: "DerekVieraPR",
+    role: "Strategist",
+    division: "MR",
+    rank: "Diamond",
+    flag: "🇵🇷",
+    bio: "Strategist with versatile reads. Controls the fight from every angle.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "Loki",           role: "Strategist", winRate: "60%", timePlayed: "50h" },
+      { name: "Doctor Strange", role: "Vanguard",   winRate: "55%", timePlayed: "40h" },
+      { name: "Mantis",         role: "Strategist", winRate: "52%", timePlayed: "30h" },
+    ],
+  },
+  {
+    id: 27,
+    name: "ABJ",
+    ign: "ABJ.",
+    role: "Strategist",
+    division: "MR",
+    rank: "Diamond",
+    flag: "🇵🇷",
+    bio: "Flex strategist. Reads the game and adapts — 96 ranked matches deep.",
+    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
+    topHeroes: [
+      { name: "The Punisher",   role: "Duelist",    winRate: "58%", timePlayed: "60h" },
+      { name: "Doctor Strange", role: "Vanguard",   winRate: "54%", timePlayed: "45h" },
+      { name: "Mantis",         role: "Strategist", winRate: "52%", timePlayed: "35h" },
+    ],
+  },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────
