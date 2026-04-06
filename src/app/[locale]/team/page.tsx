@@ -285,22 +285,6 @@ const MR_ROSTER: Player[] = [
 
 const SHADOWS_ROSTER: Player[] = [
   {
-    id: 20,
-    name: "azul1to",
-    ign: "azul1to",
-    role: "Vanguard",
-    division: "MR",
-    rank: "Diamond",
-    flag: "🇵🇷",
-    bio: "Vanguard holding it down. Creates space and never backs off.",
-    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
-    topHeroes: [
-      { name: "Magneto",         role: "Vanguard", winRate: "68%", timePlayed: "80h" },
-      { name: "Thor",            role: "Vanguard", winRate: "62%", timePlayed: "60h" },
-      { name: "Captain America", role: "Vanguard", winRate: "56%", timePlayed: "40h" },
-    ],
-  },
-  {
     id: 21,
     name: "filthypryde",
     ign: "filthypryde",
