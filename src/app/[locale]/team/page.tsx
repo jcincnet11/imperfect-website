@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { m, AnimatePresence } from "framer-motion";
+import PlayerStatsSection from "@/components/team-hub/PlayerStatsSection";
 
 // ── Types ────────────────────────────────────────────────────────
 
@@ -677,6 +678,11 @@ function PlayerCard({ player }: { player: Player }) {
         )}
         <SocialButton href={trackerUrl(player)} label="TRK" />
       </div>
+
+      {/* ── Live stats (MR only) ── */}
+      {player.division === "MR" && (
+        <PlayerStatsSection ign={player.ign} division={player.division} />
+      )}
     </div>
   );
 }
