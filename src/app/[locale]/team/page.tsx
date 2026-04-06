@@ -596,87 +596,82 @@ function PlayerCard({ player }: { player: Player }) {
         {player.bio}
       </p>
 
-      {/* ── Top Heroes ── */}
-      <div>
-        <p
-          style={{
-            fontSize: "10px",
-            color: "#C8E400",
-            textTransform: "uppercase",
-            letterSpacing: "0.15em",
-            fontWeight: 700,
-            fontFamily: "var(--font-barlow), sans-serif",
-            marginBottom: "10px",
-          }}
-        >
-          {t("top_heroes")}
-        </p>
+      {/* ── Top Heroes (static fallback — only shown for OW2 players without live stats) ── */}
+      {player.division !== "MR" && (
+        <div>
+          <p
+            style={{
+              fontSize: "10px",
+              color: "#C8E400",
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+              fontWeight: 700,
+              fontFamily: "var(--font-barlow), sans-serif",
+              marginBottom: "10px",
+            }}
+          >
+            {t("top_heroes")}
+          </p>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          {player.topHeroes.map((hero, i) => {
-            const isTop = i === 0;
-            return (
-              <div
-                key={hero.name}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  paddingLeft: isTop ? "8px" : "0",
-                  borderLeft: isTop ? "3px solid #C8E400" : "3px solid transparent",
-                }}
-              >
-                {/* Hero name */}
-                <span
-                  className="font-heading font-bold"
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            {player.topHeroes.map((hero, i) => {
+              const isTop = i === 0;
+              return (
+                <div
+                  key={hero.name}
                   style={{
-                    fontSize: isTop ? "15px" : "13px",
-                    color: "#FFFFFF",
-                    flex: 1,
-                    minWidth: 0,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    paddingLeft: isTop ? "8px" : "0",
+                    borderLeft: isTop ? "3px solid #C8E400" : "3px solid transparent",
                   }}
                 >
-                  {hero.name}
-                </span>
-
-                {/* Role badge */}
-                <RoleBadge role={hero.role} small />
-
-                {/* Win rate */}
-                <span
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: 700,
-                    color: "#C8E400",
-                    whiteSpace: "nowrap",
-                    fontFamily: "var(--font-barlow), sans-serif",
-                    minWidth: "34px",
-                    textAlign: "right",
-                  }}
-                >
-                  {hero.winRate}
-                </span>
-
-                {/* Time played */}
-                <span
-                  style={{
-                    fontSize: "11px",
-                    color: "#666666",
-                    whiteSpace: "nowrap",
-                    minWidth: "32px",
-                    textAlign: "right",
-                  }}
-                >
-                  {hero.timePlayed}
-                </span>
-              </div>
-            );
-          })}
+                  <span
+                    className="font-heading font-bold"
+                    style={{
+                      fontSize: isTop ? "15px" : "13px",
+                      color: "#FFFFFF",
+                      flex: 1,
+                      minWidth: 0,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {hero.name}
+                  </span>
+                  <RoleBadge role={hero.role} small />
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      color: "#C8E400",
+                      whiteSpace: "nowrap",
+                      fontFamily: "var(--font-barlow), sans-serif",
+                      minWidth: "34px",
+                      textAlign: "right",
+                    }}
+                  >
+                    {hero.winRate}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      color: "#666666",
+                      whiteSpace: "nowrap",
+                      minWidth: "32px",
+                      textAlign: "right",
+                    }}
+                  >
+                    {hero.timePlayed}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ── Social links ── */}
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
