@@ -189,7 +189,7 @@ const MR_ROSTER: Player[] = [
     id: 8,
     name: "crazyturnx",
     ign: "crazyturnx",
-    role: "Duelist",
+    role: "Vanguard",
     division: "MR",
     rank: "Diamond 1",
     flag: "🇵🇷",
