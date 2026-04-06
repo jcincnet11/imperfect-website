@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Scrim, Player, Availability } from "@/lib/db";
 import type { OrgRole } from "@/lib/permissions";
+import ScrimApplicationsPanel from "./ScrimApplicationsPanel";
 
 type Props = {
   scrims: Scrim[];
@@ -56,6 +57,7 @@ export default function ScrimsPanel({ scrims, players, availability, orgRole, cu
   const [saving, setSaving] = useState(false);
   const [logModal, setLogModal] = useState<Scrim | null>(null);
   const [logResult, setLogResult] = useState<{ result: Scrim["result"]; score: string; notes: string }>({ result: "W", score: "", notes: "" });
+  const [activeTab, setActiveTab] = useState<"scrims" | "applications">("scrims");
 
   const upcoming = localScrims.filter((s) => s.status !== "Cancelled" && s.status !== "Completed");
   const past = localScrims.filter((s) => s.status === "Completed" || s.status === "Cancelled");
@@ -188,6 +190,39 @@ export default function ScrimsPanel({ scrims, players, availability, orgRole, cu
         </div>
       </div>
 
+      {/* Tabs — only show if manager */}
+      {canManage && (
+        <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
+          {(["scrims", "applications"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: "8px 16px",
+                fontSize: "13px",
+                fontWeight: 600,
+                borderRadius: "8px",
+                cursor: "pointer",
+                transition: "all 0.15s",
+                border: activeTab === tab ? "1px solid rgba(200,228,0,0.3)" : "1px solid rgba(255,255,255,0.08)",
+                background: activeTab === tab ? "rgba(200,228,0,0.12)" : "transparent",
+                color: activeTab === tab ? "#C8E400" : "#777",
+              }}
+            >
+              {tab === "scrims" ? "Scrims" : "Applications"}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Applications tab */}
+      {activeTab === "applications" && canManage && (
+        <ScrimApplicationsPanel />
+      )}
+
+      {/* Scrims tab content */}
+      {activeTab !== "applications" && <>
+
       {/* Upcoming */}
       <section className="mb-10">
         <h2 className="text-xs font-semibold text-white/30 uppercase tracking-widest mb-3">Upcoming ({upcoming.length})</h2>
@@ -217,6 +252,8 @@ export default function ScrimsPanel({ scrims, players, availability, orgRole, cu
           </div>
         </section>
       )}
+
+      </>}
 
       {/* Create/Edit form modal */}
       {showForm && (

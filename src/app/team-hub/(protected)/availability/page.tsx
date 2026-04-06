@@ -2,6 +2,8 @@ import { auth } from "@/auth";
 import { getAvailability, getAvailabilityForPlayers, getAllPlayers, getPlayerByDiscordId, getScheduleBlocks } from "@/lib/db";
 import { resolveOrgRole, can } from "@/lib/permissions";
 import AvailabilityGrid from "@/components/team-hub/AvailabilityGrid";
+import AvailabilityTabs from "@/components/team-hub/AvailabilityTabs";
+import RecurringScheduleEditor from "@/components/team-hub/RecurringScheduleEditor";
 
 function getWeekStart(offsetWeeks = 0): string {
   const d = new Date();
@@ -118,21 +120,30 @@ export default async function AvailabilityPage({
 
       {!isCoachOrAdmin && (
         <p className="text-sm text-white/35 mb-5 leading-relaxed">
-          Mark your availability for each day this week. Changes save automatically.
+          Mark your availability for each day this week, or set up a recurring schedule.
         </p>
       )}
 
-      <div className="bg-[#111] border border-white/[0.07] rounded-2xl p-5">
-        <AvailabilityGrid
-          initialAvailability={availability}
-          players={players}
-          weekStart={weekStart}
-          currentDiscordId={discordId}
-          isCoachOrAdmin={isCoachOrAdmin}
-          myDivisions={myDivisions}
-          otherTeamSchedule={otherTeamSchedule}
-        />
-      </div>
+      <AvailabilityTabs
+        weeklyGrid={
+          <div className="bg-[#111] border border-white/[0.07] rounded-2xl p-5">
+            <AvailabilityGrid
+              initialAvailability={availability}
+              players={players}
+              weekStart={weekStart}
+              currentDiscordId={discordId}
+              isCoachOrAdmin={isCoachOrAdmin}
+              myDivisions={myDivisions}
+              otherTeamSchedule={otherTeamSchedule}
+            />
+          </div>
+        }
+        mySchedule={
+          <div className="bg-[#111] border border-white/[0.07] rounded-2xl p-5">
+            <RecurringScheduleEditor currentDiscordId={discordId} />
+          </div>
+        }
+      />
     </div>
   );
 }

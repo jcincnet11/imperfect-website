@@ -413,6 +413,248 @@ export async function deleteInvite(id: string): Promise<void> {
   await supabase.from("invites").delete().eq("id", id);
 }
 
+// ─── Availability Templates (Recurring) ─────────────────────────────────────
+
+export type AvailabilityBlock = "available" | "unavailable" | "unset";
+
+export type AvailabilityTemplate = {
+  id:                string;
+  player_discord_id: string;
+  day_of_week:       number; // 0=Mon, 6=Sun
+  morning:           AvailabilityBlock;
+  afternoon:         AvailabilityBlock;
+  evening:           AvailabilityBlock;
+  updated_at:        string;
+};
+
+export type AvailabilityOverride = {
+  id:                string;
+  player_discord_id: string;
+  override_date:     string; // YYYY-MM-DD
+  morning:           AvailabilityBlock;
+  afternoon:         AvailabilityBlock;
+  evening:           AvailabilityBlock;
+  created_at:        string;
+};
+
+/** Resolved availability for a single date. */
+export type ResolvedDay = {
+  date:      string; // YYYY-MM-DD
+  morning:   AvailabilityBlock;
+  afternoon: AvailabilityBlock;
+  evening:   AvailabilityBlock;
+  source:    "override" | "template" | "none";
+};
+
+export async function getTemplates(discordId: string): Promise<AvailabilityTemplate[]> {
+  if (!supabase) return [];
+  const { data } = await supabase
+    .from("availability_templates")
+    .select("*")
+    .eq("player_discord_id", discordId)
+    .order("day_of_week");
+  return (data as AvailabilityTemplate[]) ?? [];
+}
+
+export async function saveTemplates(
+  discordId: string,
+  rows: { day_of_week: number; morning: AvailabilityBlock; afternoon: AvailabilityBlock; evening: AvailabilityBlock }[],
+): Promise<void> {
+  if (!supabase) return;
+  const toUpsert = rows.map((r) => ({
+    player_discord_id: discordId,
+    ...r,
+  }));
+  await supabase
+    .from("availability_templates")
+    .upsert(toUpsert, { onConflict: "player_discord_id,day_of_week" });
+}
+
+export async function getOverrides(discordId: string): Promise<AvailabilityOverride[]> {
+  if (!supabase) return [];
+  const today = new Date().toISOString().slice(0, 10);
+  const { data } = await supabase
+    .from("availability_overrides")
+    .select("*")
+    .eq("player_discord_id", discordId)
+    .gte("override_date", today)
+    .order("override_date")
+    .limit(30);
+  return (data as AvailabilityOverride[]) ?? [];
+}
+
+export async function upsertOverride(
+  discordId: string,
+  override: { override_date: string; morning: AvailabilityBlock; afternoon: AvailabilityBlock; evening: AvailabilityBlock },
+): Promise<AvailabilityOverride> {
+  if (!supabase) throw new Error("Supabase required");
+  const { data, error } = await supabase
+    .from("availability_overrides")
+    .upsert(
+      { player_discord_id: discordId, ...override },
+      { onConflict: "player_discord_id,override_date" },
+    )
+    .select()
+    .single();
+  if (error) throw error;
+  return data as AvailabilityOverride;
+}
+
+export async function deleteOverride(discordId: string, overrideDate: string): Promise<void> {
+  if (!supabase) return;
+  await supabase
+    .from("availability_overrides")
+    .delete()
+    .eq("player_discord_id", discordId)
+    .eq("override_date", overrideDate);
+}
+
+/**
+ * Resolve availability for a player over a date range.
+ * Priority: override > template > unset.
+ */
+export async function resolveAvailability(
+  discordId: string,
+  startDate: string,
+  endDate: string,
+): Promise<ResolvedDay[]> {
+  const templates = await getTemplates(discordId);
+  // Build template lookup by day_of_week
+  const tplMap = new Map<number, AvailabilityTemplate>();
+  for (const t of templates) tplMap.set(t.day_of_week, t);
+
+  // Fetch overrides in range
+  let overrides: AvailabilityOverride[] = [];
+  if (supabase) {
+    const { data } = await supabase
+      .from("availability_overrides")
+      .select("*")
+      .eq("player_discord_id", discordId)
+      .gte("override_date", startDate)
+      .lte("override_date", endDate);
+    overrides = (data as AvailabilityOverride[]) ?? [];
+  }
+  const overrideMap = new Map<string, AvailabilityOverride>();
+  for (const o of overrides) overrideMap.set(o.override_date, o);
+
+  const results: ResolvedDay[] = [];
+  const cur = new Date(startDate + "T00:00:00");
+  const end = new Date(endDate + "T00:00:00");
+
+  while (cur <= end) {
+    const dateStr = cur.toISOString().slice(0, 10);
+    // JS getDay: 0=Sun, convert to our 0=Mon scheme
+    const jsDay = cur.getDay();
+    const dow = jsDay === 0 ? 6 : jsDay - 1; // 0=Mon..6=Sun
+
+    const ovr = overrideMap.get(dateStr);
+    if (ovr) {
+      results.push({
+        date: dateStr,
+        morning: ovr.morning,
+        afternoon: ovr.afternoon,
+        evening: ovr.evening,
+        source: "override",
+      });
+    } else {
+      const tpl = tplMap.get(dow);
+      if (tpl) {
+        results.push({
+          date: dateStr,
+          morning: tpl.morning,
+          afternoon: tpl.afternoon,
+          evening: tpl.evening,
+          source: "template",
+        });
+      } else {
+        results.push({
+          date: dateStr,
+          morning: "unset",
+          afternoon: "unset",
+          evening: "unset",
+          source: "none",
+        });
+      }
+    }
+    cur.setDate(cur.getDate() + 1);
+  }
+  return results;
+}
+
+// ─── Scrim Applications ─────────────────────────────────────────────────────
+
+export type ScrimApplication = {
+  id:                string;
+  team_name:         string;
+  discord_invite:    string | null;
+  captain_name:      string;
+  captain_discord:   string;
+  region:            string;
+  game:              "ow2" | "marvel_rivals" | "both";
+  format:            string;
+  rank_range:        string;
+  preferred_days:    string[];
+  preferred_blocks:  string[];
+  earliest_date:     string;
+  message:           string | null;
+  discord_confirmed: boolean;
+  status:            "pending" | "accepted" | "declined" | "scheduled";
+  linked_scrim_id:   string | null;
+  reviewed_by:       string | null;
+  reviewed_at:       string | null;
+  submitted_at:      string;
+};
+
+export async function getScrimApplications(status?: string): Promise<ScrimApplication[]> {
+  if (!supabase) return [];
+  let q = supabase.from("scrim_applications").select("*").order("submitted_at", { ascending: false });
+  if (status) q = q.eq("status", status);
+  const { data } = await q;
+  return (data as ScrimApplication[]) ?? [];
+}
+
+export async function createScrimApplication(
+  app: Omit<ScrimApplication, "id" | "status" | "linked_scrim_id" | "reviewed_by" | "reviewed_at" | "submitted_at">,
+): Promise<ScrimApplication> {
+  if (!supabase) throw new Error("Supabase required");
+  const { data, error } = await supabase
+    .from("scrim_applications")
+    .insert(app)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as ScrimApplication;
+}
+
+export async function checkDuplicateApplication(captainDiscord: string, game: string): Promise<boolean> {
+  if (!supabase) return false;
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const { data } = await supabase
+    .from("scrim_applications")
+    .select("id")
+    .eq("captain_discord", captainDiscord)
+    .eq("game", game)
+    .in("status", ["pending", "accepted"])
+    .gte("submitted_at", sevenDaysAgo)
+    .limit(1);
+  return (data?.length ?? 0) > 0;
+}
+
+export async function updateScrimApplication(
+  id: string,
+  patch: Partial<ScrimApplication>,
+): Promise<ScrimApplication> {
+  if (!supabase) throw new Error("Supabase required");
+  const { data, error } = await supabase
+    .from("scrim_applications")
+    .update(patch)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as ScrimApplication;
+}
+
 // ─── Stats Overrides ─────────────────────────────────────────────────────────
 
 export async function getStatsOverride(discordId: string): Promise<{
