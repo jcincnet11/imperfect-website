@@ -195,10 +195,10 @@ export function transformApiResponse(
     iconUrl: rankData?.image ?? null,
   };
 
-  // Top 3 heroes by play_time
-  const sorted = [...heroes].sort(
-    (a, b) => (b.play_time ?? 0) - (a.play_time ?? 0),
-  );
+  // Top 3 heroes by play_time — skip heroes the API can't identify yet
+  const sorted = [...heroes]
+    .filter((h) => h.hero_name && h.hero_name !== "Unknown")
+    .sort((a, b) => (b.play_time ?? 0) - (a.play_time ?? 0));
 
   const topHeroes: HeroStat[] = sorted.slice(0, 3).map((h) => {
     const heroMatches = h.matches ?? 0;
