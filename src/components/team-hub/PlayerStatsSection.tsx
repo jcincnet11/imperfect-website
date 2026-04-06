@@ -48,9 +48,11 @@ function Skeleton({ width, height }: { width: string; height: string }) {
 export default function PlayerStatsSection({
   ign,
   division,
+  discordId,
 }: {
   ign: string;
   division: "OW2" | "MR";
+  discordId?: string;
 }) {
   const [stats, setStats] = useState<PlayerStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -66,7 +68,8 @@ export default function PlayerStatsSection({
 
     async function fetchStats() {
       try {
-        const res = await fetch(`/api/marvel-rivals/player/${encodeURIComponent(ign)}`);
+        const qp = discordId ? `?discord_id=${encodeURIComponent(discordId)}` : "";
+        const res = await fetch(`/api/marvel-rivals/player/${encodeURIComponent(ign)}${qp}`);
         if (!res.ok) throw new Error("fetch failed");
         const json = await res.json();
         if (!cancelled) {
@@ -81,7 +84,7 @@ export default function PlayerStatsSection({
 
     fetchStats();
     return () => { cancelled = true; };
-  }, [ign, division]);
+  }, [ign, division, discordId]);
 
   // Don't render anything for OW2
   if (division !== "MR") return null;

@@ -412,3 +412,41 @@ export async function deleteInvite(id: string): Promise<void> {
   if (!supabase) return;
   await supabase.from("invites").delete().eq("id", id);
 }
+
+// ─── Stats Overrides ─────────────────────────────────────────────────────────
+
+export async function getStatsOverride(discordId: string): Promise<{
+  mr_username: string | null;
+  use_override: boolean;
+  rank_name: string | null;
+  win_rate: number | null;
+  kda: number | null;
+  matches: number | null;
+  top_heroes: { name: string; role: string; matchesPlayed: number; winRate: number; kda: number }[];
+} | null> {
+  if (!supabase) return null;
+  try {
+    const { data } = await supabase
+      .from("player_stats_override")
+      .select("*")
+      .eq("discord_id", discordId)
+      .single();
+    return data ?? null;
+  } catch {
+    return null; // Table might not exist yet
+  }
+}
+
+export async function upsertStatsOverride(
+  discordId: string,
+  override: Record<string, unknown>,
+): Promise<void> {
+  if (!supabase) return;
+  try {
+    await supabase
+      .from("player_stats_override")
+      .upsert({ discord_id: discordId, ...override, updated_at: new Date().toISOString() }, { onConflict: "discord_id" });
+  } catch {
+    // Table might not exist
+  }
+}

@@ -37,6 +37,8 @@ const HERO_ROLES: Record<string, "Vanguard" | "Duelist" | "Strategist"> = {
   groot: "Vanguard",
   "peni parker": "Vanguard",
   "emma frost": "Vanguard",
+  "the thing": "Vanguard",
+  ultron: "Vanguard",
 
   // Duelist
   "spider-man": "Duelist",
@@ -62,6 +64,12 @@ const HERO_ROLES: Record<string, "Vanguard" | "Duelist" | "Strategist"> = {
   storm: "Duelist",
   "captain marvel": "Duelist",
   "the hood": "Duelist",
+  "white fox": "Duelist",
+  daredevil: "Duelist",
+  gambit: "Duelist",
+  "black bolt": "Duelist",
+  "mr. negative": "Duelist",
+  taskmaster: "Duelist",
 
   // Strategist
   mantis: "Strategist",

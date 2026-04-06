@@ -164,6 +164,21 @@ CREATE TRIGGER availability_updated_at
   BEFORE UPDATE ON availability
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
+-- Player stats override (manual stat entry for when API data is wrong or unavailable)
+CREATE TABLE IF NOT EXISTS player_stats_override (
+  discord_id    TEXT PRIMARY KEY REFERENCES players(discord_id),
+  mr_username   TEXT,              -- Marvel Rivals in-game username (for API lookup)
+  use_override  BOOLEAN DEFAULT FALSE, -- If true, show manual data instead of API
+  rank_name     TEXT,
+  win_rate      NUMERIC,           -- 0.0-1.0
+  kda           NUMERIC,
+  matches       INTEGER,
+  top_heroes    JSONB DEFAULT '[]', -- [{name, role, matchesPlayed, winRate, kda}]
+  notes         TEXT,
+  updated_at    TIMESTAMPTZ DEFAULT NOW(),
+  updated_by    TEXT               -- discord_id of admin who last edited
+);
+
 -- Row Level Security (optional but recommended)
 ALTER TABLE players ENABLE ROW LEVEL SECURITY;
 ALTER TABLE schedule_blocks ENABLE ROW LEVEL SECURITY;

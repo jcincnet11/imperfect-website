@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { transformApiResponse, PlayerStats } from "@/lib/mr-stats";
+import { getStatsOverride } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,36 @@ export async function GET(
 
   const key = username.toLowerCase();
   const forceRefresh = request.nextUrl.searchParams.get("force") === "true";
+  const discordId = request.nextUrl.searchParams.get("discord_id");
+
+  // ----- Check for manual stats override -----
+  if (discordId) {
+    const override = await getStatsOverride(discordId);
+    if (override?.use_override) {
+      const manualStats: PlayerStats = {
+        username,
+        rank: {
+          name: override.rank_name ?? "Unranked",
+          tier: "",
+          iconUrl: null,
+        },
+        winRate: (override.win_rate ?? 0) / 100,
+        kda: override.kda ?? 0,
+        matchesPlayed: override.matches ?? 0,
+        topHeroes: (override.top_heroes ?? []).map((h) => ({
+          name: h.name,
+          role: h.role,
+          matchesPlayed: h.matchesPlayed,
+          winRate: h.winRate / 100,
+          kda: h.kda,
+          portraitUrl: null,
+        })),
+        dataSource: "manual",
+        lastUpdated: new Date().toISOString(),
+      };
+      return NextResponse.json({ stats: manualStats });
+    }
+  }
 
   // ----- Check cache (unless force) -----
   if (!forceRefresh) {
