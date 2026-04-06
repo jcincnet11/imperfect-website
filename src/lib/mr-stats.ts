@@ -137,6 +137,8 @@ const MR_HERO_ICON: Record<string, string> = {
   "black bolt": "https://marvelrivalsapi.com/rivals/heroes/transformations/black-bolt-headbig-0.webp",
   "mr. negative": "https://marvelrivalsapi.com/rivals/heroes/transformations/mr-negative-headbig-0.webp",
   "taskmaster": "https://marvelrivalsapi.com/rivals/heroes/transformations/taskmaster-headbig-0.webp",
+  "rogue": "https://marvelrivalsapi.com/rivals/heroes/transformations/rogue-headbig-0.webp",
+  "angela": "https://marvelrivalsapi.com/rivals/heroes/transformations/angela-headbig-0.webp",
 };
 
 /** Get the square headshot icon URL for a Marvel Rivals hero. */
@@ -211,7 +213,9 @@ export function transformApiResponse(
       matchesPlayed: heroMatches,
       winRate: heroMatches > 0 ? heroWins / heroMatches : 0,
       kda: (heroKills + heroAssists) / Math.max(heroDeaths, 1),
-      portraitUrl: h.hero_name ? mrHeroPortrait(h.hero_name) : null,
+      portraitUrl: h.hero_thumbnail
+        ? `https://marvelrivalsapi.com/rivals${h.hero_thumbnail}`
+        : mrHeroPortrait(h.hero_name ?? ""),
     };
   });
 
