@@ -319,7 +319,7 @@ const SHADOWS_ROSTER: Player[] = [
   {
     id: 22,
     name: "oxarianz",
-    ign: "oxarianz",
+    ign: "Oxarian",
     role: "Duelist",
     division: "MR",
     rank: "Diamond",
