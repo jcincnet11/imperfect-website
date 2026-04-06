@@ -27,6 +27,7 @@ export type PlayerStats = {
 // ---------------------------------------------------------------------------
 
 const HERO_ROLES: Record<string, "Vanguard" | "Duelist" | "Strategist"> = {
+  // Vanguard
   magneto: "Vanguard",
   thor: "Vanguard",
   "captain america": "Vanguard",
@@ -35,7 +36,9 @@ const HERO_ROLES: Record<string, "Vanguard" | "Duelist" | "Strategist"> = {
   venom: "Vanguard",
   groot: "Vanguard",
   "peni parker": "Vanguard",
+  "emma frost": "Vanguard",
 
+  // Duelist
   "spider-man": "Duelist",
   "black panther": "Duelist",
   wolverine: "Duelist",
@@ -52,7 +55,15 @@ const HERO_ROLES: Record<string, "Vanguard" | "Duelist" | "Strategist"> = {
   "scarlet witch": "Duelist",
   "iron fist": "Duelist",
   "squirrel girl": "Duelist",
+  blade: "Duelist",
+  "mister fantastic": "Duelist",
+  magik: "Duelist",
+  hela: "Duelist",
+  storm: "Duelist",
+  "captain marvel": "Duelist",
+  "the hood": "Duelist",
 
+  // Strategist
   mantis: "Strategist",
   "luna snow": "Strategist",
   loki: "Strategist",
