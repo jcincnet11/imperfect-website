@@ -53,6 +53,31 @@ export default function CommunitySection() {
                 {t("events_cta")}
               </Link>
             </div>
+
+            {/* Register Your Team CTA */}
+            <div style={{ marginTop: "32px", paddingTop: "24px", borderTop: "1px solid #2A2A2A" }}>
+              <p style={{ fontSize: "13px", color: "#888", marginBottom: "12px" }}>
+                Have a team? Bring your squad to the community.
+              </p>
+              <Link
+                href={`/${locale}/community/join`}
+                style={{
+                  display: "inline-block",
+                  background: "rgba(200,228,0,0.1)",
+                  border: "1px solid rgba(200,228,0,0.3)",
+                  color: "#C8E400",
+                  padding: "10px 24px",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Register Your Team →
+              </Link>
+            </div>
           </div>
         </m.div>
       </div>
