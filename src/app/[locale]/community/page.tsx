@@ -160,6 +160,52 @@ export default function CommunityPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Register Your Team CTA ── */}
+      <section style={{ padding: "80px 24px", borderTop: "1px solid #1F1F1F" }}>
+        <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+          <m.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{
+              background: "linear-gradient(135deg, rgba(200,228,0,0.08) 0%, rgba(200,228,0,0.02) 100%)",
+              border: "1px solid rgba(200,228,0,0.2)",
+              borderRadius: "20px",
+              padding: "40px 32px",
+              textAlign: "center",
+            }}
+          >
+            <p style={{ fontSize: "11px", color: "#C8E400", textTransform: "uppercase", letterSpacing: "0.2em", fontWeight: 700, marginBottom: "12px" }}>
+              Teams Welcome
+            </p>
+            <h2 className="font-heading font-black uppercase" style={{ fontSize: "28px", color: "#fff", marginBottom: "12px", lineHeight: 1.1 }}>
+              Register Your Team
+            </h2>
+            <p style={{ fontSize: "14px", color: "#888", lineHeight: 1.6, maxWidth: "440px", margin: "0 auto 24px" }}>
+              Bring your squad to the IMPerfect community. Get access to scrims, tournaments, coaching, and the competitive Puerto Rico gaming scene.
+            </p>
+            <Link
+              href={`/${locale}/community/join`}
+              style={{
+                display: "inline-block",
+                background: "#C8E400",
+                color: "#111",
+                padding: "14px 32px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                fontWeight: 800,
+                textDecoration: "none",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Register Now →
+            </Link>
+          </m.div>
+        </div>
+      </section>
     </main>
   );
 }

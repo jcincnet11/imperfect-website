@@ -15,8 +15,9 @@ const NAV = [
 ];
 
 const STAFF_NAV = [
-  { href: "/team-hub/roster",  label: "Roster",  icon: "◉", minRole: "HEAD_COACH" as OrgRole },
-  { href: "/team-hub/scrims",  label: "Scrims",  icon: "◫", minRole: "MANAGER"    as OrgRole },
+  { href: "/team-hub/roster",    label: "Roster",    icon: "◉", minRole: "HEAD_COACH" as OrgRole },
+  { href: "/team-hub/scrims",    label: "Scrims",    icon: "◫", minRole: "MANAGER"    as OrgRole },
+  { href: "/team-hub/community", label: "Community", icon: "◎", minRole: "MANAGER"    as OrgRole },
 ];
 
 const ADMIN_NAV = [

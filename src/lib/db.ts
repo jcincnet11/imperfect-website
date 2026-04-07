@@ -655,6 +655,122 @@ export async function updateScrimApplication(
   return data as ScrimApplication;
 }
 
+// ─── Community Teams ────────────────────────────────────────────────────────
+
+export type CommunityTeam = {
+  id:              string;
+  team_name:       string;
+  team_tag:        string | null;
+  games:           string[];
+  platforms:       string[];
+  region:          string;
+  discord_server:  string | null;
+  referral_source: string | null;
+  goals:           string[];
+  about:           string | null;
+  status:          "pending" | "approved" | "declined" | "active";
+  submitted_at:    string;
+  reviewed_by:     string | null;
+  reviewed_at:     string | null;
+  notes:           string | null;
+};
+
+export type CommunityTeamPlayer = {
+  id:             string;
+  team_id:        string;
+  is_captain:     boolean;
+  ign:            string;
+  discord_handle: string;
+  role:           string;
+  rank:           string;
+  platform:       string;
+  created_at:     string;
+};
+
+export async function getCommunityTeams(status?: string): Promise<CommunityTeam[]> {
+  if (!supabase) return [];
+  let q = supabase.from("community_teams").select("*").order("submitted_at", { ascending: false });
+  if (status) q = q.eq("status", status);
+  const { data } = await q;
+  return (data as CommunityTeam[]) ?? [];
+}
+
+export async function getCommunityTeamPlayers(teamId: string): Promise<CommunityTeamPlayer[]> {
+  if (!supabase) return [];
+  const { data } = await supabase
+    .from("community_team_players")
+    .select("*")
+    .eq("team_id", teamId)
+    .order("is_captain", { ascending: false });
+  return (data as CommunityTeamPlayer[]) ?? [];
+}
+
+export async function createCommunityTeam(
+  team: Omit<CommunityTeam, "id" | "status" | "submitted_at" | "reviewed_by" | "reviewed_at" | "notes">,
+  players: Omit<CommunityTeamPlayer, "id" | "team_id" | "created_at">[],
+): Promise<CommunityTeam> {
+  if (!supabase) throw new Error("Supabase required");
+  const { data: teamData, error: teamErr } = await supabase
+    .from("community_teams")
+    .insert(team)
+    .select()
+    .single();
+  if (teamErr) throw teamErr;
+  const created = teamData as CommunityTeam;
+
+  if (players.length > 0) {
+    const playerRows = players.map((p) => ({ ...p, team_id: created.id }));
+    await supabase.from("community_team_players").insert(playerRows);
+  }
+
+  return created;
+}
+
+export async function checkDuplicateCommunityTeam(captainDiscord: string, games: string[]): Promise<boolean> {
+  if (!supabase) return false;
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  // Find teams where captain matches and games overlap within 30 days
+  const { data: captainTeams } = await supabase
+    .from("community_team_players")
+    .select("team_id")
+    .eq("discord_handle", captainDiscord)
+    .eq("is_captain", true);
+
+  if (!captainTeams?.length) return false;
+
+  const teamIds = captainTeams.map((t) => t.team_id);
+  const { data: recentTeams } = await supabase
+    .from("community_teams")
+    .select("id, games")
+    .in("id", teamIds)
+    .in("status", ["pending", "approved", "active"])
+    .gte("submitted_at", thirtyDaysAgo);
+
+  if (!recentTeams?.length) return false;
+
+  // Check if any recent team has overlapping games
+  for (const t of recentTeams) {
+    const tGames = (t.games as string[]) ?? [];
+    if (games.some((g) => tGames.includes(g))) return true;
+  }
+  return false;
+}
+
+export async function updateCommunityTeam(
+  id: string,
+  patch: Partial<CommunityTeam>,
+): Promise<CommunityTeam> {
+  if (!supabase) throw new Error("Supabase required");
+  const { data, error } = await supabase
+    .from("community_teams")
+    .update(patch)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as CommunityTeam;
+}
+
 // ─── Stats Overrides ─────────────────────────────────────────────────────────
 
 export async function getStatsOverride(discordId: string): Promise<{

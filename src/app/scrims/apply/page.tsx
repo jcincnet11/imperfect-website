@@ -158,6 +158,12 @@ export default function ScrimApplyPage() {
           <p style={{ color: "#666", fontSize: "14px", marginTop: "8px" }}>
             Request a scrimmage against IMPerfect. Fill out the form below and our Manager will follow up on Discord.
           </p>
+          <p style={{ color: "#555", fontSize: "13px", marginTop: "12px" }}>
+            New to the community?{" "}
+            <Link href="/en/community/join" style={{ color: "#C8E400", textDecoration: "none", fontWeight: 600 }}>
+              Register your team first →
+            </Link>
+          </p>
         </div>
 
         {serverError && (
