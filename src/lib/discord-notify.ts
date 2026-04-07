@@ -1,4 +1,4 @@
-import type { ScheduleBlock } from "./db";
+import type { ScheduleBlock, Player } from "./db";
 
 const BLOCK_LABELS: Record<string, string> = {
   PRACTICE: "Practice",
@@ -102,6 +102,39 @@ export async function notifyBlockDeleted(block: ScheduleBlock): Promise<void> {
         description: `**${typeLabel}** on ${dayLabel} at ${timeLabel} has been removed.`,
         color: 0x555555,
         footer: { text: `IMPerfect Team Hub · ${block.division}` },
+      },
+    ],
+  });
+}
+
+/**
+ * Notify when all players on a team have submitted availability for the week.
+ */
+export async function notifyAvailabilityComplete(
+  division: string,
+  weekLabel: string,
+  players: Player[],
+  summary: { available: number; unavailable: number; unsure: number },
+): Promise<void> {
+  const channelId = getChannelId(division);
+  if (!channelId) return;
+
+  const total = players.length;
+  const names = players.map((p) => p.display_name).join(", ");
+
+  await sendMessage(channelId, {
+    embeds: [
+      {
+        title: "✅ Availability Complete",
+        description: `All **${total}** players on **${division}** have submitted their availability for the week of **${weekLabel}**.`,
+        color: 0xc8e400,
+        fields: [
+          { name: "Available", value: `${summary.available} entries`, inline: true },
+          { name: "Unavailable", value: `${summary.unavailable} entries`, inline: true },
+          { name: "Unsure", value: `${summary.unsure} entries`, inline: true },
+          { name: "Players", value: names, inline: false },
+        ],
+        footer: { text: `IMPerfect Team Hub · ${division}` },
       },
     ],
   });
