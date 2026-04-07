@@ -9,7 +9,8 @@ export function proxy(request: NextRequest) {
   // Team Hub and Management live outside locale routing — pass through directly
   if (
     request.nextUrl.pathname.startsWith("/team-hub") ||
-    request.nextUrl.pathname.startsWith("/management")
+    request.nextUrl.pathname.startsWith("/management") ||
+    request.nextUrl.pathname.startsWith("/scrims")
   ) {
     return NextResponse.next();
   }
