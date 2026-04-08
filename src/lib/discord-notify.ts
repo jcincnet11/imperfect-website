@@ -122,6 +122,11 @@ export async function notifyAvailabilityComplete(
 
   const total = players.length;
 
+  // Determine game(s) from player data
+  const games = new Set(players.map((p) => p.game).filter(Boolean));
+  const gameLabel = games.size === 0 ? "" :
+    [...games].map((g) => g === "OW2" ? "Overwatch 2" : g === "MR" ? "Marvel Rivals" : g === "BOTH" ? "OW2 + MR" : g).join(", ");
+
   // Build day-by-day summary
   const dayLines = dayBreakdown.map((d) => {
     const pct = Math.round((d.available / d.total) * 100);
@@ -150,7 +155,7 @@ export async function notifyAvailabilityComplete(
     embeds: [
       {
         title: "📋 Weekly Availability — All Submitted",
-        description: `All **${total}** players on **${division}** have submitted for **${weekLabel}**.`,
+        description: `All **${total}** players on **${division}**${gameLabel ? ` (${gameLabel})` : ""} have submitted for **${weekLabel}**.`,
         color: 0xc8e400,
         fields: [
           { name: "Day-by-Day", value: dayLines.join("\n"), inline: false },
