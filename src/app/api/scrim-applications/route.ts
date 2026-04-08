@@ -84,13 +84,13 @@ export async function POST(request: NextRequest) {
     discord_confirmed: true,
   });
 
-  // Fire Discord webhook notification (non-blocking)
-  sendDiscordWebhook(app).catch(() => {});
+  // Fire Discord notification (non-blocking)
+  sendDiscordNotification(app).catch(() => {});
 
   return Response.json({ application: app }, { status: 201 });
 }
 
-async function sendDiscordWebhook(app: {
+async function sendDiscordNotification(app: {
   team_name: string;
   game: string;
   format: string;
@@ -102,15 +102,15 @@ async function sendDiscordWebhook(app: {
   earliest_date: string;
   message: string | null;
 }) {
-  const url = process.env.DISCORD_SCRIM_WEBHOOK_URL;
-  if (!url) return;
+  const channelId = process.env.DISCORD_CHANNEL_SCRIMS;
+  const token = process.env.DISCORD_BOT_TOKEN;
 
   const gameLabel = app.game === "ow2" ? "Overwatch 2" : app.game === "marvel_rivals" ? "Marvel Rivals" : "Both";
   const days = (app.preferred_days as string[]).join(", ");
   const blocks = (app.preferred_blocks as string[]).map((b) => b.charAt(0).toUpperCase() + b.slice(1)).join(", ");
 
   const embed = {
-    title: "New Scrim Application",
+    title: "🎮 New Scrim Application",
     color: 0xc8e400,
     fields: [
       { name: "Team", value: app.team_name, inline: true },
@@ -126,6 +126,19 @@ async function sendDiscordWebhook(app: {
     footer: { text: "Review in Team Hub → /team-hub/scrims" },
   };
 
+  // Send via bot to dedicated channel
+  if (channelId && token) {
+    await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+      method: "POST",
+      headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ embeds: [embed] }),
+    });
+    return;
+  }
+
+  // Fallback to webhook if bot not configured
+  const url = process.env.DISCORD_SCRIM_WEBHOOK_URL;
+  if (!url) return;
   await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

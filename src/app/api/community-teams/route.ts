@@ -130,25 +130,25 @@ export async function POST(request: NextRequest) {
     })),
   );
 
-  // Discord webhook (non-blocking)
-  sendWebhook(team, players).catch(() => {});
+  // Discord notification (non-blocking)
+  sendDiscordNotification(team, players).catch(() => {});
 
   return Response.json({ team }, { status: 201 });
 }
 
-async function sendWebhook(
+async function sendDiscordNotification(
   team: { team_name: string; team_tag: string | null; games: string[]; platforms: string[]; region: string; discord_server: string | null; goals: string[] },
   players: Array<{ is_captain: boolean; ign: string; discord_handle: string; rank: string }>,
 ) {
-  const url = process.env.DISCORD_COMMUNITY_WEBHOOK_URL || process.env.DISCORD_SCRIM_WEBHOOK_URL;
-  if (!url) return;
+  const channelId = process.env.DISCORD_CHANNEL_COMMUNITY;
+  const token = process.env.DISCORD_BOT_TOKEN;
 
   const captain = players.find((p) => p.is_captain);
   const gameLabel = team.games.map((g) => g === "ow2" ? "OW2" : g === "marvel_rivals" ? "Marvel Rivals" : g).join(", ");
   const goalLabel = team.goals.map((g) => g.charAt(0).toUpperCase() + g.slice(1)).join(", ");
 
   const embed = {
-    title: "New Community Team Registration",
+    title: "🏆 New Community Team Registration",
     color: 0xc8e400,
     fields: [
       { name: "Team", value: team.team_tag ? `${team.team_name} [${team.team_tag}]` : team.team_name, inline: true },
@@ -163,6 +163,19 @@ async function sendWebhook(
     footer: { text: "Review in Team Hub → /team-hub/community" },
   };
 
+  // Send via bot to dedicated channel
+  if (channelId && token) {
+    await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+      method: "POST",
+      headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ embeds: [embed] }),
+    });
+    return;
+  }
+
+  // Fallback to webhook
+  const url = process.env.DISCORD_COMMUNITY_WEBHOOK_URL || process.env.DISCORD_SCRIM_WEBHOOK_URL;
+  if (!url) return;
   await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
