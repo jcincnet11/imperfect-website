@@ -231,22 +231,6 @@ const MR_ROSTER: Player[] = [
     ],
   },
   {
-    id: 8,
-    name: "crazyturnx",
-    ign: "crazyturnx",
-    role: "Vanguard",
-    division: "MR",
-    rank: "",
-    flag: "🇵🇷",
-    bio: "High-mobility duelist. Finds the angle before you know it exists.",
-    socials: { twitter: null, instagram: null, tiktok: null, twitch: null },
-    topHeroes: [
-      { name: "Spider-Man",    role: "Duelist", winRate: "74%", timePlayed: "120h" },
-      { name: "Black Panther", role: "Duelist", winRate: "66%", timePlayed: "80h"  },
-      { name: "Wolverine",     role: "Duelist", winRate: "60%", timePlayed: "55h"  },
-    ],
-  },
-  {
     id: 9,
     name: "georgierican",
     ign: "georgierican",
