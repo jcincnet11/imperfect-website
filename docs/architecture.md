@@ -2,99 +2,93 @@
 
 ## Overview
 
-IMPerfect is a Next.js 16 App Router application with three distinct surface areas sharing one codebase:
+IMPerfect is a Next.js 16 App Router application with three distinct surface areas sharing one codebase, plus standalone public forms.
 
-1. **Public site** — Marketing pages, i18n EN/ES, no auth required
-2. **Team Hub** — Discord-authenticated area for players, coaches, admins
-3. **Management Dashboard** — Admin-only ops tools (tournament tracker, sponsor CRM, merch checklist)
+## Three Surfaces
 
-## Routing
+### 1. Public Site (`/[locale]/*`)
+Marketing and community-facing pages. Locale-routed via next-intl middleware (`src/proxy.ts`). Pages: home, team, games, results, community, sponsorship, about, news.
 
-Traffic enters through `src/proxy.ts` (Next.js middleware), which acts as a router before any page handler runs:
+**Key features:**
+- Live Marvel Rivals player stats (API + 1hr cache)
+- Hero portrait images (Blizzard CDN for OW2, marvelrivalsapi.com for MR)
+- Community team registration form (`/[locale]/community/join`)
+- Bilingual EN/ES via translation files in `src/messages/`
 
-```
-Request
-  ├── /team-hub/**  → bypass i18n, enforce NextAuth session
-  ├── /management/** → bypass i18n, enforce NextAuth session (admin role)
-  └── everything else → next-intl middleware → [locale] routing
-```
+### 2. Team Hub (`/team-hub/*`)
+Authenticated player and staff portal. Discord OAuth via NextAuth. Protected by server-side session check in `(protected)/layout.tsx`.
 
-Public pages live at `src/app/[locale]/` and are accessible at `/en/...` and `/es/...`. The default locale (`en`) also serves at `/` via next-intl's locale detection.
+**Role hierarchy (6 tiers):**
+- OWNER (env var `OWNER_DISCORD_ID`) → full access
+- ORG_ADMIN → edit players, approve community teams, post announcements
+- HEAD_COACH → view all rosters, submit lineups
+- MANAGER → manage scrims, view all availability
+- CAPTAIN → flag team availability
+- PLAYER → view own team, set own availability
 
-## Authentication
+**Features:**
+- Dashboard, Schedule (weekly grid), Availability (weekly grid + recurring templates + overrides)
+- Scrims (CRUD + applications tab), Roster management, Announcements
+- Community team registrations admin view
+- Admin panel (invites, roles, audit log, player stats overrides)
 
-NextAuth v5 with the Discord OAuth provider. The approval flow:
+### 3. Management Dashboard (`/management/*`)
+ORG_ADMIN+ only. Separate from Team Hub. Handles org-level operations: tournaments, sponsors, revenue tracking, merch checklist, press kit.
 
-1. User authenticates with Discord
-2. `signIn` callback checks `APPROVED_DISCORD_IDS` env var (comma-separated Discord IDs)
-3. If approved, `jwt` callback fetches the player's `role` and `division` from Supabase `players` table
-4. Role (`player` | `coach` | `admin`) and division are injected into the session via `SessionUser` type augmentation in `src/types/next-auth.d.ts`
-5. Unapproved users are redirected to `/team-hub?error=not_approved`
+### 4. Public Forms (`/scrims/*`)
+Standalone pages bypassing locale middleware. No auth required.
+- `/scrims/apply` — Scrim application form
 
-**Current limitation:** The approved ID list is an env var, requiring a redeploy to update when the roster changes. See TODO for the migration path to Supabase-based approval.
+## Middleware
+
+`src/proxy.ts` handles routing:
+- `/team-hub`, `/management`, `/scrims` → bypass i18n, pass through directly
+- Everything else → next-intl locale routing (EN/ES)
 
 ## Data Layer
 
-`src/lib/db.ts` provides the abstraction for Team Hub data:
+`src/lib/db.ts` — single data access layer.
+- **Primary:** Supabase (PostgreSQL) when `SUPABASE_URL` + `SUPABASE_ANON_KEY` set
+- **Fallback:** Local JSON files in `/data/` (dev only, warns in production)
+- Management routes (`src/lib/management-db.ts`) require Supabase — no JSON fallback
 
-- Checks if `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set
-- If yes → Supabase queries
-- If no → reads from JSON files in `data/` (players.json, schedule.json, availability.json)
-
-The JSON fallback is **dev-only**. It exists so contributors can run locally without Supabase credentials. Management data (`src/lib/management-db.ts`) has no fallback — it hard-fails if Supabase is not configured.
-
-## Database
-
-8 tables in Supabase (PostgreSQL). Schema source of truth: `supabase-schema.sql`.
-
+### Database Tables (18)
 | Table | Purpose |
 |---|---|
-| `players` | Discord ID, display name, role, division, photo |
-| `schedule_blocks` | Weekly practice slots per team |
-| `availability` | Per-player daily availability flags |
-| `tournaments` | Event tracking with W/L and prize data |
-| `sponsors` | Sponsor CRM (contact, tier, status, invoices) |
-| `revenue` | Revenue by category for financial reporting |
-| `checklist_items` | Merch launch pre-launch checklist (seeded with 21 items) |
+| players | Roster with roles, division, game, rank |
+| availability | Weekly per-day status (legacy grid) |
+| availability_templates | Recurring weekly schedule (7 days × 3 blocks) |
+| availability_overrides | Date-specific exceptions to template |
+| schedule_blocks | Weekly practice/scrim/meeting blocks per division |
+| scrims | Scheduled scrimmages with results |
+| scrim_applications | Public scrim requests from external teams |
+| community_teams | Community team registrations |
+| community_team_players | Players within community team registrations |
+| announcements | Team Hub announcements with audience targeting |
+| invites | Token-based invite system with role assignment |
+| audit_log | Append-only action log |
+| player_stats_override | Manual MR stats overrides |
+| reminders_sent | Deduplication for cron reminders |
+| tournaments | Tournament tracker |
+| sponsors | Sponsor CRM |
+| revenue | Revenue tracking |
+| checklist_items | Merch launch checklist |
 
-The `checklist_items` table is seeded in the schema SQL — no separate seed script needed.
+## Discord Integration
 
-## i18n
+Two notification methods:
+1. **Bot token** (`DISCORD_BOT_TOKEN`) → Posts to team-specific channels via Discord API v10
+2. **Dedicated channels** → `DISCORD_CHANNEL_IMPERFECT`, `DISCORD_CHANNEL_SHADOWS`, `DISCORD_CHANNEL_SCRIMS`, `DISCORD_CHANNEL_COMMUNITY`
 
-next-intl v4 handles locale routing and string translation.
+**Notification types:**
+- Schedule block created/updated/deleted → team channel
+- Session reminders (1hr + 15min) → team channel
+- All players submit availability → team channel (with day-by-day breakdown)
+- New scrim application → scrims channel (with team availability overlay)
+- New community team registration → community channel
 
-- Config: `src/i18n/routing.ts` (locales: `['en', 'es']`, default: `'en'`)
-- Request handler: `src/i18n/request.ts`
-- Translations: `src/messages/en.json`, `src/messages/es.json`
-- All public page strings must have entries in both translation files
+## External APIs
 
-## Key Files
-
-| File | Role |
-|---|---|
-| `src/proxy.ts` | Middleware: i18n routing + auth enforcement |
-| `src/auth.ts` | NextAuth config: Discord provider + role injection |
-| `src/lib/db.ts` | Team Hub data: Supabase + JSON fallback |
-| `src/lib/management-db.ts` | Management data: Supabase only |
-| `src/lib/supabase.ts` | Supabase client singleton |
-| `src/lib/discord-notify.ts` | Discord webhook notifications |
-| `supabase-schema.sql` | Database schema (source of truth) |
-| `.env.example` | All required environment variables |
-
-## Environment Variables
-
-| Variable | Used by |
-|---|---|
-| `NEXTAUTH_SECRET` | NextAuth session encryption |
-| `NEXTAUTH_URL` | NextAuth callback URL |
-| `DISCORD_CLIENT_ID` | Discord OAuth app |
-| `DISCORD_CLIENT_SECRET` | Discord OAuth app |
-| `APPROVED_DISCORD_IDS` | Comma-separated allowed Discord user IDs |
-| `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_ANON_KEY` | Supabase public API key |
-
-## Deployment
-
-Hosted on Vercel. Production: `imperfect-sage.vercel.app`. Environment variables are configured in the Vercel project dashboard (not committed).
-
-Use `make deploy` (wraps `vercel --prod`) for production deployments. Preview deployments via `make deploy-preview`.
+- **Marvel Rivals API** (`marvelrivalsapi.com/api/v1`) — Player stats, hero data. API key required. 1hr in-memory cache per player.
+- **Blizzard CDN** (`d15f34w2p8l1cc.cloudfront.net`) — OW2 hero portrait images (256x256 PNG)
+- **Discord API v10** — Bot messages to channels, OAuth authentication

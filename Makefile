@@ -1,9 +1,9 @@
 PROJECT_NAME = imperfect
 
-.PHONY: help build test run lint typecheck deploy logs status db-schema db-reset db-seed docs
+.PHONY: help build test run lint typecheck unit deploy deploy-preview logs status db-schema db-reset db-seed db-push docs
 
 help: ## Show this help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
 # ── Development ──────────────────────────────────────────────────────────────
 
@@ -24,11 +24,14 @@ lint: ## Run ESLint
 typecheck: ## Run TypeScript type checking
 	npx tsc --noEmit
 
-test: lint typecheck ## Run all checks (lint + typecheck)
+unit: ## Run unit tests (vitest)
+	npm run test
+
+test: lint typecheck unit ## Run all checks (lint + typecheck + unit tests)
 
 # ── Database ─────────────────────────────────────────────────────────────────
 
-db-schema: ## Print current Supabase schema (requires supabase CLI + login)
+db-schema: ## Print current Supabase schema
 	supabase db dump --schema public
 
 db-reset: ## Reset local Supabase and apply schema
@@ -36,6 +39,9 @@ db-reset: ## Reset local Supabase and apply schema
 
 db-seed: ## Seed Supabase with local JSON dev data
 	npx tsx scripts/seed-db.ts
+
+db-push: ## Push pending migrations to remote Supabase
+	npx supabase db push
 
 # ── Deployment ───────────────────────────────────────────────────────────────
 
@@ -45,7 +51,7 @@ deploy: ## Deploy to Vercel production
 deploy-preview: ## Deploy to Vercel preview
 	vercel
 
-logs: ## Tail production logs (TARGET=prod or omit)
+logs: ## Tail production logs
 	vercel logs https://imperfect-sage.vercel.app --follow
 
 status: ## Show Vercel deployment status

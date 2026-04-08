@@ -2,99 +2,80 @@
 
 Task tracking for IMPerfect esports site. Mark `[~]` when starting, `[x]` when done.
 
+## High Priority
+
+- [ ] Get MR username for **the_mofn_ninja** — API returns NOT FOUND, can't pull live stats
+- [ ] Get MR username for **tides100ping** — API returns NOT FOUND, can't pull live stats
+- [ ] Fill in real OW2 roster data — currently 5 placeholder players (OW2 division rebuilding)
+- [ ] Populate Echoes subteam roster — currently TBA ghost cards
+
 ## Content & Features
 
-- [ ] Fill in real OW2 roster data — currently placeholder (OW2 division rebuilding, no players in DB)
-- [x] Populate Shadows roster with real player data from Supabase (6 players)
-- [ ] Populate Echoes subteam roster — currently TBA ghost cards (no players in DB yet)
-- [x] Build news article detail pages — cards show "Coming Soon", no `/news/[slug]` route exists
-- [ ] Add TikTok and YouTube handles to Footer — currently hardcoded to `#` (needs real handles)
-- [x] Translate remaining data strings (community events, milestones, game descriptions, tier perks) to Spanish
+- [ ] Add Spanish translations for `/es/community/join` and `/scrims/apply` — both show English only
+- [ ] Add TikTok and YouTube handles to Footer — currently hardcoded to `#`
+- [ ] Add Open Graph images per page for better social sharing
+- [ ] Build merch store (Phase 3 — planned but not started)
 
-## SEO & Metadata
+## Performance
 
-- [x] Add `generateMetadata` to every `[locale]` page — currently zero pages export metadata
-- [ ] Add Open Graph images per page
-- [x] Add canonical URLs and hreflang alternate links for EN/ES locale pages
+- [ ] Optimize player profile images in `public/players/` — files are 1.9–2.8 MB each
 
-## Code Quality
+## Future Enhancements
 
-- [x] Fix React Hook conditional call in `ScheduleGrid.tsx` — `useState` called after early return
-- [x] Replace `<a>` tags with `<Link>` in `team-hub/join/[token]/page.tsx` and `team-hub/page.tsx`
-- [x] Remove unused `hColor` variable in team page player card rendering
-- [x] Clean up unused imports: `archivePlayer` in users route, `DAYS`/`TIME_SLOTS` in reminders route
-
-## Accessibility
-
-- [x] Add meaningful alt text to avatar images in Management and Team Hub sidebars
-- [x] Increase ARIA labels on interactive elements (buttons, toggles, modals) across the site
-- [x] Add `onError` fallback handlers for player profile images
-
-## Performance & Infra
-
-- [ ] Optimize player profile images in `public/players/` — files are 1.9–2.8 MB each (served via next/image, low priority)
-- [x] Seed `data/availability.json` and `data/schedule.json` with sample data for local dev
-- [x] Standardize API error response format across `/api/management/` routes
-- [x] Replace `console.error()` calls with structured logger in error boundaries and management-db
+- [ ] Pre-resolve and cache availability for next 4 weeks when Manager views scrim scheduling overlay
+- [ ] Add "Schedule" action on scrim applications that pre-fills the scrim creation form
+- [ ] Add welcome Discord DM/webhook when community team is approved
+- [ ] Set up cron trigger for `/api/cron/reminders` (Vercel Cron or external service)
+- [ ] Add E2E tests for scrim application and community registration flows
 
 ---
 
-## Completed (previous sprint)
+## Completed (April 2026)
 
 <details>
-<summary>30+ items — click to expand</summary>
+<summary>Click to expand</summary>
 
-### Security & Auth
-- [x] Move `APPROVED_DISCORD_IDS` to Supabase `players` table lookup
-- [x] Add CSRF protection to all management API routes
-- [x] Validate and sanitize all API route inputs
-- [x] Add rate limiting to public API routes
-- [x] Audit management routes for authorization checks
+### Features Built
+- [x] Recurring availability templates (weekly schedule, set once)
+- [x] One-off availability overrides (date-specific exceptions)
+- [x] Scrim application portal (`/scrims/apply`) — public, no auth
+- [x] Community team registration (`/en/community/join`) — public, no auth
+- [x] Applications tab in `/team-hub/scrims` for Manager+
+- [x] Community teams admin view at `/team-hub/community`
+- [x] Discord bot notifications — availability completion, schedule changes, reminders
+- [x] Discord bot notifications — scrim applications with team availability overlay
+- [x] Discord bot notifications — community team registrations
+- [x] Hero portrait images on player cards (OW2 Blizzard CDN + MR headshot icons)
+- [x] Management division for non-playing admin staff
+- [x] Live Marvel Rivals player stats from API
+- [x] Manual stats override system for admins
+- [x] Register Your Team CTA on homepage + community page
 
-### Core Reliability
-- [x] Add error boundaries around Team Hub and Management dashboard
-- [x] Handle Supabase connection failures gracefully in `management-db.ts`
-- [x] Add `/api/health` route for uptime monitoring
-- [x] Fix data fallback behavior in `db.ts`
-
-### Testing
-- [x] Add unit tests for `db.ts` and `management-db.ts`
-- [x] Add integration tests for critical API routes
-- [x] Add E2E test for Team Hub login flow
-
-### CI/CD
-- [x] Create GitHub Actions workflow for PRs
-- [x] Add Vercel preview deployment check
-- [x] Add `supabase-schema.sql` migration tracking
-
-### Observability
-- [x] Add Sentry error tracking
-- [x] Add structured logging to API routes
-- [x] Set up uptime monitoring
-
-### Performance
-- [x] Add `next/image` optimization to player photos
-- [x] Implement caching headers on public API routes
-- [x] Lazy-load Framer Motion animations
-
-### UX Polish
-- [x] Build out News page
-- [x] Build out Shadows and Echoes team sections
-- [x] Add loading states to Team Hub data fetches
-- [x] Add mobile navigation menu
-
-### Developer Experience
-- [x] Add `npm run typecheck` script
-- [x] Create `.env.example`
-- [x] Add seed script for local dev data
-
-### Bug Fixes (April 2026)
-- [x] Fix language switch — full i18n across all pages
-- [x] Fix active nav highlight (#C8E400)
+### Bug Fixes
+- [x] Fix language switching (full i18n across all pages)
+- [x] Fix active nav highlighting (#C8E400)
 - [x] Fix sponsorship page blank render
 - [x] Fix availability team scoping for players
-- [x] Update Discord invite link
+- [x] Fix select dropdown options invisible (dark bg)
+- [x] Fix MR hero portrait URLs (switched from broken thumbnails to card/headbig icons)
+- [x] Filter out Unknown heroes from MR stats display
+- [x] Bypass locale middleware for /scrims routes
+
+### Player Updates
+- [x] Update spooit IGN → kev0o1
+- [x] Update filthypryde IGN → FifiPryde
+- [x] Update lblazerowl IGN → BŁXZER
+- [x] Update iaguacate IGN → l Aguacate l
+- [x] Add PapitaSlayër to Shadows roster
+- [x] Add malangas as ORG_ADMIN
+- [x] Archive crazyturnx (removed from team)
+- [x] Move malangas + astrov_11 to Management division
+
+### Infrastructure
+- [x] Supabase migrations for all new tables
+- [x] Discord bot connected to 3 channels (team, scrims, community)
+- [x] Vercel env vars configured for all services
+- [x] CI/CD pipeline (GitHub Actions + Vercel preview checks)
+- [x] Sentry error tracking + structured logging
 
 </details>
-</content>
-</invoke>
