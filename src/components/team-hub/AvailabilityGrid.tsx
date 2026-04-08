@@ -105,7 +105,7 @@ export default function AvailabilityGrid({
     }
   }
 
-  const TEAM_ORDER = ["IMPerfect", "Shadows", "Echoes"];
+  const TEAM_ORDER = ["IMPerfect", "Shadows", "Echoes", "Management"];
 
   // For coaches/admins: all players. For players: their team(s) only.
   const displayPlayers = isCoachOrAdmin
