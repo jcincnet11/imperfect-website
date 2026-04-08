@@ -85,6 +85,14 @@ export default function Footer() {
             <p style={{ fontSize: "12px", color: "#555555", marginTop: "8px", lineHeight: 1.6 }}>
               {t("tagline_sub")}
             </p>
+            <a
+              href="mailto:Imperfectgamingpr@gmail.com"
+              style={{ fontSize: "12px", color: "#C8E400", textDecoration: "none", marginTop: "8px", display: "inline-block" }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              Imperfectgamingpr@gmail.com
+            </a>
           </div>
 
           {/* Col 2 — Nav */}

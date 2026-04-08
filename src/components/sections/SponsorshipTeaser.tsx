@@ -81,12 +81,12 @@ export default function SponsorshipTeaser() {
             ))}
             <div style={{ marginTop: "8px", paddingTop: "16px", borderTop: "1px solid #1F1F1F" }}>
               <a
-                href="mailto:sponsorships@imperfectorg.gg"
+                href="mailto:Imperfectgamingpr@gmail.com"
                 style={{ fontSize: "13px", color: "#555555", textDecoration: "none", transition: "color 0.15s", display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#C8E400")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}
               >
-                <span>sponsorships@imperfectorg.gg</span>
+                <span>Imperfectgamingpr@gmail.com</span>
                 <span>→</span>
               </a>
             </div>

@@ -6,12 +6,12 @@ const BOILERPLATE = `IMPerfect is Puerto Rico's premier esports organization, co
 
 With a passionate and engaged fanbase, IMPerfect offers brands a direct connection to the 18–34 demographic across social media, live events, and streaming platforms. The organization combines competitive excellence with authentic community storytelling, making it the ideal partner for brands looking to reach Puerto Rico's gaming community and the broader Latin American esports audience.
 
-For media inquiries, partnership opportunities, and press materials, contact: sponsorships@imperfectorg.gg`;
+For media inquiries, partnership opportunities, and press materials, contact: Imperfectgamingpr@gmail.com`;
 
 const FAQ = [
   {
     q: "How do I request a player interview?",
-    a: "Email sponsorships@imperfectorg.gg with your outlet name, publication date, and preferred player. Allow 5–7 business days for scheduling.",
+    a: "Email Imperfectgamingpr@gmail.com with your outlet name, publication date, and preferred player. Allow 5–7 business days for scheduling.",
   },
   {
     q: "What image formats are available in the press kit?",
@@ -23,7 +23,7 @@ const FAQ = [
   },
   {
     q: "Who is the media contact?",
-    a: "All media inquiries go to sponsorships@imperfectorg.gg. We typically respond within 2 business days.",
+    a: "All media inquiries go to Imperfectgamingpr@gmail.com. We typically respond within 2 business days.",
   },
   {
     q: "Do you attend or host live events?",
@@ -166,10 +166,10 @@ export default function PressPage() {
           <p className="text-sm text-white/50 mb-5 leading-relaxed">
             Send press inquiries, interview requests, and partnership questions to{" "}
             <a
-              href="mailto:sponsorships@imperfectorg.gg"
+              href="mailto:Imperfectgamingpr@gmail.com"
               className="text-[#c5d400] hover:underline"
             >
-              sponsorships@imperfectorg.gg
+              Imperfectgamingpr@gmail.com
             </a>
             {" "}or use the form below.
           </p>
@@ -192,7 +192,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function MediaInquiryForm() {
   return (
     <form
-      action={`mailto:sponsorships@imperfectorg.gg`}
+      action={`mailto:Imperfectgamingpr@gmail.com`}
       method="get"
       encType="text/plain"
       className="space-y-4"

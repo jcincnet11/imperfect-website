@@ -133,7 +133,7 @@ export default function SponsorshipPage() {
                       </li>
                     ))}
                   </ul>
-                  <a href="mailto:sponsorships@imperfectorg.gg" className="btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                  <a href="mailto:Imperfectgamingpr@gmail.com" className="btn-primary" style={{ width: "100%", justifyContent: "center" }}>
                     {t("get_started")}
                   </a>
                 </div>
@@ -151,9 +151,8 @@ export default function SponsorshipPage() {
             <p style={{ fontSize: "14px", color: "#888888", marginBottom: "32px", lineHeight: 1.65 }}>
               {t("cta_desc")}
             </p>
-            {/* sponsorships@imperfectorg.gg — address to be confirmed with org leadership */}
-            <a href="mailto:sponsorships@imperfectorg.gg" className="btn-primary">
-              sponsorships@imperfectorg.gg →
+            <a href="mailto:Imperfectgamingpr@gmail.com" className="btn-primary">
+              Imperfectgamingpr@gmail.com →
             </a>
           </m.div>
         </div>
