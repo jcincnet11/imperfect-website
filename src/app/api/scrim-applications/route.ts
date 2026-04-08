@@ -4,6 +4,8 @@ import {
   getScrimApplications,
   createScrimApplication,
   checkDuplicateApplication,
+  getAllPlayers,
+  getAvailability,
 } from "@/lib/db";
 import { resolveOrgRole } from "@/lib/permissions";
 import { can } from "@/lib/permissions";
@@ -109,20 +111,60 @@ async function sendDiscordNotification(app: {
   const days = (app.preferred_days as string[]).join(", ");
   const blocks = (app.preferred_blocks as string[]).map((b) => b.charAt(0).toUpperCase() + b.slice(1)).join(", ");
 
+  // Check our teams' availability for the requested days
+  const DAY_MAP: Record<string, string> = {
+    mon: "MON", tue: "TUE", wed: "WED", thu: "THU", fri: "FRI", sat: "SAT", sun: "SUN",
+  };
+  let teamAvailField = "";
+  try {
+    const allPlayers = await getAllPlayers();
+    // Get current week's availability
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() + mondayOffset);
+    const weekStartStr = weekStart.toISOString().slice(0, 10);
+    const availability = await getAvailability(weekStartStr);
+
+    const requestedDays = app.preferred_days.map((d) => DAY_MAP[d]).filter(Boolean);
+    const divisions = ["IMPerfect", "Shadows"];
+
+    const lines: string[] = [];
+    for (const div of divisions) {
+      const teamPlayers = allPlayers.filter((p) => p.division === div && !p.archived);
+      if (teamPlayers.length === 0) continue;
+      const teamIds = new Set(teamPlayers.map((p) => p.discord_id));
+      const teamAvail = availability.filter((a) => teamIds.has(a.player_discord_id));
+
+      const dayResults = requestedDays.map((day) => {
+        const dayEntries = teamAvail.filter((a) => a.day === day && a.status === "AVAILABLE");
+        return `${day.charAt(0) + day.slice(1).toLowerCase()}: ${dayEntries.length}/${teamPlayers.length}`;
+      });
+      lines.push(`**${div}** — ${dayResults.join(", ")}`);
+    }
+    if (lines.length > 0) teamAvailField = lines.join("\n");
+  } catch {
+    // Non-critical — skip if availability check fails
+  }
+
+  const fields = [
+    { name: "Team", value: app.team_name, inline: true },
+    { name: "Game", value: gameLabel, inline: true },
+    { name: "Format", value: app.format, inline: true },
+    { name: "Captain", value: app.captain_discord, inline: true },
+    { name: "Region", value: app.region, inline: true },
+    { name: "Rank Range", value: app.rank_range, inline: true },
+    { name: "They're Available", value: `${days} — ${blocks}`, inline: false },
+    { name: "Earliest Date", value: app.earliest_date, inline: true },
+    ...(teamAvailField ? [{ name: "Our Team Availability (this week)", value: teamAvailField, inline: false }] : []),
+    ...(app.message ? [{ name: "Message", value: app.message, inline: false }] : []),
+  ];
+
   const embed = {
     title: "🎮 New Scrim Application",
     color: 0xc8e400,
-    fields: [
-      { name: "Team", value: app.team_name, inline: true },
-      { name: "Game", value: gameLabel, inline: true },
-      { name: "Format", value: app.format, inline: true },
-      { name: "Captain", value: app.captain_discord, inline: true },
-      { name: "Region", value: app.region, inline: true },
-      { name: "Rank Range", value: app.rank_range, inline: true },
-      { name: "Available", value: `${days} — ${blocks}`, inline: false },
-      { name: "Earliest Date", value: app.earliest_date, inline: true },
-      ...(app.message ? [{ name: "Message", value: app.message, inline: false }] : []),
-    ],
+    fields,
     footer: { text: "Review in Team Hub → /team-hub/scrims" },
   };
 
