@@ -25,7 +25,9 @@ function blockDateTime(weekStart: string, day: string, timeSlot: string): Date {
 }
 
 export async function GET(request: NextRequest) {
-  const secret = request.headers.get("x-cron-secret");
+  // Support both x-cron-secret header (manual) and Authorization: Bearer (Vercel Cron)
+  const secret = request.headers.get("x-cron-secret")
+    || request.headers.get("authorization")?.replace("Bearer ", "");
   if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }

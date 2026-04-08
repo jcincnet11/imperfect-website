@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 // ── Constants ────────────────────────────────────────────────────
 
@@ -51,6 +51,7 @@ const errStyle: React.CSSProperties = {
 
 export default function CommunityJoinPage() {
   const locale = useLocale();
+  const t = useTranslations("community_join");
 
   // Team state
   const [teamName, setTeamName] = useState("");
@@ -162,7 +163,7 @@ export default function CommunityJoinPage() {
       }
       setSubmitted(true);
     } catch {
-      setServerError("Network error. Please try again.");
+      setServerError(t("error_network"));
     } finally {
       setSubmitting(false);
     }
@@ -175,13 +176,13 @@ export default function CommunityJoinPage() {
       <div style={{ minHeight: "60vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 20px", textAlign: "center" }}>
         <div style={{ fontSize: "48px", marginBottom: "16px", color: "#C8E400" }}>&#10003;</div>
         <h1 className="font-heading" style={{ fontSize: "28px", fontWeight: 800, color: "#C8E400", marginBottom: "12px" }}>
-          {teamName} is registered!
+          {teamName} {t("success_title")}
         </h1>
         <p style={{ color: "#aaa", fontSize: "15px", lineHeight: 1.7, maxWidth: 480, marginBottom: "8px" }}>
-          Welcome to the IMPerfect Gaming community. Our team will review your registration and reach out via Discord within 48 hours.
+          {t("success_body")}
         </p>
         <p style={{ color: "#888", fontSize: "14px", marginBottom: "24px" }}>
-          Make sure <strong style={{ color: "#fff" }}>{captain.discord_handle}</strong> is reachable — that&apos;s how we&apos;ll get in touch.
+          {t("success_contact", { handle: captain.discord_handle })}
         </p>
         <a
           href="https://discord.gg/VuTAEqPT"
@@ -199,13 +200,13 @@ export default function CommunityJoinPage() {
             marginBottom: "12px",
           }}
         >
-          Join Discord →
+          {t("success_discord")}
         </a>
         <button
           onClick={() => { setSubmitted(false); setTeamName(""); setTeamTag(""); setGames([]); setPlatforms([]); setRegion(""); setDiscordServer(""); setReferral(""); setCaptain({ is_captain: true, ign: "", discord_handle: "", role: "", rank: "", platform: "" }); setExtraPlayers([blankPlayer()]); setAbout(""); setGoals([]); setConfirmed(false); }}
           style={{ background: "none", border: "none", color: "#C8E400", fontSize: "13px", cursor: "pointer", marginTop: "8px" }}
         >
-          Register Another Team
+          {t("success_another")}
         </button>
       </div>
     );
@@ -228,13 +229,13 @@ export default function CommunityJoinPage() {
       {/* Header */}
       <div style={{ marginBottom: "36px" }}>
         <Link href={`/${locale}/community`} style={{ color: "#C8E400", fontSize: "12px", textDecoration: "none", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-          ← Community
+          {t("back")}
         </Link>
         <h1 className="font-heading" style={{ fontSize: "32px", fontWeight: 900, color: "#fff", marginTop: "12px", lineHeight: 1.1 }}>
-          Bring Your Team to the <span style={{ color: "#C8E400" }}>IMPerfect</span> Community
+          {t("title_1")} <span style={{ color: "#C8E400" }}>{t("title_2")}</span> {t("title_3")}
         </h1>
         <p style={{ color: "#777", fontSize: "14px", marginTop: "10px", lineHeight: 1.6 }}>
-          Register your team and get access to scrims, events, and the competitive Puerto Rico gaming scene. Takes under 3 minutes.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -248,7 +249,7 @@ export default function CommunityJoinPage() {
 
         {/* ═══ SECTION 1 — YOUR TEAM ═══ */}
         <section style={{ background: "#111", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "24px" }}>
-          <SectionHead>Your Team</SectionHead>
+          <SectionHead>{t("section_team")}</SectionHead>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <Field label="Team / Org Name *" error={errors.teamName}>
@@ -294,7 +295,7 @@ export default function CommunityJoinPage() {
 
         {/* ═══ SECTION 2 — YOUR PLAYERS ═══ */}
         <section style={{ background: "#111", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "24px" }}>
-          <SectionHead>Your Players</SectionHead>
+          <SectionHead>{t("section_players")}</SectionHead>
 
           {errors.duplicateHandles && <p style={{ ...errStyle, marginBottom: "12px" }}>{errors.duplicateHandles}</p>}
 
@@ -394,7 +395,7 @@ export default function CommunityJoinPage() {
 
         {/* ═══ SECTION 3 — FINAL DETAILS ═══ */}
         <section style={{ background: "#111", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "24px" }}>
-          <SectionHead>Final Details</SectionHead>
+          <SectionHead>{t("section_final")}</SectionHead>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <Field label="Tell us about your team" error="" helper="">
@@ -452,7 +453,7 @@ export default function CommunityJoinPage() {
                 marginTop: "8px",
               }}
             >
-              {submitting ? "Submitting..." : "Register Our Team"}
+              {submitting ? t("submitting") : t("submit")}
             </button>
           </div>
         </section>

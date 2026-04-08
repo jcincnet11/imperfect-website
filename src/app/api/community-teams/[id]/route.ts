@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
-import { updateCommunityTeam, getCommunityTeamPlayers, appendAuditLog } from "@/lib/db";
+import { updateCommunityTeam, getCommunityTeamPlayers, appendAuditLog, type CommunityTeam } from "@/lib/db";
 import { resolveOrgRole, hasRole } from "@/lib/permissions";
 
 /**
@@ -66,5 +66,39 @@ export async function PATCH(
     after_val: patch as Record<string, unknown>,
   });
 
+  // Send welcome notification when approved
+  if (body.status === "approved") {
+    sendApprovalNotification(updated).catch(() => {});
+  }
+
   return Response.json({ team: updated });
+}
+
+async function sendApprovalNotification(team: CommunityTeam) {
+  const channelId = process.env.DISCORD_CHANNEL_COMMUNITY;
+  const token = process.env.DISCORD_BOT_TOKEN;
+  if (!channelId || !token) return;
+
+  const players = await getCommunityTeamPlayers(team.id);
+  const captain = players.find((p) => p.is_captain);
+  const gameLabel = (team.games as string[]).map((g) => g === "ow2" ? "OW2" : g === "marvel_rivals" ? "Marvel Rivals" : g).join(", ");
+
+  await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+    method: "POST",
+    headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      embeds: [{
+        title: "✅ Community Team Approved",
+        description: `**${team.team_name}**${team.team_tag ? ` [${team.team_tag}]` : ""} has been approved! Welcome to the IMPerfect community.`,
+        color: 0xc8e400,
+        fields: [
+          { name: "Game(s)", value: gameLabel, inline: true },
+          { name: "Region", value: team.region, inline: true },
+          { name: "Players", value: `${players.length} total`, inline: true },
+          ...(captain ? [{ name: "Captain", value: `${captain.ign} — ${captain.discord_handle}`, inline: false }] : []),
+        ],
+        footer: { text: "IMPerfect Team Hub · Community" },
+      }],
+    }),
+  });
 }
