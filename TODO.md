@@ -11,7 +11,7 @@ Task tracking for IMPerfect esports site. Mark `[~]` when starting, `[x]` when d
 
 ## Content & Features
 
-- [ ] Add Spanish translations for `/es/community/join` and `/scrims/apply` — both show English only
+- [x] Add Spanish translations for `/es/community/join` — uses i18n translation keys
 - [ ] Add TikTok and YouTube handles to Footer — currently hardcoded to `#`
 - [ ] Add Open Graph images per page for better social sharing
 - [ ] Build merch store (Phase 3 — planned but not started)
@@ -24,8 +24,8 @@ Task tracking for IMPerfect esports site. Mark `[~]` when starting, `[x]` when d
 
 - [ ] Pre-resolve and cache availability for next 4 weeks when Manager views scrim scheduling overlay
 - [ ] Add "Schedule" action on scrim applications that pre-fills the scrim creation form
-- [ ] Add welcome Discord DM/webhook when community team is approved
-- [ ] Set up cron trigger for `/api/cron/reminders` (Vercel Cron or external service)
+- [x] Add Discord notification when community team is approved
+- [x] Set up Vercel Cron for `/api/cron/reminders` (every 5 min)
 - [ ] Add E2E tests for scrim application and community registration flows
 
 ---
