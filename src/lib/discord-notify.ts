@@ -109,30 +109,52 @@ export async function notifyBlockDeleted(block: ScheduleBlock): Promise<void> {
 
 /**
  * Notify when all players on a team have submitted availability for the week.
+ * Shows per-day breakdown and highlights best days.
  */
 export async function notifyAvailabilityComplete(
   division: string,
   weekLabel: string,
   players: Player[],
-  summary: { available: number; unavailable: number; unsure: number },
+  dayBreakdown: { day: string; available: number; total: number }[],
 ): Promise<void> {
   const channelId = getChannelId(division);
   if (!channelId) return;
 
   const total = players.length;
-  const names = players.map((p) => p.display_name).join(", ");
+
+  // Build day-by-day summary
+  const dayLines = dayBreakdown.map((d) => {
+    const pct = Math.round((d.available / d.total) * 100);
+    const bar = d.available === d.total ? "🟢" : d.available >= d.total * 0.7 ? "🟡" : "🔴";
+    return `${bar} **${d.day}** — ${d.available}/${d.total} available (${pct}%)`;
+  });
+
+  // Find best days (everyone or most available)
+  const bestDays = dayBreakdown
+    .filter((d) => d.available === d.total)
+    .map((d) => d.day);
+  const goodDays = dayBreakdown
+    .filter((d) => d.available >= d.total * 0.7 && d.available < d.total)
+    .map((d) => d.day);
+
+  let bestLine = "";
+  if (bestDays.length > 0) {
+    bestLine = `✅ **Full team available:** ${bestDays.join(", ")}`;
+  } else if (goodDays.length > 0) {
+    bestLine = `🟡 **Best days (70%+):** ${goodDays.join(", ")}`;
+  } else {
+    bestLine = "⚠️ No day has 70%+ availability this week";
+  }
 
   await sendMessage(channelId, {
     embeds: [
       {
-        title: "✅ Availability Complete",
-        description: `All **${total}** players on **${division}** have submitted their availability for the week of **${weekLabel}**.`,
+        title: "📋 Weekly Availability — All Submitted",
+        description: `All **${total}** players on **${division}** have submitted for **${weekLabel}**.`,
         color: 0xc8e400,
         fields: [
-          { name: "Available", value: `${summary.available} entries`, inline: true },
-          { name: "Unavailable", value: `${summary.unavailable} entries`, inline: true },
-          { name: "Unsure", value: `${summary.unsure} entries`, inline: true },
-          { name: "Players", value: names, inline: false },
+          { name: "Day-by-Day", value: dayLines.join("\n"), inline: false },
+          { name: "Best Days to Schedule", value: bestLine, inline: false },
         ],
         footer: { text: `IMPerfect Team Hub · ${division}` },
       },

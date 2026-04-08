@@ -92,13 +92,18 @@ async function checkTeamCompletion(weekStart: string, triggerDiscordId: string) 
 
   if (!allSubmitted) return;
 
-  // Count statuses
-  const summary = { available: 0, unavailable: 0, unsure: 0 };
-  for (const a of availability) {
-    if (a.status === "AVAILABLE") summary.available++;
-    else if (a.status === "UNAVAILABLE") summary.unavailable++;
-    else summary.unsure++;
-  }
+  // Build per-day breakdown
+  const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] as const;
+  const DAY_NAMES: Record<string, string> = {
+    MON: "Monday", TUE: "Tuesday", WED: "Wednesday",
+    THU: "Thursday", FRI: "Friday", SAT: "Saturday", SUN: "Sunday",
+  };
+  const total = teamPlayers.length;
+  const dayBreakdown = DAYS.map((day) => {
+    const dayEntries = availability.filter((a) => a.day === day);
+    const availableCount = dayEntries.filter((a) => a.status === "AVAILABLE").length;
+    return { day: DAY_NAMES[day], available: availableCount, total };
+  });
 
   // Format week label
   const d = new Date(weekStart + "T12:00:00");
@@ -106,7 +111,7 @@ async function checkTeamCompletion(weekStart: string, triggerDiscordId: string) 
   end.setDate(end.getDate() + 6);
   const weekLabel = `${d.toLocaleDateString("en-US", { month: "short", day: "numeric" })} – ${end.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
 
-  await notifyAvailabilityComplete(player.division, weekLabel, teamPlayers, summary);
+  await notifyAvailabilityComplete(player.division, weekLabel, teamPlayers, dayBreakdown);
 }
 
 function currentWeekStart(): string {
