@@ -37,7 +37,10 @@ Example: `20260415120000_add_player_photo_url.sql`
 
 | File | Description |
 |---|---|
-| `20260401033055_remote_commit.sql` | Initial schema — all tables, RLS policies, checklist seed data |
+| `20260401033055_remote_commit.sql` | Initial schema — players, schedule_blocks, availability, tournaments, sponsors, revenue, checklist_items. RLS policies, seed data |
+| `20260402010856_role_system.sql` | Role system — adds org_role, game, in_game_role, rank, captain_of, archived to players. Creates scrims, announcements, audit_log, invites, player_stats_override, reminders_sent tables |
+| `20260406_recurring_availability_and_scrim_applications.sql` | Recurring availability — availability_templates, availability_overrides. Scrim applications — scrim_applications table with indexes |
+| `20260407_community_teams.sql` | Community registration — community_teams, community_team_players tables with indexes |
 
 ## Local development
 

@@ -74,3 +74,37 @@ Vercel automatically tracks:
 - **Deployment previews** — one per PR branch
 
 Enable Vercel Analytics by adding `@vercel/analytics` if you want more detailed metrics.
+
+## Discord Bot Notifications
+
+The app uses a Discord bot (`DISCORD_BOT_TOKEN`) to post notifications to team channels via the Discord API v10.
+
+**Channels (env vars):**
+| Env Var | Purpose |
+|---|---|
+| `DISCORD_CHANNEL_IMPERFECT` | IMPerfect team: availability completion, schedule changes, reminders |
+| `DISCORD_CHANNEL_SHADOWS` | Shadows team: same as above |
+| `DISCORD_CHANNEL_SCRIMS` | Scrim application alerts (with team availability overlay) |
+| `DISCORD_CHANNEL_COMMUNITY` | Community team registration + approval notifications |
+
+**Notification types:**
+- Schedule block created/updated/deleted → team channel
+- Session reminders (1hr + 15min before) → team channel
+- All players submit weekly availability → team channel (day-by-day breakdown + best days)
+- New scrim application → scrims channel (includes our team availability for requested days)
+- New community team registration → community channel
+- Community team approved → community channel (welcome message)
+
+**Code:** `src/lib/discord-notify.ts` (schedule/availability), inline in API routes (scrims, community).
+
+## Vercel Cron
+
+Session reminders are triggered by Vercel Cron, configured in `vercel.json`:
+
+```json
+{
+  "crons": [{ "path": "/api/cron/reminders", "schedule": "*/5 * * * *" }]
+}
+```
+
+Runs every 5 minutes. Checks for sessions starting in 55–65 min (1hr reminder) or 10–20 min (15min reminder). Deduplicates via `reminders_sent` table. Protected by `CRON_SECRET` env var (Vercel sends as `Authorization: Bearer` header).
