@@ -200,23 +200,35 @@ export default function ScrimApplyPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "28px" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               <Field label="Which game? *" error={errors.game}>
-                <select style={{ ...inputStyle, appearance: "none" }} value={form.game} onChange={(e) => set("game", e.target.value)}>
+                <select style={{ ...inputStyle, appearance: "none" }} value={form.game} onChange={(e) => {
+                  const game = e.target.value;
+                  set("game", game);
+                  if (game === "marvel_rivals") set("format", "6v6");
+                  else if (game === "ow2") set("format", "5v5");
+                  else if (game === "both") set("format", "");
+                }}>
                   <option value="">Select...</option>
                   <option value="ow2">Overwatch 2</option>
                   <option value="marvel_rivals">Marvel Rivals</option>
                   <option value="both">Both</option>
                 </select>
               </Field>
-              <Field label="Format *" error={errors.format}>
-                <select style={{ ...inputStyle, appearance: "none" }} value={form.format} onChange={(e) => set("format", e.target.value)}>
-                  <option value="">Select...</option>
-                  <option value="5v5">5v5</option>
-                  <option value="6v6">6v6</option>
-                  <option value="Scrimmage">Scrimmage</option>
-                  <option value="Best of 3">Best of 3</option>
-                  <option value="Other">Other</option>
-                </select>
-              </Field>
+              {form.game === "marvel_rivals" ? (
+                <Field label="Format" error="">
+                  <div style={{ ...inputStyle, display: "flex", alignItems: "center", color: "#888" }}>6v6</div>
+                </Field>
+              ) : (
+                <Field label="Format *" error={errors.format}>
+                  <select style={{ ...inputStyle, appearance: "none" }} value={form.format} onChange={(e) => set("format", e.target.value)}>
+                    <option value="">Select...</option>
+                    <option value="5v5">5v5</option>
+                    <option value="6v6">6v6</option>
+                    <option value="Scrimmage">Scrimmage</option>
+                    <option value="Best of 3">Best of 3</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </Field>
+              )}
             </div>
             <Field label="Competitive rank range of your team *" error={errors.rank_range}>
               <input style={inputStyle} value={form.rank_range} onChange={(e) => set("rank_range", e.target.value)} placeholder="e.g., Diamond–Grandmaster" />
