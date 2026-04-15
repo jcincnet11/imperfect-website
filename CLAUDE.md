@@ -26,7 +26,7 @@ All operations go through the `Makefile` — the single entry point for build, r
 ```bash
 make run            # Dev server (localhost:3000)
 make build          # Production build
-make test           # Lint + typecheck
+make test           # Lint + typecheck + unit tests
 make deploy         # Deploy to Vercel production
 make logs           # Tail production logs
 make status         # Vercel deployment status
@@ -82,6 +82,20 @@ The `docs/` folder is the single source of truth for institutional knowledge. Be
 
 ### TODO
 `TODO.md` is a lightweight task tracker. Mark items `[~]` (pending) before starting so parallel agents don't collide. Mark `[x]` when done.
+
+### Skills
+
+`.claude/skills/` teaches Claude project-specific conventions and provides reusable workflows as slash commands.
+
+**Reference skills** (auto-loaded as context):
+- `cli-first` — Use CLI tools and `.env*` files for third-party services
+- `lsp` — Use language servers for type checking, references, and code navigation
+
+**Task skills** (invoked via `/command`):
+- `/docs` — Capture conversation learnings into docs and clean up stale content
+- `/todo` — Work through TODO.md tasks sequentially (`/todo populate` to re-analyze and seed next batch)
+- `/squad` — Analyze the project and generate domain-specific rules and specialist subagents (`/squad refresh` to update)
+- `/bosskey` — Summarize recent git activity into a standup script
 
 ## Conventions
 - Brand color #C8E400 is non-negotiable

@@ -1,6 +1,6 @@
 PROJECT_NAME = imperfect
 
-.PHONY: help build test run lint typecheck unit deploy deploy-preview logs status db-schema db-reset db-seed db-push docs
+.PHONY: help build test run start lint typecheck unit e2e deploy deploy-preview logs status db-schema db-reset db-seed db-push docs
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -27,6 +27,9 @@ typecheck: ## Run TypeScript type checking
 unit: ## Run unit tests (vitest)
 	npm run test
 
+e2e: ## Run Playwright E2E tests
+	npm run test:e2e
+
 test: lint typecheck unit ## Run all checks (lint + typecheck + unit tests)
 
 # ── Database ─────────────────────────────────────────────────────────────────
@@ -52,7 +55,7 @@ deploy-preview: ## Deploy to Vercel preview
 	vercel
 
 logs: ## Tail production logs
-	vercel logs https://imperfect-sage.vercel.app --follow
+	vercel logs https://imperfectgg.com --follow
 
 status: ## Show Vercel deployment status
 	vercel ls $(PROJECT_NAME)

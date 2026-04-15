@@ -55,13 +55,13 @@ The `/api/health` endpoint is the canonical health check:
 **Setting up UptimeRobot (free):**
 1. Go to [uptimerobot.com](https://uptimerobot.com) → Add New Monitor
 2. Monitor type: **HTTP(s)**
-3. URL: `https://imperfect-sage.vercel.app/api/health`
+3. URL: `https://imperfectgg.com/api/health`
 4. Monitoring interval: **5 minutes**
 5. Alert contacts: your email or Discord webhook
 
 **Setting up Better Uptime (alternative, has Discord alerts):**
 1. Go to [betteruptime.com](https://betteruptime.com) → New monitor
-2. URL: `https://imperfect-sage.vercel.app/api/health`
+2. URL: `https://imperfectgg.com/api/health`
 3. Add a Discord integration for alerts
 
 Both services will alert you within 5 minutes of the site going down.
