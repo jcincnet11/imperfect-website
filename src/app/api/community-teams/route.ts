@@ -6,24 +6,32 @@ import {
   checkDuplicateCommunityTeam,
 } from "@/lib/db";
 import { resolveOrgRole, can } from "@/lib/permissions";
+import { apiError } from "@/lib/api-error";
+import { verifyCsrfOrigin } from "@/lib/csrf";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/community-teams?status=pending
  * Manager+ only.
  */
 export async function GET(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await auth();
+    if (!session?.user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-  const user = session.user as Record<string, unknown>;
-  const orgRole = resolveOrgRole({ discordId: user.discordId as string, orgRole: user.orgRole as string });
-  if (!can.manageScrim(orgRole)) {
-    return Response.json({ error: "Forbidden" }, { status: 403 });
+    const user = session.user as Record<string, unknown>;
+    const orgRole = resolveOrgRole({ discordId: user.discordId as string, orgRole: user.orgRole as string });
+    if (!can.manageScrim(orgRole)) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const status = request.nextUrl.searchParams.get("status") ?? undefined;
+    const teams = await getCommunityTeams(status);
+    return Response.json({ teams });
+  } catch (e) {
+    console.error("GET /api/community-teams", e);
+    return apiError("Internal server error", 500);
   }
-
-  const status = request.nextUrl.searchParams.get("status") ?? undefined;
-  const teams = await getCommunityTeams(status);
-  return Response.json({ teams });
 }
 
 /**
@@ -31,109 +39,128 @@ export async function GET(request: NextRequest) {
  * Public — no auth required.
  */
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  try {
+    if (!checkRateLimit(request)) return Response.json({ error: "Too many requests" }, { status: 429 });
+    if (!verifyCsrfOrigin(request)) return Response.json({ error: "Invalid origin" }, { status: 403 });
 
-  // Validate team fields
-  if (!body.team_name?.trim() || body.team_name.trim().length < 2 || body.team_name.trim().length > 50) {
-    return Response.json({ error: "Team name must be 2–50 characters" }, { status: 400 });
-  }
-  if (body.team_tag && (body.team_tag.length < 2 || body.team_tag.length > 6 || !/^[A-Za-z0-9]+$/.test(body.team_tag))) {
-    return Response.json({ error: "Team tag must be 2–6 alphanumeric characters" }, { status: 400 });
-  }
-  if (!Array.isArray(body.games) || body.games.length === 0) {
-    return Response.json({ error: "Select at least one game" }, { status: 400 });
-  }
-  if (!Array.isArray(body.platforms) || body.platforms.length === 0) {
-    return Response.json({ error: "Select at least one platform" }, { status: 400 });
-  }
-  if (!body.region?.trim() || body.region.trim().length < 2) {
-    return Response.json({ error: "Region is required" }, { status: 400 });
-  }
-  if (!Array.isArray(body.goals) || body.goals.length === 0) {
-    return Response.json({ error: "Select at least one goal" }, { status: 400 });
-  }
-  if (!body.discord_confirmed) {
-    return Response.json({ error: "Discord confirmation required" }, { status: 400 });
-  }
+    const body = await request.json();
 
-  // Validate players
-  const players = body.players as Array<{
-    is_captain: boolean; ign: string; discord_handle: string;
-    role: string; rank: string; platform: string;
-  }>;
-  if (!Array.isArray(players) || players.length === 0) {
-    return Response.json({ error: "At least the captain is required" }, { status: 400 });
-  }
-  const captain = players.find((p) => p.is_captain);
-  if (!captain) {
-    return Response.json({ error: "Captain info is required" }, { status: 400 });
-  }
-  if (!captain.ign?.trim() || captain.ign.trim().length < 2) {
-    return Response.json({ error: "Captain IGN is required (2+ chars)" }, { status: 400 });
-  }
-  if (!captain.discord_handle?.trim()) {
-    return Response.json({ error: "Captain Discord handle is required" }, { status: 400 });
-  }
-  if (!captain.role) {
-    return Response.json({ error: "Captain role is required" }, { status: 400 });
-  }
-  if (!captain.rank?.trim() || captain.rank.trim().length < 2) {
-    return Response.json({ error: "Captain rank is required" }, { status: 400 });
-  }
-  if (!captain.platform) {
-    return Response.json({ error: "Captain platform is required" }, { status: 400 });
-  }
-
-  // Check for duplicate Discord handles within submission
-  const handles = players.map((p) => p.discord_handle?.trim().toLowerCase()).filter(Boolean);
-  if (new Set(handles).size !== handles.length) {
-    return Response.json({ error: "Each player must have a unique Discord handle" }, { status: 400 });
-  }
-
-  // Validate non-captain players (if row exists, must be complete)
-  for (let i = 0; i < players.length; i++) {
-    const p = players[i];
-    if (p.is_captain) continue;
-    if (!p.ign?.trim() || !p.discord_handle?.trim()) {
-      return Response.json({ error: `Player ${i + 1}: IGN and Discord handle are required` }, { status: 400 });
+    // Validate team fields
+    if (!body.team_name?.trim() || body.team_name.trim().length < 2 || body.team_name.trim().length > 50) {
+      return Response.json({ error: "Team name must be 2–50 characters" }, { status: 400 });
     }
+    if (body.team_tag && (body.team_tag.length < 2 || body.team_tag.length > 6 || !/^[A-Za-z0-9]+$/.test(body.team_tag))) {
+      return Response.json({ error: "Team tag must be 2–6 alphanumeric characters" }, { status: 400 });
+    }
+    if (!Array.isArray(body.games) || body.games.length === 0) {
+      return Response.json({ error: "Select at least one game" }, { status: 400 });
+    }
+    if (!Array.isArray(body.platforms) || body.platforms.length === 0) {
+      return Response.json({ error: "Select at least one platform" }, { status: 400 });
+    }
+    if (!body.region?.trim() || body.region.trim().length < 2) {
+      return Response.json({ error: "Region is required" }, { status: 400 });
+    }
+    if (!Array.isArray(body.goals) || body.goals.length === 0) {
+      return Response.json({ error: "Select at least one goal" }, { status: 400 });
+    }
+    if (!body.discord_confirmed) {
+      return Response.json({ error: "Discord confirmation required" }, { status: 400 });
+    }
+
+    // Max-length checks on free-text fields
+    const maxLengths: Record<string, number> = { region: 50, discord_server: 200, about: 1000 };
+    for (const [field, max] of Object.entries(maxLengths)) {
+      if (typeof body[field] === "string" && body[field].length > max) {
+        return Response.json({ error: `${field} must be ${max} characters or fewer` }, { status: 400 });
+      }
+    }
+    if (Array.isArray(body.players) && body.players.length > 20) {
+      return Response.json({ error: "Maximum 20 players per team" }, { status: 400 });
+    }
+
+    // Validate players
+    const players = body.players as Array<{
+      is_captain: boolean; ign: string; discord_handle: string;
+      role: string; rank: string; platform: string;
+    }>;
+    if (!Array.isArray(players) || players.length === 0) {
+      return Response.json({ error: "At least the captain is required" }, { status: 400 });
+    }
+    const captain = players.find((p) => p.is_captain);
+    if (!captain) {
+      return Response.json({ error: "Captain info is required" }, { status: 400 });
+    }
+    if (!captain.ign?.trim() || captain.ign.trim().length < 2) {
+      return Response.json({ error: "Captain IGN is required (2+ chars)" }, { status: 400 });
+    }
+    if (!captain.discord_handle?.trim()) {
+      return Response.json({ error: "Captain Discord handle is required" }, { status: 400 });
+    }
+    if (!captain.role) {
+      return Response.json({ error: "Captain role is required" }, { status: 400 });
+    }
+    if (!captain.rank?.trim() || captain.rank.trim().length < 2) {
+      return Response.json({ error: "Captain rank is required" }, { status: 400 });
+    }
+    if (!captain.platform) {
+      return Response.json({ error: "Captain platform is required" }, { status: 400 });
+    }
+
+    // Check for duplicate Discord handles within submission
+    const handles = players.map((p) => p.discord_handle?.trim().toLowerCase()).filter(Boolean);
+    if (new Set(handles).size !== handles.length) {
+      return Response.json({ error: "Each player must have a unique Discord handle" }, { status: 400 });
+    }
+
+    // Validate non-captain players (if row exists, must be complete)
+    for (let i = 0; i < players.length; i++) {
+      const p = players[i];
+      if (p.is_captain) continue;
+      if (!p.ign?.trim() || !p.discord_handle?.trim()) {
+        return Response.json({ error: `Player ${i + 1}: IGN and Discord handle are required` }, { status: 400 });
+      }
+    }
+
+    // Duplicate guard: same captain + overlapping games within 30 days
+    const isDuplicate = await checkDuplicateCommunityTeam(captain.discord_handle.trim(), body.games);
+    if (isDuplicate) {
+      return Response.json({
+        error: `Looks like ${captain.discord_handle} already registered a team for this game recently. If you need to make changes, reach out on Discord.`,
+        duplicate: true,
+      }, { status: 409 });
+    }
+
+    const team = await createCommunityTeam(
+      {
+        team_name: body.team_name.trim(),
+        team_tag: body.team_tag?.trim().toUpperCase() || null,
+        games: body.games,
+        platforms: body.platforms,
+        region: body.region.trim(),
+        discord_server: body.discord_server?.trim() || null,
+        referral_source: body.referral_source || null,
+        goals: body.goals,
+        about: body.about?.trim() || null,
+      },
+      players.map((p) => ({
+        is_captain: p.is_captain,
+        ign: p.ign.trim(),
+        discord_handle: p.discord_handle.trim(),
+        role: p.role,
+        rank: p.rank.trim(),
+        platform: p.platform,
+      })),
+    );
+
+    // Discord notification (non-blocking)
+    sendDiscordNotification(team, players).catch((e) => console.error("Discord notify (community registration):", e));
+
+    return Response.json({ team }, { status: 201 });
+  } catch (e) {
+    console.error("POST /api/community-teams", e);
+    return apiError("Internal server error", 500);
   }
-
-  // Duplicate guard: same captain + overlapping games within 30 days
-  const isDuplicate = await checkDuplicateCommunityTeam(captain.discord_handle.trim(), body.games);
-  if (isDuplicate) {
-    return Response.json({
-      error: `Looks like ${captain.discord_handle} already registered a team for this game recently. If you need to make changes, reach out on Discord.`,
-      duplicate: true,
-    }, { status: 409 });
-  }
-
-  const team = await createCommunityTeam(
-    {
-      team_name: body.team_name.trim(),
-      team_tag: body.team_tag?.trim().toUpperCase() || null,
-      games: body.games,
-      platforms: body.platforms,
-      region: body.region.trim(),
-      discord_server: body.discord_server?.trim() || null,
-      referral_source: body.referral_source || null,
-      goals: body.goals,
-      about: body.about?.trim() || null,
-    },
-    players.map((p) => ({
-      is_captain: p.is_captain,
-      ign: p.ign.trim(),
-      discord_handle: p.discord_handle.trim(),
-      role: p.role,
-      rank: p.rank.trim(),
-      platform: p.platform,
-    })),
-  );
-
-  // Discord notification (non-blocking)
-  sendDiscordNotification(team, players).catch(() => {});
-
-  return Response.json({ team }, { status: 201 });
 }
 
 async function sendDiscordNotification(

@@ -27,6 +27,13 @@ export const metadata: Metadata = {
     title: "IMPerfect Esports",
     description: "Puerto Rico's Premier Hero Shooter Team",
     type: "website",
+    siteName: "IMPerfect Esports",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IMPerfect Esports",
+    description: "Puerto Rico's Premier Hero Shooter Team",
   },
 };
 

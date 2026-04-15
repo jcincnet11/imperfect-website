@@ -217,7 +217,17 @@ export default function ScrimsPanel({ scrims, players, availability, orgRole, cu
 
       {/* Applications tab */}
       {activeTab === "applications" && canManage && (
-        <ScrimApplicationsPanel />
+        <ScrimApplicationsPanel onSchedule={(data) => {
+          setForm({
+            ...blankForm(),
+            game: data.game,
+            opponent_org: data.opponent_org,
+            format: data.format,
+            division: data.game === "OW2" ? "OW2" : "IMPerfect",
+          });
+          setShowForm(true);
+          setActiveTab("scrims");
+        }} />
       )}
 
       {/* Scrims tab content */}

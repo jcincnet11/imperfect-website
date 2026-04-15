@@ -11,10 +11,10 @@ export const metadata: Metadata = {
     type: "website",
   },
   alternates: {
-    canonical: "https://imperfect-sage.vercel.app/en/sponsorship",
+    canonical: "https://imperfectgg.com/en/sponsorship",
     languages: {
-      en: "https://imperfect-sage.vercel.app/en/sponsorship",
-      es: "https://imperfect-sage.vercel.app/es/sponsorship",
+      en: "https://imperfectgg.com/en/sponsorship",
+      es: "https://imperfectgg.com/es/sponsorship",
     },
   },
 };

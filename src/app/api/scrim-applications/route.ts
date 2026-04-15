@@ -9,24 +9,32 @@ import {
 } from "@/lib/db";
 import { resolveOrgRole } from "@/lib/permissions";
 import { can } from "@/lib/permissions";
+import { apiError } from "@/lib/api-error";
+import { verifyCsrfOrigin } from "@/lib/csrf";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/scrim-applications?status=pending
  * Manager+ only — returns all applications, optionally filtered by status.
  */
 export async function GET(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await auth();
+    if (!session?.user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-  const user = session.user as Record<string, unknown>;
-  const orgRole = resolveOrgRole({ discordId: user.discordId as string, orgRole: user.orgRole as string });
-  if (!can.manageScrim(orgRole)) {
-    return Response.json({ error: "Forbidden" }, { status: 403 });
+    const user = session.user as Record<string, unknown>;
+    const orgRole = resolveOrgRole({ discordId: user.discordId as string, orgRole: user.orgRole as string });
+    if (!can.manageScrim(orgRole)) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const status = request.nextUrl.searchParams.get("status") ?? undefined;
+    const applications = await getScrimApplications(status);
+    return Response.json({ applications });
+  } catch (e) {
+    console.error("GET /api/scrim-applications", e);
+    return apiError("Internal server error", 500);
   }
-
-  const status = request.nextUrl.searchParams.get("status") ?? undefined;
-  const applications = await getScrimApplications(status);
-  return Response.json({ applications });
 }
 
 /**
@@ -34,62 +42,78 @@ export async function GET(request: NextRequest) {
  * Public — no auth required. Creates a new scrim application.
  */
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  try {
+    if (!checkRateLimit(request)) return Response.json({ error: "Too many requests" }, { status: 429 });
+    if (!verifyCsrfOrigin(request)) return Response.json({ error: "Invalid origin" }, { status: 403 });
 
-  // Validate required fields
-  const required = ["team_name", "captain_name", "captain_discord", "region", "game", "format", "rank_range", "preferred_days", "preferred_blocks", "earliest_date"];
-  for (const field of required) {
-    if (!body[field] || (typeof body[field] === "string" && !body[field].trim())) {
-      return Response.json({ error: `${field} is required` }, { status: 400 });
+    const body = await request.json();
+
+    // Validate required fields
+    const required = ["team_name", "captain_name", "captain_discord", "region", "game", "format", "rank_range", "preferred_days", "preferred_blocks", "earliest_date"];
+    for (const field of required) {
+      if (!body[field] || (typeof body[field] === "string" && !body[field].trim())) {
+        return Response.json({ error: `${field} is required` }, { status: 400 });
+      }
     }
+
+    if (!["ow2", "marvel_rivals", "both"].includes(body.game)) {
+      return Response.json({ error: "Invalid game selection" }, { status: 400 });
+    }
+
+    // Max-length checks on user-submitted strings
+    const maxLengths: Record<string, number> = { team_name: 100, captain_name: 100, captain_discord: 100, region: 50, format: 50, rank_range: 50, discord_invite: 200, message: 1000 };
+    for (const [field, max] of Object.entries(maxLengths)) {
+      if (typeof body[field] === "string" && body[field].length > max) {
+        return Response.json({ error: `${field} must be ${max} characters or fewer` }, { status: 400 });
+      }
+    }
+
+    if (!body.discord_confirmed) {
+      return Response.json({ error: "Discord confirmation required" }, { status: 400 });
+    }
+
+    // Earliest date must be at least 3 days from now
+    const earliest = new Date(body.earliest_date);
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 3);
+    minDate.setHours(0, 0, 0, 0);
+    if (earliest < minDate) {
+      return Response.json({ error: "Earliest date must be at least 3 days from today" }, { status: 400 });
+    }
+
+    // Duplicate guard: same captain + game within 7 days
+    const isDuplicate = await checkDuplicateApplication(body.captain_discord.trim(), body.game);
+    if (isDuplicate) {
+      return Response.json({
+        error: "You already have a pending application. Our Manager will be in touch soon.",
+        duplicate: true,
+      }, { status: 409 });
+    }
+
+    const app = await createScrimApplication({
+      team_name: body.team_name.trim(),
+      discord_invite: body.discord_invite?.trim() || null,
+      captain_name: body.captain_name.trim(),
+      captain_discord: body.captain_discord.trim(),
+      region: body.region.trim(),
+      game: body.game,
+      format: body.format.trim(),
+      rank_range: body.rank_range.trim(),
+      preferred_days: body.preferred_days,
+      preferred_blocks: body.preferred_blocks,
+      earliest_date: body.earliest_date,
+      message: body.message?.trim() || null,
+      discord_confirmed: true,
+    });
+
+    // Fire Discord notification (non-blocking)
+    sendDiscordNotification(app).catch((e) => console.error("Discord notify (scrim application):", e));
+
+    return Response.json({ application: app }, { status: 201 });
+  } catch (e) {
+    console.error("POST /api/scrim-applications", e);
+    return apiError("Internal server error", 500);
   }
-
-  if (!["ow2", "marvel_rivals", "both"].includes(body.game)) {
-    return Response.json({ error: "Invalid game selection" }, { status: 400 });
-  }
-
-  if (!body.discord_confirmed) {
-    return Response.json({ error: "Discord confirmation required" }, { status: 400 });
-  }
-
-  // Earliest date must be at least 3 days from now
-  const earliest = new Date(body.earliest_date);
-  const minDate = new Date();
-  minDate.setDate(minDate.getDate() + 3);
-  minDate.setHours(0, 0, 0, 0);
-  if (earliest < minDate) {
-    return Response.json({ error: "Earliest date must be at least 3 days from today" }, { status: 400 });
-  }
-
-  // Duplicate guard: same captain + game within 7 days
-  const isDuplicate = await checkDuplicateApplication(body.captain_discord.trim(), body.game);
-  if (isDuplicate) {
-    return Response.json({
-      error: "You already have a pending application. Our Manager will be in touch soon.",
-      duplicate: true,
-    }, { status: 409 });
-  }
-
-  const app = await createScrimApplication({
-    team_name: body.team_name.trim(),
-    discord_invite: body.discord_invite?.trim() || null,
-    captain_name: body.captain_name.trim(),
-    captain_discord: body.captain_discord.trim(),
-    region: body.region.trim(),
-    game: body.game,
-    format: body.format.trim(),
-    rank_range: body.rank_range.trim(),
-    preferred_days: body.preferred_days,
-    preferred_blocks: body.preferred_blocks,
-    earliest_date: body.earliest_date,
-    message: body.message?.trim() || null,
-    discord_confirmed: true,
-  });
-
-  // Fire Discord notification (non-blocking)
-  sendDiscordNotification(app).catch(() => {});
-
-  return Response.json({ application: app }, { status: 201 });
 }
 
 async function sendDiscordNotification(app: {

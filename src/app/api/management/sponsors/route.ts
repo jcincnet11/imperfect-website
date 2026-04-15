@@ -3,8 +3,9 @@ import { auth } from "@/auth";
 import { isOrgAdmin } from "@/lib/admin";
 import { getSponsors, createSponsor } from "@/lib/management-db";
 import { verifyCsrfOrigin } from "@/lib/csrf";
-import { missingField, safeNumber } from "@/lib/validate";
+import { missingField, safeNumber, invalidEnum } from "@/lib/validate";
 import { apiError } from "@/lib/api-error";
+import { logRequest } from "@/lib/logger";
 
 export async function GET() {
   try {
@@ -22,6 +23,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const start = Date.now();
     const session = await auth();
     if (!session?.user) return apiError("Unauthorized", 401);
     if (!isOrgAdmin(session)) return apiError("Forbidden", 403);
@@ -30,6 +32,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json() as Record<string, unknown>;
     const missing = missingField(body, ["company_name"]);
     if (missing) return apiError(`Missing required field: ${missing}`, 400);
+    const badTier = invalidEnum("tier", body.tier, ["founding", "gold", "silver", "bronze", "community", "Prospect"]);
+    if (badTier) return apiError(badTier, 400);
+    const badStatus = invalidEnum("status", body.status, ["Active", "Prospect", "Expired", "Declined"]);
+    if (badStatus) return apiError(badStatus, 400);
 
     const sponsor = await createSponsor({
       company_name: body.company_name as string,
@@ -50,7 +56,9 @@ export async function POST(request: NextRequest) {
       source: (body.source as string) ?? null,
       notes: (body.notes as string) ?? null,
     });
-    return Response.json(sponsor, { status: 201 });
+    const res = Response.json(sponsor, { status: 201 });
+    logRequest(request, res, start, { userId: session.user.discordId ?? "" });
+    return res;
   } catch (e) {
     console.error("POST /api/management/sponsors", e);
     return apiError("Internal server error", 500);

@@ -38,8 +38,15 @@ export async function GET(request: NextRequest) {
 
   const now = new Date();
   const weekStart = currentWeekStart();
-  const teams = ["IMPerfect", "Shadows", "Echoes"];
   const notified: string[] = [];
+
+  // Fetch active divisions from the players table instead of hardcoding
+  const { data: divisionRows } = await supabase
+    .from("players")
+    .select("division")
+    .eq("archived", false)
+    .not("division", "is", null);
+  const teams = [...new Set((divisionRows ?? []).map((r: { division: string }) => r.division))];
 
   for (const team of teams) {
     const { data: blocks } = await supabase

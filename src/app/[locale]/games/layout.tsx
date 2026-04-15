@@ -11,10 +11,10 @@ export const metadata: Metadata = {
     type: "website",
   },
   alternates: {
-    canonical: "https://imperfect-sage.vercel.app/en/games",
+    canonical: "https://imperfectgg.com/en/games",
     languages: {
-      en: "https://imperfect-sage.vercel.app/en/games",
-      es: "https://imperfect-sage.vercel.app/es/games",
+      en: "https://imperfectgg.com/en/games",
+      es: "https://imperfectgg.com/es/games",
     },
   },
 };

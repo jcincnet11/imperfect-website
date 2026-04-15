@@ -3,8 +3,9 @@ import { auth } from "@/auth";
 import { isOrgAdmin } from "@/lib/admin";
 import { getRevenue, createRevenue } from "@/lib/management-db";
 import { verifyCsrfOrigin } from "@/lib/csrf";
-import { missingField, safeNumber } from "@/lib/validate";
+import { missingField, safeNumber, invalidEnum } from "@/lib/validate";
 import { apiError } from "@/lib/api-error";
+import { logRequest } from "@/lib/logger";
 
 export async function GET() {
   try {
@@ -22,6 +23,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const start = Date.now();
     const session = await auth();
     if (!session?.user) return apiError("Unauthorized", 401);
     if (!isOrgAdmin(session)) return apiError("Forbidden", 403);
@@ -30,6 +32,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json() as Record<string, unknown>;
     const missing = missingField(body, ["date", "category"]);
     if (missing) return apiError(`Missing required field: ${missing}`, 400);
+    const badCategory = invalidEnum("category", body.category, ["Sponsorship", "Tournament", "Merch", "Donation", "Other"]);
+    if (badCategory) return apiError(badCategory, 400);
+    const badPayment = invalidEnum("payment_method", body.payment_method, ["PayPal", "Zelle", "Cash", "ATH Movil", "Check", "Crypto", "Other"]);
+    if (badPayment) return apiError(badPayment, 400);
 
     const entry = await createRevenue({
       date: body.date as string,
@@ -43,7 +49,9 @@ export async function POST(request: NextRequest) {
       receipt_ref: (body.receipt_ref as string) ?? null,
       notes: (body.notes as string) ?? null,
     });
-    return Response.json(entry, { status: 201 });
+    const res = Response.json(entry, { status: 201 });
+    logRequest(request, res, start, { userId: session.user.discordId ?? "" });
+    return res;
   } catch (e) {
     console.error("POST /api/management/revenue", e);
     return apiError("Internal server error", 500);

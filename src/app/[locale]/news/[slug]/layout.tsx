@@ -4,10 +4,10 @@ export const metadata: Metadata = {
   title: "Article — IMPerfect Esports",
   description: "Read the latest from IMPerfect Esports.",
   alternates: {
-    canonical: "https://imperfect-sage.vercel.app/en/news",
+    canonical: "https://imperfectgg.com/en/news",
     languages: {
-      en: "https://imperfect-sage.vercel.app/en/news",
-      es: "https://imperfect-sage.vercel.app/es/news",
+      en: "https://imperfectgg.com/en/news",
+      es: "https://imperfectgg.com/es/news",
     },
   },
 };
