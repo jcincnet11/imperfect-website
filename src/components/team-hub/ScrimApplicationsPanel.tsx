@@ -20,6 +20,7 @@ type Application = {
   linked_scrim_id: string | null;
   reviewed_by: string | null;
   reviewed_at: string | null;
+  decline_reason: string | null;
   submitted_at: string;
 };
 
@@ -65,18 +66,27 @@ export default function ScrimApplicationsPanel({ onSchedule }: { onSchedule?: (d
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
-  const updateStatus = async (id: string, status: string) => {
+  const updateStatus = async (id: string, status: string, extra?: Record<string, unknown>) => {
     setActionLoading(id);
     const res = await fetch(`/api/scrim-applications/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status, ...extra }),
     });
     if (res.ok) {
       const { application } = await res.json();
       setApps((prev) => prev.map((a) => a.id === id ? application : a));
     }
     setActionLoading(null);
+  };
+
+  const declineWithReason = (id: string) => {
+    const reason = window.prompt(
+      "Optional — reason for declining (500 chars max). This will be posted in the scrims Discord channel. Leave blank to decline without a message.",
+      "",
+    );
+    if (reason === null) return; // user cancelled
+    updateStatus(id, "declined", { decline_reason: reason });
   };
 
   const filtered = filter === "all" ? apps : apps.filter((a) => a.status === filter);
@@ -183,6 +193,13 @@ export default function ScrimApplicationsPanel({ onSchedule }: { onSchedule?: (d
                 </div>
               )}
 
+              {app.status === "declined" && app.decline_reason && (
+                <div style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", borderRadius: "8px", padding: "10px 12px", marginBottom: "12px", fontSize: "12px", color: "#ef4444" }}>
+                  <strong style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em", opacity: 0.7 }}>Decline reason</strong>
+                  <div style={{ marginTop: "4px", color: "#fca5a5", fontStyle: "normal" }}>{app.decline_reason}</div>
+                </div>
+              )}
+
               {/* Actions */}
               {app.status === "pending" && (
                 <div style={{ display: "flex", gap: "8px" }}>
@@ -203,7 +220,7 @@ export default function ScrimApplicationsPanel({ onSchedule }: { onSchedule?: (d
                     Accept
                   </button>
                   <button
-                    onClick={() => updateStatus(app.id, "declined")}
+                    onClick={() => declineWithReason(app.id)}
                     disabled={actionLoading === app.id}
                     style={{
                       padding: "6px 16px",

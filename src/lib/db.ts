@@ -602,6 +602,7 @@ export type ScrimApplication = {
   linked_scrim_id:   string | null;
   reviewed_by:       string | null;
   reviewed_at:       string | null;
+  decline_reason:    string | null;
   submitted_at:      string;
 };
 
@@ -614,7 +615,7 @@ export async function getScrimApplications(status?: string): Promise<ScrimApplic
 }
 
 export async function createScrimApplication(
-  app: Omit<ScrimApplication, "id" | "status" | "linked_scrim_id" | "reviewed_by" | "reviewed_at" | "submitted_at">,
+  app: Omit<ScrimApplication, "id" | "status" | "linked_scrim_id" | "reviewed_by" | "reviewed_at" | "decline_reason" | "submitted_at">,
 ): Promise<ScrimApplication> {
   if (!supabase) throw new Error("Supabase required");
   const { data, error } = await supabase
