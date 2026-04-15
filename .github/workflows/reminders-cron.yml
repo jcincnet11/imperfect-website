@@ -1,0 +1,16 @@
+name: Reminders Cron
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hit reminders endpoint
+        run: |
+          curl -sS -f -X GET \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            https://imperfectgg.com/api/cron/reminders
