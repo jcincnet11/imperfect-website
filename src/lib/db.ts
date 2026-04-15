@@ -831,6 +831,7 @@ export async function upsertStatsOverride(
 export type LineupSlot = {
   player_discord_id: string;
   role: string;
+  hero?: string | null;
 };
 
 export type Lineup = {

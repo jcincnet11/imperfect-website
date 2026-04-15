@@ -84,6 +84,12 @@ export async function POST(request: NextRequest) {
       if (!isValidRole(game, s.role)) {
         return apiError(`Invalid role "${s.role}" for ${game}`, 400);
       }
+      if (s.hero != null) {
+        if (typeof s.hero !== "string" || s.hero.length > 40) {
+          return apiError("Hero must be a string up to 40 chars", 400);
+        }
+        s.hero = s.hero.trim() || null;
+      }
     }
 
     // Guard against duplicate players in the same lineup

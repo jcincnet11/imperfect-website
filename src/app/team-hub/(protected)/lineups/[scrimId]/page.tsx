@@ -27,6 +27,7 @@ export default async function LineupPage({
 
   const orgRole = resolveOrgRole(session.user);
   const canEdit = can.submitLineup(orgRole) || orgRole === "CAPTAIN";
+  const canApprove = can.approveLineups(orgRole);
 
   // Players are filtered to the scrim's division — you can't field someone
   // from a different team
@@ -44,6 +45,7 @@ export default async function LineupPage({
       players={rosterPlayers}
       initialLineup={lineup}
       canEdit={canEdit}
+      canApprove={canApprove}
     />
   );
 }

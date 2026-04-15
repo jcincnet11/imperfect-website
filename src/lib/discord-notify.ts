@@ -255,6 +255,43 @@ export async function notifyLineupSubmitted(
   });
 }
 
+export async function notifyLineupApproved(
+  lineup: Lineup,
+  scrim: Scrim,
+  approverName: string,
+): Promise<void> {
+  const channelId = getChannelId(scrim.division);
+  if (!channelId) return;
+
+  const gameLabel = scrim.game === "OW2" ? "Overwatch 2" : "Marvel Rivals";
+  const scrimDate = new Date(scrim.scheduled_at).toLocaleDateString("en-US", {
+    month: "short", day: "numeric",
+    timeZone: "America/Puerto_Rico",
+  });
+
+  const slotLines = lineup.slots
+    .map((s) => {
+      const heroNote = s.hero ? ` · *${s.hero}*` : "";
+      return `<@${s.player_discord_id}>${heroNote}`;
+    })
+    .join("\n");
+
+  await sendMessage(channelId, {
+    embeds: [
+      {
+        title: "✅ Lineup Approved",
+        description: `Approved lineup for **${scrim.opponent_org}** — ${gameLabel} · ${scrimDate}`,
+        color: 0x22c55e,
+        fields: [
+          { name: "Starters", value: slotLines, inline: false },
+          { name: "Approved by", value: approverName, inline: true },
+        ],
+        footer: { text: `IMPerfect Team Hub · ${scrim.division}` },
+      },
+    ],
+  });
+}
+
 export async function notifyReminder(block: ScheduleBlock, minutesUntil: number): Promise<void> {
   const channelId = getChannelId(block.division);
   if (!channelId) return;

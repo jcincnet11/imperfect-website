@@ -16,6 +16,7 @@ type Props = {
   players: RosterPlayer[];
   initialLineup: Lineup | null;
   canEdit: boolean;
+  canApprove?: boolean;
 };
 
 function formatScrimDateTime(iso: string): string {
@@ -23,7 +24,7 @@ function formatScrimDateTime(iso: string): string {
   return `${d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Puerto_Rico" })} at ${d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", timeZone: "America/Puerto_Rico" })} AST`;
 }
 
-export default function LineupBuilder({ scrim, players, initialLineup, canEdit }: Props) {
+export default function LineupBuilder({ scrim, players, initialLineup, canEdit, canApprove = false }: Props) {
   const game = scrim.game as Game;
   const roles = rolesForGame(game);
   const expected = expectedSlotRoles(game);
@@ -38,7 +39,9 @@ export default function LineupBuilder({ scrim, players, initialLineup, canEdit }
 
   const [notes, setNotes] = useState<string>(initialLineup?.notes ?? "");
   const [saving, setSaving] = useState(false);
+  const [approving, setApproving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [status, setStatus] = useState<Lineup["status"] | null>(initialLineup?.status ?? null);
   const [error, setError] = useState<string | null>(null);
 
   const setSlotPlayer = (index: number, discordId: string) => {
@@ -46,6 +49,28 @@ export default function LineupBuilder({ scrim, players, initialLineup, canEdit }
       i === index ? { ...(s ?? { role: expected[index] }), player_discord_id: discordId } as LineupSlot : s,
     ));
     setSaved(false);
+  };
+
+  const setSlotHero = (index: number, hero: string) => {
+    setSlots((prev) => prev.map((s, i) =>
+      i === index ? { ...(s ?? { role: expected[index], player_discord_id: "" }), hero: hero || null } as LineupSlot : s,
+    ));
+    setSaved(false);
+  };
+
+  const approve = async () => {
+    if (!initialLineup) return;
+    setApproving(true);
+    setError(null);
+    const res = await fetch(`/api/lineups/${initialLineup.id}/approve`, { method: "POST" });
+    if (res.ok) {
+      const json = await res.json();
+      setStatus(json.lineup.status);
+    } else {
+      const json = await res.json().catch(() => ({}));
+      setError(json.error ?? "Failed to approve.");
+    }
+    setApproving(false);
   };
 
   const usedPlayers = useMemo(
@@ -115,9 +140,23 @@ export default function LineupBuilder({ scrim, players, initialLineup, canEdit }
         <p className="text-xs text-white/40 mt-1">{formatScrimDateTime(scrim.scheduled_at)}</p>
       </div>
 
-      {initialLineup?.status === "approved" && (
+      {status === "approved" && (
         <div className="mb-4 px-4 py-2.5 rounded-lg bg-green-500/10 border border-green-500/25 text-green-400 text-sm font-semibold">
           ✓ Lineup approved
+        </div>
+      )}
+      {status === "submitted" && canApprove && (
+        <div className="mb-4 px-4 py-3 rounded-lg bg-[#c5d400]/[0.06] border border-[#c5d400]/25 flex items-center justify-between gap-3 flex-wrap">
+          <div className="text-sm text-white/80">
+            <span className="font-bold text-[#c5d400]">Pending approval.</span> Review and approve this lineup.
+          </div>
+          <button
+            onClick={approve}
+            disabled={approving}
+            className="px-4 py-1.5 rounded-lg text-xs font-bold bg-green-500/15 text-green-400 border border-green-500/30 hover:bg-green-500/25 transition-colors disabled:opacity-50"
+          >
+            {approving ? "Approving…" : "✓ Approve Lineup"}
+          </button>
         </div>
       )}
 
@@ -128,8 +167,9 @@ export default function LineupBuilder({ scrim, players, initialLineup, canEdit }
           for (let i = 0; i < role.count; i++) {
             const idx = flatIndex++;
             const current = slots[idx]?.player_discord_id ?? "";
+            const currentHero = slots[idx]?.hero ?? "";
             slotsForRole.push(
-              <div key={idx} className="flex items-center gap-3">
+              <div key={idx} className="flex items-center gap-3 flex-wrap md:flex-nowrap">
                 <div className="w-20 text-[11px] font-bold tracking-widest uppercase text-white/40">
                   Slot {idx + 1}
                 </div>
@@ -137,7 +177,7 @@ export default function LineupBuilder({ scrim, players, initialLineup, canEdit }
                   value={current}
                   onChange={(e) => setSlotPlayer(idx, e.target.value)}
                   disabled={!canEdit || saving}
-                  className="flex-1 bg-[#0a0a0a] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:border-[#c5d400]/40 focus:outline-none disabled:opacity-60"
+                  className="flex-1 min-w-[180px] bg-[#0a0a0a] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white focus:border-[#c5d400]/40 focus:outline-none disabled:opacity-60"
                 >
                   <option value="">— Select player —</option>
                   {players.map((p) => {
@@ -156,6 +196,15 @@ export default function LineupBuilder({ scrim, players, initialLineup, canEdit }
                     );
                   })}
                 </select>
+                <input
+                  type="text"
+                  value={currentHero ?? ""}
+                  onChange={(e) => setSlotHero(idx, e.target.value)}
+                  disabled={!canEdit || saving}
+                  maxLength={40}
+                  placeholder="Hero (optional)"
+                  className="w-full md:w-36 bg-[#0a0a0a] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/20 focus:border-[#c5d400]/40 focus:outline-none disabled:opacity-60"
+                />
               </div>,
             );
           }
