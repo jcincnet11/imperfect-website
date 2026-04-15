@@ -48,6 +48,8 @@ type CardState = {
 
 export default function PlayerStatsAdmin({ players }: { players: MRPlayer[] }) {
   const [cards, setCards] = useState<Record<string, CardState>>({});
+  const [divisionFilter, setDivisionFilter] = useState<string>("all");
+  const [roleFilter, setRoleFilter] = useState<string>("all");
 
   // Fetch stats for a single player
   const fetchStats = useCallback(
@@ -94,6 +96,62 @@ export default function PlayerStatsAdmin({ players }: { players: MRPlayer[] }) {
     players.forEach((p) => fetchStats(p.displayName, true));
   }
 
+  const divisions = Array.from(new Set(players.map((p) => p.division))).sort();
+  const roles = Array.from(
+    new Set(players.map((p) => p.inGameRole).filter((r): r is string => Boolean(r))),
+  ).sort();
+
+  const filteredPlayers = players.filter((p) => {
+    if (divisionFilter !== "all" && p.division !== divisionFilter) return false;
+    if (roleFilter !== "all" && p.inGameRole !== roleFilter) return false;
+    return true;
+  });
+
+  function handleExportCsv() {
+    const header = [
+      "Player", "Division", "Role", "Rank Tier", "Rank Name",
+      "Win Rate %", "KDA", "Matches Played", "Data Source", "Last Updated",
+      "Hero 1", "Hero 1 WR %", "Hero 1 KDA", "Hero 1 Matches",
+      "Hero 2", "Hero 2 WR %", "Hero 2 KDA", "Hero 2 Matches",
+      "Hero 3", "Hero 3 WR %", "Hero 3 KDA", "Hero 3 Matches",
+    ];
+    const rows = filteredPlayers.map((p) => {
+      const s = cards[p.displayName]?.stats;
+      const heroCells = (idx: number) => {
+        const h = s?.topHeroes?.[idx];
+        return h
+          ? [h.name, (h.winRate * 100).toFixed(1), h.kda.toFixed(2), String(h.matchesPlayed)]
+          : ["", "", "", ""];
+      };
+      return [
+        p.displayName,
+        p.division,
+        p.inGameRole ?? "",
+        s?.rank?.tier ?? "",
+        s?.rank?.name ?? "",
+        s ? (s.winRate * 100).toFixed(1) : "",
+        s ? s.kda.toFixed(2) : "",
+        s ? String(s.matchesPlayed) : "",
+        s?.dataSource ?? "",
+        s?.lastUpdated ?? "",
+        ...heroCells(0),
+        ...heroCells(1),
+        ...heroCells(2),
+      ];
+    });
+    const csv = [header, ...rows]
+      .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `imperfect-mr-stats-${stamp}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="p-6 md:p-8 max-w-5xl">
       {/* Header */}
@@ -106,21 +164,51 @@ export default function PlayerStatsAdmin({ players }: { players: MRPlayer[] }) {
             <span className="text-[#c5d400]">Player Stats</span> Management
           </h1>
           <p className="text-white/35 text-sm mt-1">
-            {players.length} Marvel Rivals player{players.length !== 1 ? "s" : ""}
+            Showing {filteredPlayers.length} of {players.length} Marvel Rivals player{players.length !== 1 ? "s" : ""}
           </p>
         </div>
 
-        <button
-          onClick={handleRefreshAll}
-          className="px-4 py-2 rounded-xl border border-[#c5d400]/30 text-[#c5d400] text-sm font-bold uppercase tracking-widest hover:bg-[#c5d400]/10 transition-colors self-start"
-        >
-          Refresh All
-        </button>
+        <div className="flex gap-2 self-start">
+          <button
+            onClick={handleExportCsv}
+            className="px-4 py-2 rounded-xl border border-white/15 text-white/70 text-sm font-bold uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors"
+          >
+            Export CSV
+          </button>
+          <button
+            onClick={handleRefreshAll}
+            className="px-4 py-2 rounded-xl border border-[#c5d400]/30 text-[#c5d400] text-sm font-bold uppercase tracking-widest hover:bg-[#c5d400]/10 transition-colors"
+          >
+            Refresh All
+          </button>
+        </div>
       </div>
+
+      {/* Filters */}
+      {(divisions.length > 1 || roles.length > 1) && (
+        <div className="flex flex-wrap gap-4 mb-6">
+          {divisions.length > 1 && (
+            <FilterGroup
+              label="Division"
+              options={["all", ...divisions]}
+              value={divisionFilter}
+              onChange={setDivisionFilter}
+            />
+          )}
+          {roles.length > 1 && (
+            <FilterGroup
+              label="Role"
+              options={["all", ...roles]}
+              value={roleFilter}
+              onChange={setRoleFilter}
+            />
+          )}
+        </div>
+      )}
 
       {/* Player cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {players.map((player) => {
+        {filteredPlayers.map((player) => {
           const state = cards[player.displayName] ?? {
             stats: null,
             loading: true,
@@ -494,6 +582,46 @@ function PlayerCard({
           )}
         </form>
       )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Filter pill group
+// ---------------------------------------------------------------------------
+
+function FilterGroup({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: string[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="text-[10px] font-bold tracking-widest uppercase text-white/40">{label}</span>
+      <div className="flex gap-1.5 flex-wrap">
+        {options.map((opt) => {
+          const active = value === opt;
+          return (
+            <button
+              key={opt}
+              onClick={() => onChange(opt)}
+              className={`px-3 py-1 rounded-lg text-[11px] font-semibold uppercase tracking-wide transition-colors ${
+                active
+                  ? "bg-[#c5d400]/15 text-[#c5d400] border border-[#c5d400]/30"
+                  : "bg-white/[0.03] text-white/50 border border-white/[0.06] hover:text-white/80"
+              }`}
+            >
+              {opt === "all" ? "All" : opt}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
