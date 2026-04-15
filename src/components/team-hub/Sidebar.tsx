@@ -13,6 +13,7 @@ const NAV = [
   { href: "/team-hub/availability",   label: "Availability",   icon: "◈" },
   { href: "/team-hub/vod",            label: "VOD Library",    icon: "▶" },
   { href: "/team-hub/history",        label: "Match History",  icon: "◆" },
+  { href: "/team-hub/tournaments",    label: "Tournaments",    icon: "♚" },
   { href: "/team-hub/announcements",  label: "Announcements",  icon: "◭" },
 ];
 
