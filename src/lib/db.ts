@@ -197,6 +197,21 @@ export async function getScheduleBlocks(weekStart: string, division: string): Pr
   return blocks.filter((b) => b.week_start === weekStart && b.division === division);
 }
 
+export async function getAllVodReviews(): Promise<ScheduleBlock[]> {
+  if (supabase) {
+    const { data } = await supabase
+      .from("schedule_blocks")
+      .select("*")
+      .eq("block_type", "VOD_REVIEW")
+      .order("week_start", { ascending: false });
+    return (data as ScheduleBlock[]) ?? [];
+  }
+  const blocks = readJson<ScheduleBlock>("schedule.json");
+  return blocks
+    .filter((b) => b.block_type === "VOD_REVIEW")
+    .sort((a, b) => b.week_start.localeCompare(a.week_start));
+}
+
 export async function upsertScheduleBlock(block: ScheduleBlock): Promise<ScheduleBlock> {
   if (supabase) {
     const { data } = await supabase

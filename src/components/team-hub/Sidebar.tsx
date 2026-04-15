@@ -11,6 +11,7 @@ const NAV = [
   { href: "/team-hub/dashboard",      label: "Dashboard",      icon: "⬡" },
   { href: "/team-hub/schedule",       label: "Schedule",       icon: "▦" },
   { href: "/team-hub/availability",   label: "Availability",   icon: "◈" },
+  { href: "/team-hub/vod",            label: "VOD Library",    icon: "▶" },
   { href: "/team-hub/announcements",  label: "Announcements",  icon: "◭" },
 ];
 
