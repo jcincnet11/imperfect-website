@@ -4,6 +4,7 @@ import { getAnnouncements, createAnnouncement, appendAuditLog } from "@/lib/db";
 import { resolveOrgRole, can } from "@/lib/permissions";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
+import { notifyAnnouncement } from "@/lib/discord-notify";
 
 export async function GET(req: NextRequest) {
   try {
@@ -44,6 +45,10 @@ export async function POST(req: NextRequest) {
       entity_id: announcement.id,
       before_val: null,
       after_val: announcement as unknown as Record<string, unknown>,
+    });
+
+    notifyAnnouncement(announcement, session.user.name ?? session.user.discordId!).catch((err) => {
+      console.error("Discord notify (announcement):", err);
     });
 
     return NextResponse.json(announcement, { status: 201 });

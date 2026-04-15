@@ -1,4 +1,4 @@
-import type { ScheduleBlock, Player } from "./db";
+import type { ScheduleBlock, Player, Announcement } from "./db";
 
 const BLOCK_LABELS: Record<string, string> = {
   PRACTICE: "Practice",
@@ -165,6 +165,50 @@ export async function notifyAvailabilityComplete(
       },
     ],
   });
+}
+
+const AUDIENCE_TO_DIVISIONS: Record<Announcement["target_audience"], string[]> = {
+  ALL:       ["IMPerfect", "Shadows", "Echoes"],
+  IMPERFECT: ["IMPerfect"],
+  SHADOWS:   ["Shadows"],
+  ECHOES:    ["Echoes"],
+  COACHES:   ["IMPerfect"],
+  MANAGERS:  ["IMPerfect"],
+  PLAYERS:   ["IMPerfect", "Shadows", "Echoes"],
+};
+
+export async function notifyAnnouncement(
+  announcement: Announcement,
+  authorName: string,
+): Promise<void> {
+  const divisions = AUDIENCE_TO_DIVISIONS[announcement.target_audience] ?? ["IMPerfect"];
+  const audienceLabel = announcement.target_audience === "ALL"
+    ? "Everyone"
+    : announcement.target_audience.charAt(0) + announcement.target_audience.slice(1).toLowerCase();
+
+  const body = announcement.body.length > 1800
+    ? announcement.body.slice(0, 1800) + "…"
+    : announcement.body;
+
+  const embed = {
+    title: `${announcement.pinned ? "📌 " : "📣 "}${announcement.title}`,
+    description: body,
+    color: announcement.pinned ? 0xc8e400 : 0x3a7bd5,
+    fields: [
+      { name: "Audience", value: audienceLabel, inline: true },
+      { name: "Posted by", value: authorName, inline: true },
+    ],
+    footer: { text: "IMPerfect Team Hub · Announcement" },
+    timestamp: announcement.created_at,
+  };
+
+  await Promise.all(
+    divisions.map(async (division) => {
+      const channelId = getChannelId(division);
+      if (!channelId) return;
+      await sendMessage(channelId, { embeds: [embed] });
+    }),
+  );
 }
 
 export async function notifyReminder(block: ScheduleBlock, minutesUntil: number): Promise<void> {
