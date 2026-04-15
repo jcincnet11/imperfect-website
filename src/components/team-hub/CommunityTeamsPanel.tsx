@@ -17,6 +17,7 @@ type Team = {
   reviewed_by: string | null;
   reviewed_at: string | null;
   notes: string | null;
+  decline_reason: string | null;
 };
 
 type Player = {
@@ -81,18 +82,27 @@ export default function CommunityTeamsPanel({ canModify }: { canModify: boolean 
     }
   };
 
-  const updateStatus = async (id: string, status: string) => {
+  const updateStatus = async (id: string, status: string, extra?: Record<string, unknown>) => {
     setActionLoading(id);
     const res = await fetch(`/api/community-teams/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status, ...extra }),
     });
     if (res.ok) {
       const { team } = await res.json();
       setTeams((prev) => prev.map((t) => t.id === id ? team : t));
     }
     setActionLoading(null);
+  };
+
+  const declineWithReason = (id: string) => {
+    const reason = window.prompt(
+      "Optional — reason for declining (500 chars max). This will be posted in the community Discord channel so the team can reapply. Leave blank to decline without a message.",
+      "",
+    );
+    if (reason === null) return;
+    updateStatus(id, "declined", { decline_reason: reason });
   };
 
   const saveNote = async (id: string) => {
@@ -221,7 +231,7 @@ export default function CommunityTeamsPanel({ canModify }: { canModify: boolean 
                       Approve
                     </button>
                     <button
-                      onClick={() => updateStatus(team.id, "declined")}
+                      onClick={() => declineWithReason(team.id)}
                       disabled={actionLoading === team.id}
                       style={{ padding: "5px 14px", borderRadius: "6px", fontSize: "11px", fontWeight: 700, border: "none", background: "rgba(239,68,68,0.1)", color: "#ef4444", cursor: "pointer" }}
                     >
@@ -259,6 +269,12 @@ export default function CommunityTeamsPanel({ canModify }: { canModify: boolean 
               )}
               {team.notes && noteEditing !== team.id && (
                 <p style={{ marginTop: "8px", fontSize: "11px", color: "#666", fontStyle: "italic" }}>Note: {team.notes}</p>
+              )}
+              {team.status === "declined" && team.decline_reason && (
+                <div style={{ marginTop: "8px", padding: "8px 10px", borderRadius: "6px", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", fontSize: "11px", color: "#fca5a5" }}>
+                  <strong style={{ color: "#ef4444", textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "10px" }}>Decline reason (posted to team)</strong>
+                  <div style={{ marginTop: "2px" }}>{team.decline_reason}</div>
+                </div>
               )}
 
               {/* Expanded player list */}

@@ -689,6 +689,7 @@ export type CommunityTeam = {
   reviewed_by:     string | null;
   reviewed_at:     string | null;
   notes:           string | null;
+  decline_reason:  string | null;
 };
 
 export type CommunityTeamPlayer = {
@@ -722,7 +723,7 @@ export async function getCommunityTeamPlayers(teamId: string): Promise<Community
 }
 
 export async function createCommunityTeam(
-  team: Omit<CommunityTeam, "id" | "status" | "submitted_at" | "reviewed_by" | "reviewed_at" | "notes">,
+  team: Omit<CommunityTeam, "id" | "status" | "submitted_at" | "reviewed_by" | "reviewed_at" | "notes" | "decline_reason">,
   players: Omit<CommunityTeamPlayer, "id" | "team_id" | "created_at">[],
 ): Promise<CommunityTeam> {
   if (!supabase) throw new Error("Supabase required");

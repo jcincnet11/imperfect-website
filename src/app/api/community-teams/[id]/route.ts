@@ -60,6 +60,9 @@ export async function PATCH(
     const patch: Record<string, unknown> = {};
     if (body.status) patch.status = body.status;
     if (body.notes !== undefined) patch.notes = body.notes;
+    if (typeof body.decline_reason === "string") {
+      patch.decline_reason = body.decline_reason.trim().slice(0, 500) || null;
+    }
     if (body.status === "approved" || body.status === "declined") {
       patch.reviewed_by = discordId;
       patch.reviewed_at = new Date().toISOString();
@@ -79,6 +82,8 @@ export async function PATCH(
     // Send welcome notification when approved
     if (body.status === "approved") {
       sendApprovalNotification(updated).catch((e) => console.error("Discord notify (community team approved):", e));
+    } else if (body.status === "declined") {
+      sendDeclineNotification(updated).catch((e) => console.error("Discord notify (community team declined):", e));
     }
 
     return Response.json({ team: updated });
@@ -86,6 +91,34 @@ export async function PATCH(
     console.error("PATCH /api/community-teams/[id]", e);
     return apiError("Internal server error", 500);
   }
+}
+
+async function sendDeclineNotification(team: CommunityTeam) {
+  const channelId = process.env.DISCORD_CHANNEL_COMMUNITY;
+  const token = process.env.DISCORD_BOT_TOKEN;
+  if (!channelId || !token) return;
+
+  const players = await getCommunityTeamPlayers(team.id);
+  const captain = players.find((p) => p.is_captain);
+
+  await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+    method: "POST",
+    headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      embeds: [{
+        title: "❌ Community Team Application Declined",
+        description: `**${team.team_name}**${team.team_tag ? ` [${team.team_tag}]` : ""} was not approved at this time.\n\nYou may address the feedback below and reapply at https://imperfectgg.com/en/community/join.`,
+        color: 0xef4444,
+        fields: [
+          ...(captain ? [{ name: "Captain", value: captain.discord_handle, inline: true }] : []),
+          ...(team.decline_reason
+            ? [{ name: "Reason", value: team.decline_reason, inline: false }]
+            : [{ name: "Reason", value: "_No reason provided. Reach out to staff for details._", inline: false }]),
+        ],
+        footer: { text: "IMPerfect Community" },
+      }],
+    }),
+  });
 }
 
 async function sendApprovalNotification(team: CommunityTeam) {
