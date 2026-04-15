@@ -408,6 +408,9 @@ function ScrimCard({ scrim, canManage, onEdit, onDelete, onLogResult }: {
               </button>
             )
           )}
+          <a href={`/team-hub/lineups/${scrim.id}`} className="text-xs text-white/40 hover:text-[#c5d400] border border-white/[0.08] hover:border-[#c5d400]/40 px-2.5 py-1.5 rounded-lg transition-colors">
+            Lineup
+          </a>
           <button onClick={onEdit} className="text-xs text-white/40 hover:text-white border border-white/[0.08] px-2.5 py-1.5 rounded-lg transition-colors">Edit</button>
           <button onClick={onDelete} className="text-xs text-red-400/50 hover:text-red-400 border border-white/[0.06] px-2.5 py-1.5 rounded-lg transition-colors">×</button>
         </div>

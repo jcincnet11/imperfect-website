@@ -825,3 +825,66 @@ export async function upsertStatsOverride(
     // Table might not exist
   }
 }
+
+// ── Lineups ───────────────────────────────────────────────────────────────
+
+export type LineupSlot = {
+  player_discord_id: string;
+  role: string;
+};
+
+export type Lineup = {
+  id:           string;
+  scrim_id:     string;
+  status:       "draft" | "submitted" | "approved";
+  slots:        LineupSlot[];
+  notes:        string | null;
+  submitted_by: string;
+  submitted_at: string;
+  approved_by:  string | null;
+  approved_at:  string | null;
+  updated_at:   string;
+};
+
+export async function getLineupForScrim(scrimId: string): Promise<Lineup | null> {
+  if (!supabase) return null;
+  const { data } = await supabase
+    .from("lineups")
+    .select("*")
+    .eq("scrim_id", scrimId)
+    .maybeSingle();
+  return (data as Lineup | null) ?? null;
+}
+
+export async function upsertLineup(
+  lineup: Omit<Lineup, "id" | "submitted_at" | "updated_at" | "approved_by" | "approved_at"> & {
+    id?: string;
+  },
+): Promise<Lineup> {
+  if (!supabase) throw new Error("Supabase required for lineups");
+  const payload = { ...lineup, updated_at: new Date().toISOString() };
+  const { data, error } = await supabase
+    .from("lineups")
+    .upsert(payload, { onConflict: "scrim_id" })
+    .select()
+    .single();
+  if (error) throw error;
+  return data as Lineup;
+}
+
+export async function approveLineup(id: string, approvedBy: string): Promise<Lineup> {
+  if (!supabase) throw new Error("Supabase required for lineups");
+  const { data, error } = await supabase
+    .from("lineups")
+    .update({
+      status: "approved",
+      approved_by: approvedBy,
+      approved_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data as Lineup;
+}

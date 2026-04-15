@@ -1,4 +1,4 @@
-import type { ScheduleBlock, Player, Announcement } from "./db";
+import type { ScheduleBlock, Player, Announcement, Lineup, Scrim } from "./db";
 
 const BLOCK_LABELS: Record<string, string> = {
   PRACTICE: "Practice",
@@ -209,6 +209,50 @@ export async function notifyAnnouncement(
       await sendMessage(channelId, { embeds: [embed] });
     }),
   );
+}
+
+export async function notifyLineupSubmitted(
+  lineup: Lineup,
+  scrim: Scrim,
+  submitterName: string,
+): Promise<void> {
+  const channelId = getChannelId(scrim.division);
+  if (!channelId) return;
+
+  const gameLabel = scrim.game === "OW2" ? "Overwatch 2" : "Marvel Rivals";
+  const scrimDate = new Date(scrim.scheduled_at).toLocaleDateString("en-US", {
+    month: "short", day: "numeric", year: "numeric",
+    timeZone: "America/Puerto_Rico",
+  });
+  const scrimTime = new Date(scrim.scheduled_at).toLocaleTimeString("en-US", {
+    hour: "2-digit", minute: "2-digit",
+    timeZone: "America/Puerto_Rico",
+  });
+
+  const ROLE_LABELS: Record<string, string> = {
+    tank: "Tank", dps: "DPS", support: "Support",
+    vanguard: "Vanguard", duelist: "Duelist", strategist: "Strategist", flex: "Flex",
+  };
+
+  const slotLines = lineup.slots
+    .map((s) => `**${ROLE_LABELS[s.role] ?? s.role}** — <@${s.player_discord_id}>`)
+    .join("\n");
+
+  await sendMessage(channelId, {
+    embeds: [
+      {
+        title: "📋 Lineup Submitted",
+        description: `Lineup set for **${scrim.opponent_org}** — ${gameLabel} · ${scrimDate} at ${scrimTime}`,
+        color: 0xc8e400,
+        fields: [
+          { name: "Starters", value: slotLines, inline: false },
+          ...(lineup.notes ? [{ name: "Notes", value: lineup.notes, inline: false }] : []),
+          { name: "Submitted by", value: submitterName, inline: true },
+        ],
+        footer: { text: `IMPerfect Team Hub · ${scrim.division}` },
+      },
+    ],
+  });
 }
 
 export async function notifyReminder(block: ScheduleBlock, minutesUntil: number): Promise<void> {
