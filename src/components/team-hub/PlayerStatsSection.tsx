@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 // ---------------------------------------------------------------------------
 // Types (mirrors the API response shape from /api/marvel-rivals/player/[ign])
@@ -188,12 +189,12 @@ export default function PlayerStatsSection({
                   }}
                 >
                   {hero.portraitUrl ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
+                    <Image
                       src={hero.portraitUrl}
                       alt={hero.name}
                       width={i === 0 ? 30 : 26}
                       height={i === 0 ? 30 : 26}
+                      unoptimized
                       style={{
                         borderRadius: "6px",
                         objectFit: "cover",
@@ -201,7 +202,7 @@ export default function PlayerStatsSection({
                         background: "#1A1A1A",
                         border: "1px solid #2A2A2A",
                       }}
-                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                     />
                   ) : (
                     <div style={{

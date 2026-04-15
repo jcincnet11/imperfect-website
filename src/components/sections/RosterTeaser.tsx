@@ -13,14 +13,14 @@ const ROLE_COLORS: Record<string, string> = {
 };
 
 const players = [
-  { tag: "iaguacate",      role: "Strategist", label: "Coach",  game: "MR", img: "/players/AGUACATE_3.png" },
-  { tag: "lblazerowl",     role: "Strategist", label: "Coach",  game: "MR", img: "/players/BLAZER_3.png" },
-  { tag: "crazyturnx",     role: "Duelist",    label: "Player", game: "MR", img: "/players/FILTHYPRYDE.png" },
-  { tag: "georgierican",   role: "Strategist", label: "Player", game: "MR", img: "/players/GEORGIE.png" },
-  { tag: "spooit",         role: "Vanguard",   label: "Player", game: "MR", img: "/players/KEVO.png" },
-  { tag: "the_mofn_ninja", role: "Duelist",    label: "Player", game: "MR", img: "/players/MOFN_2.png" },
-  { tag: "tides100ping",   role: "Duelist",    label: "Player", game: "MR", img: "/players/TIDES.png" },
-  { tag: "zoivanni",       role: "Vanguard",   label: "Player", game: "MR", img: "/players/VANNI.png" },
+  { tag: "iaguacate",      role: "Strategist", label: "Coach",  game: "MR", img: "/players/AGUACATE_3.webp" },
+  { tag: "lblazerowl",     role: "Strategist", label: "Coach",  game: "MR", img: "/players/BLAZER_3.webp" },
+  { tag: "crazyturnx",     role: "Duelist",    label: "Player", game: "MR", img: "/players/FILTHYPRYDE.webp" },
+  { tag: "georgierican",   role: "Strategist", label: "Player", game: "MR", img: "/players/GEORGIE.webp" },
+  { tag: "spooit",         role: "Vanguard",   label: "Player", game: "MR", img: "/players/KEVO.webp" },
+  { tag: "the_mofn_ninja", role: "Duelist",    label: "Player", game: "MR", img: "/players/MOFN_2.webp" },
+  { tag: "tides100ping",   role: "Duelist",    label: "Player", game: "MR", img: "/players/TIDES.webp" },
+  { tag: "zoivanni",       role: "Vanguard",   label: "Player", game: "MR", img: "/players/VANNI.webp" },
 ].map((p) => ({ ...p, color: ROLE_COLORS[p.role] }));
 
 export default function RosterTeaser() {
