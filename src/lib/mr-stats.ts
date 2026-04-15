@@ -165,9 +165,11 @@ function rankFromLevel(level: number): string {
 
 export function transformApiResponse(
   username: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any,
 ): PlayerStats | null {
   const ranked = data?.overall_stats?.ranked;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const heroes: any[] = data?.heroes_ranked ?? [];
 
   // Treat empty data as "no stats available"

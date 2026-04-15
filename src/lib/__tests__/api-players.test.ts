@@ -8,18 +8,22 @@ vi.mock("@/auth", () => ({ auth: () => mockAuth() }));
 
 const mockGetAllPlayers = vi.fn();
 const mockUpsertPlayer = vi.fn();
+const mockAppendAuditLog = vi.fn();
 vi.mock("@/lib/db", () => ({
   getAllPlayers: () => mockGetAllPlayers(),
   upsertPlayer: (p: unknown) => mockUpsertPlayer(p),
+  appendAuditLog: (entry: unknown) => mockAppendAuditLog(entry),
 }));
+
+vi.mock("@/lib/csrf", () => ({ verifyCsrfOrigin: () => true }));
 
 // Always pass rate limit in unit tests
 vi.mock("@/lib/rate-limit", () => ({ checkRateLimit: () => true }));
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-function makeSession(role: string) {
-  return { user: { role, discordId: "test_discord_id" } };
+function makeSession(orgRole: string) {
+  return { user: { orgRole, discordId: "test_discord_id" } };
 }
 
 function req(method = "GET", body?: unknown) {
@@ -43,14 +47,14 @@ describe("GET /api/players", () => {
   });
 
   it("returns 403 when role is player", async () => {
-    mockAuth.mockResolvedValue(makeSession("player"));
+    mockAuth.mockResolvedValue(makeSession("PLAYER"));
     const { GET } = await import("@/app/api/players/route");
     const res = await GET(req());
     expect(res.status).toBe(403);
   });
 
   it("returns 200 with players for coach role", async () => {
-    mockAuth.mockResolvedValue(makeSession("coach"));
+    mockAuth.mockResolvedValue(makeSession("HEAD_COACH"));
     mockGetAllPlayers.mockResolvedValue([{ discord_id: "abc", display_name: "TestPlayer", role: "player" }]);
     const { GET } = await import("@/app/api/players/route");
     const res = await GET(req());
@@ -61,7 +65,7 @@ describe("GET /api/players", () => {
   });
 
   it("returns 200 with players for admin role", async () => {
-    mockAuth.mockResolvedValue(makeSession("admin"));
+    mockAuth.mockResolvedValue(makeSession("ORG_ADMIN"));
     mockGetAllPlayers.mockResolvedValue([]);
     const { GET } = await import("@/app/api/players/route");
     const res = await GET(req());
@@ -80,14 +84,14 @@ describe("POST /api/players", () => {
   });
 
   it("returns 403 when role is coach", async () => {
-    mockAuth.mockResolvedValue(makeSession("coach"));
+    mockAuth.mockResolvedValue(makeSession("HEAD_COACH"));
     const { POST } = await import("@/app/api/players/route");
     const res = await POST(req("POST", { discord_id: "abc" }));
     expect(res.status).toBe(403);
   });
 
   it("returns 200 and calls upsertPlayer when admin", async () => {
-    mockAuth.mockResolvedValue(makeSession("admin"));
+    mockAuth.mockResolvedValue(makeSession("ORG_ADMIN"));
     mockUpsertPlayer.mockResolvedValue(undefined);
     const { POST } = await import("@/app/api/players/route");
     const player = { discord_id: "xyz", display_name: "New", role: "player", division: "MR", is_admin: false };

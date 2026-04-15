@@ -7,15 +7,20 @@ const mockAuth = vi.fn();
 vi.mock("@/auth", () => ({ auth: () => mockAuth() }));
 
 const mockGetAvailability = vi.fn();
+const mockGetAvailabilityForPlayers = vi.fn();
 const mockUpsertAvailability = vi.fn();
 const mockGetAllPlayers = vi.fn();
+const mockGetPlayerByDiscordId = vi.fn();
 vi.mock("@/lib/db", () => ({
   getAvailability: (w: string, id?: string) => mockGetAvailability(w, id),
+  getAvailabilityForPlayers: (w: string, ids: string[]) => mockGetAvailabilityForPlayers(w, ids),
   upsertAvailability: (r: unknown) => mockUpsertAvailability(r),
   getAllPlayers: () => mockGetAllPlayers(),
+  getPlayerByDiscordId: (id: string) => mockGetPlayerByDiscordId(id),
 }));
 
 vi.mock("@/lib/rate-limit", () => ({ checkRateLimit: () => true }));
+vi.mock("@/lib/csrf", () => ({ verifyCsrfOrigin: () => true }));
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -49,13 +54,21 @@ describe("GET /api/availability", () => {
     expect(res.status).toBe(401);
   });
 
-  it("player only sees their own availability", async () => {
+  it("player only sees their own team's availability", async () => {
     mockAuth.mockResolvedValue(makeSession("player", "player_1"));
-    mockGetAvailability.mockResolvedValue([]);
-    mockGetAllPlayers.mockResolvedValue([]);
+    mockGetAllPlayers.mockResolvedValue([
+      { discord_id: "player_1", division: "MR" },
+      { discord_id: "player_2", division: "MR" },
+      { discord_id: "player_3", division: "OW2" },
+    ]);
+    mockGetPlayerByDiscordId.mockResolvedValue({ discord_id: "player_1", division: "MR" });
+    mockGetAvailabilityForPlayers.mockResolvedValue([]);
     const { GET } = await import("@/app/api/availability/route");
     await GET(getReq({ week_start: "2026-01-06" }));
-    expect(mockGetAvailability).toHaveBeenCalledWith("2026-01-06", "player_1");
+    expect(mockGetAvailabilityForPlayers).toHaveBeenCalledWith(
+      "2026-01-06",
+      ["player_1", "player_2"],
+    );
   });
 
   it("coach sees all availability (no discord id filter)", async () => {

@@ -40,7 +40,14 @@ const DAY_LABELS: Record<string, string> = {
   mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun",
 };
 
-export default function ScrimApplicationsPanel() {
+type ScheduleData = {
+  game: "OW2" | "MR";
+  opponent_org: string;
+  format: string;
+  applicationId: string;
+};
+
+export default function ScrimApplicationsPanel({ onSchedule }: { onSchedule?: (data: ScheduleData) => void }) {
   const [apps, setApps] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
@@ -55,6 +62,7 @@ export default function ScrimApplicationsPanel() {
     setLoading(false);
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   const updateStatus = async (id: string, status: string) => {
@@ -214,6 +222,31 @@ export default function ScrimApplicationsPanel() {
               )}
               {app.status === "accepted" && (
                 <div style={{ display: "flex", gap: "8px" }}>
+                  {onSchedule && (
+                    <button
+                      onClick={() => {
+                        const gameMap: Record<string, "OW2" | "MR"> = { ow2: "OW2", marvel_rivals: "MR" };
+                        onSchedule({
+                          game: gameMap[app.game] ?? "MR",
+                          opponent_org: app.team_name,
+                          format: app.format,
+                          applicationId: app.id,
+                        });
+                      }}
+                      style={{
+                        padding: "6px 16px",
+                        borderRadius: "8px",
+                        fontSize: "12px",
+                        fontWeight: 700,
+                        border: "none",
+                        cursor: "pointer",
+                        background: "rgba(200,228,0,0.15)",
+                        color: "#C8E400",
+                      }}
+                    >
+                      Schedule Scrim
+                    </button>
+                  )}
                   <button
                     onClick={() => updateStatus(app.id, "scheduled")}
                     disabled={actionLoading === app.id}
