@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Barlow_Condensed, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const barlow = Barlow_Condensed({
@@ -40,7 +41,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${barlow.variable} ${inter.variable}`}>
-      <body className="min-h-screen bg-dark text-white">{children}</body>
+      <body className="min-h-screen bg-dark text-white">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
