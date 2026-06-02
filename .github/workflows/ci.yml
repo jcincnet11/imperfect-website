@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Guard — no client-exposed Supabase key
+        run: ./scripts/check-no-public-supabase.sh
+
       - name: Lint
         run: npm run lint
 
