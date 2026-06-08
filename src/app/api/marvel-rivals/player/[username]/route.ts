@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { transformApiResponse, mrHeroPortrait, PlayerStats } from "@/lib/mr-stats";
 import { getStatsOverride } from "@/lib/db";
+import { DISCORD_ID_RE } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +39,14 @@ export async function GET(
   const discordId = request.nextUrl.searchParams.get("discord_id");
 
   // ----- Check for manual stats override -----
+  // Validate the discord_id query param as a numeric Discord snowflake before
+  // passing it to the DB (public/unauth route).
+  if (discordId && !DISCORD_ID_RE.test(discordId)) {
+    return NextResponse.json(
+      { stats: null, error: "Invalid discord_id" },
+      { status: 400 },
+    );
+  }
   if (discordId) {
     const override = await getStatsOverride(discordId);
     if (override?.use_override) {

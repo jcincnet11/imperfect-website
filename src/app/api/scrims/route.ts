@@ -5,6 +5,24 @@ import { resolveOrgRole, can } from "@/lib/permissions";
 import { appendAuditLog } from "@/lib/db";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
+import {
+  missingField, invalidEnum, tooLong,
+  SCRIM_GAMES, SCRIM_STATUSES, SCRIM_RESULTS, DIVISIONS,
+} from "@/lib/validate";
+
+/** Validate scrim fields. Returns an error message or null. */
+function validateScrimFields(body: Record<string, unknown>): string | null {
+  return (
+    invalidEnum("game", body.game, SCRIM_GAMES) ||
+    invalidEnum("division", body.division, DIVISIONS) ||
+    invalidEnum("status", body.status, SCRIM_STATUSES) ||
+    invalidEnum("result", body.result, SCRIM_RESULTS) ||
+    tooLong("opponent_org", body.opponent_org, 120) ||
+    tooLong("format", body.format, 60) ||
+    tooLong("score", body.score, 40) ||
+    tooLong("notes", body.notes, 5_000)
+  );
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -33,6 +51,12 @@ export async function POST(req: NextRequest) {
     if (!verifyCsrfOrigin(req)) return apiError("Invalid origin", 403);
 
     const body = await req.json();
+
+    const missing = missingField(body, ["game", "division", "opponent_org", "scheduled_at"]);
+    if (missing) return apiError(`Missing required field: ${missing}`, 400);
+    const fieldErr = validateScrimFields(body);
+    if (fieldErr) return apiError(fieldErr, 400);
+
     const scrim = await createScrim({
       ...body,
       created_by: session.user.discordId!,

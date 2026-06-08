@@ -6,6 +6,10 @@ import { randomUUID } from "crypto";
 import { notifyAvailabilityComplete } from "@/lib/discord-notify";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
+import {
+  missingField, invalidEnum, invalidFormat,
+  DAYS, AVAILABILITY_STATUSES, DATE_RE,
+} from "@/lib/validate";
 
 export async function GET(request: NextRequest) {
   try {
@@ -63,6 +67,14 @@ export async function POST(request: NextRequest) {
     const role = (session.user as Record<string, unknown>).role as string;
 
     const body = await request.json() as Partial<Availability>;
+
+    const missing = missingField(body, ["week_start", "day", "status"]);
+    if (missing) return apiError(`Missing required field: ${missing}`, 400);
+    const fieldErr =
+      invalidFormat("week_start", body.week_start, DATE_RE) ||
+      invalidEnum("day", body.day, DAYS) ||
+      invalidEnum("status", body.status, AVAILABILITY_STATUSES);
+    if (fieldErr) return apiError(fieldErr, 400);
 
     // Players can only update their own availability
     if (role === "player" && body.player_discord_id !== discordId) {

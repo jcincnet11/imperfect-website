@@ -5,6 +5,10 @@ import { resolveOrgRole, can } from "@/lib/permissions";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
 import { notifyAnnouncement } from "@/lib/discord-notify";
+import { missingField, invalidEnum, tooLong, ANNOUNCEMENT_AUDIENCES } from "@/lib/validate";
+
+const TITLE_MAX = 200;
+const BODY_MAX = 10_000;
 
 export async function GET(req: NextRequest) {
   try {
@@ -33,6 +37,16 @@ export async function POST(req: NextRequest) {
     if (!verifyCsrfOrigin(req)) return apiError("Invalid origin", 403);
 
     const body = await req.json();
+
+    const missing = missingField(body, ["title", "body"]);
+    if (missing) return apiError(`Missing required field: ${missing}`, 400);
+    const fieldErr =
+      tooLong("title", body.title, TITLE_MAX) ||
+      tooLong("body", body.body, BODY_MAX) ||
+      invalidEnum("target_audience", body.target_audience, ANNOUNCEMENT_AUDIENCES) ||
+      (body.pinned !== undefined && typeof body.pinned !== "boolean" ? "pinned must be a boolean" : null);
+    if (fieldErr) return apiError(fieldErr, 400);
+
     const announcement = await createAnnouncement({
       ...body,
       author_discord_id: session.user.discordId!,

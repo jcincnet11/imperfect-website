@@ -4,6 +4,10 @@ import { updateAnnouncement, deleteAnnouncement, appendAuditLog } from "@/lib/db
 import { resolveOrgRole, can } from "@/lib/permissions";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
+import { invalidEnum, tooLong, ANNOUNCEMENT_AUDIENCES } from "@/lib/validate";
+
+const TITLE_MAX = 200;
+const BODY_MAX = 10_000;
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -19,6 +23,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     const { id } = await params;
     const patch = await req.json();
+
+    const fieldErr =
+      tooLong("title", patch.title, TITLE_MAX) ||
+      tooLong("body", patch.body, BODY_MAX) ||
+      invalidEnum("target_audience", patch.target_audience, ANNOUNCEMENT_AUDIENCES) ||
+      (patch.pinned !== undefined && typeof patch.pinned !== "boolean" ? "pinned must be a boolean" : null);
+    if (fieldErr) return apiError(fieldErr, 400);
+
     await updateAnnouncement(id, patch);
     return NextResponse.json({ ok: true });
   } catch (e) {

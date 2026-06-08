@@ -4,6 +4,10 @@ import { updateScrim, deleteScrim, getScrims, appendAuditLog } from "@/lib/db";
 import { resolveOrgRole, can } from "@/lib/permissions";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
+import {
+  invalidEnum, tooLong,
+  SCRIM_GAMES, SCRIM_STATUSES, SCRIM_RESULTS, DIVISIONS,
+} from "@/lib/validate";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -19,6 +23,17 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     const { id } = await params;
     const patch = await req.json();
+
+    const fieldErr =
+      invalidEnum("game", patch.game, SCRIM_GAMES) ||
+      invalidEnum("division", patch.division, DIVISIONS) ||
+      invalidEnum("status", patch.status, SCRIM_STATUSES) ||
+      invalidEnum("result", patch.result, SCRIM_RESULTS) ||
+      tooLong("opponent_org", patch.opponent_org, 120) ||
+      tooLong("format", patch.format, 60) ||
+      tooLong("score", patch.score, 40) ||
+      tooLong("notes", patch.notes, 5_000);
+    if (fieldErr) return apiError(fieldErr, 400);
 
     // Fetch before for audit
     const before = (await getScrims()).find((s) => s.id === id) ?? null;

@@ -11,6 +11,55 @@ const DATA_DIR = path.join(process.cwd(), "data");
 
 let _jsonFallbackWarned = false;
 
+/**
+ * Returns a shallow copy of `obj` containing only the keys listed in `allowed`.
+ * Used as a writable-column allowlist before persisting route-supplied objects
+ * to Supabase — strips any unknown/privileged fields (mass-assignment guard).
+ */
+function pick<T extends Record<string, unknown>>(obj: T, allowed: readonly string[]): Partial<T> {
+  const out: Partial<T> = {};
+  for (const key of allowed) {
+    if (key in obj && obj[key] !== undefined) {
+      out[key as keyof T] = obj[key as keyof T];
+    }
+  }
+  return out;
+}
+
+// ─── Writable-column allowlists ─────────────────────────────────────────────
+// Only these columns may be set by route-supplied objects. Server-managed
+// columns (id, created_at, updated_at) and anything not listed is stripped.
+
+const PLAYER_COLUMNS = [
+  "discord_id", "display_name", "division", "role", "is_admin",
+  "org_role", "game", "in_game_role", "rank", "captain_of", "archived",
+] as const;
+
+const SCHEDULE_BLOCK_COLUMNS = [
+  "id", "week_start", "division", "day", "time_slot", "block_type", "notes",
+] as const;
+
+const AVAILABILITY_COLUMNS = [
+  "id", "week_start", "player_discord_id", "day", "status",
+] as const;
+
+const SCRIM_COLUMNS = [
+  "game", "division", "opponent_org", "scheduled_at", "format",
+  "status", "result", "score", "notes", "created_by",
+] as const;
+
+const ANNOUNCEMENT_COLUMNS = [
+  "title", "body", "author_discord_id", "pinned", "target_audience",
+] as const;
+
+const AVAILABILITY_TEMPLATE_COLUMNS = [
+  "player_discord_id", "day_of_week", "morning", "afternoon", "evening",
+] as const;
+
+const AVAILABILITY_OVERRIDE_COLUMNS = [
+  "player_discord_id", "override_date", "morning", "afternoon", "evening",
+] as const;
+
 function readJson<T>(filename: string): T[] {
   if (process.env.NODE_ENV === "production" && !_jsonFallbackWarned) {
     _jsonFallbackWarned = true;
@@ -143,14 +192,15 @@ export async function getAllPlayers(includeArchived = false): Promise<Player[]> 
 }
 
 export async function upsertPlayer(player: Partial<Player> & { discord_id: string }): Promise<void> {
+  const safe = pick(player, PLAYER_COLUMNS) as Partial<Player> & { discord_id: string };
   if (supabase) {
-    await supabase.from("players").upsert(player, { onConflict: "discord_id" });
+    await supabase.from("players").upsert(safe, { onConflict: "discord_id" });
     return;
   }
   const players = readJson<Player>("players.json");
-  const idx = players.findIndex((p) => p.discord_id === player.discord_id);
-  if (idx >= 0) players[idx] = { ...players[idx], ...player };
-  else players.push(player as Player);
+  const idx = players.findIndex((p) => p.discord_id === safe.discord_id);
+  if (idx >= 0) players[idx] = { ...players[idx], ...safe };
+  else players.push(safe as Player);
   writeJson("players.json", players);
 }
 
@@ -213,20 +263,21 @@ export async function getAllVodReviews(): Promise<ScheduleBlock[]> {
 }
 
 export async function upsertScheduleBlock(block: ScheduleBlock): Promise<ScheduleBlock> {
+  const safe = pick(block, SCHEDULE_BLOCK_COLUMNS) as ScheduleBlock;
   if (supabase) {
     const { data } = await supabase
       .from("schedule_blocks")
-      .upsert(block, { onConflict: "id" })
+      .upsert(safe, { onConflict: "id" })
       .select()
       .single();
     return data as ScheduleBlock;
   }
   const blocks = readJson<ScheduleBlock>("schedule.json");
-  const idx = blocks.findIndex((b) => b.id === block.id);
-  if (idx >= 0) blocks[idx] = block;
-  else blocks.push(block);
+  const idx = blocks.findIndex((b) => b.id === safe.id);
+  if (idx >= 0) blocks[idx] = safe;
+  else blocks.push(safe);
   writeJson("schedule.json", blocks);
-  return block;
+  return safe;
 }
 
 export async function deleteScheduleBlock(id: string): Promise<void> {
@@ -271,14 +322,16 @@ export async function getAvailabilityForPlayers(weekStart: string, discordIds: s
 }
 
 export async function upsertAvailability(row: Availability): Promise<Availability> {
+  const safe = pick(row, AVAILABILITY_COLUMNS) as Availability;
   if (supabase) {
     const { data } = await supabase
       .from("availability")
-      .upsert(row, { onConflict: "week_start,player_discord_id,day" })
+      .upsert(safe, { onConflict: "week_start,player_discord_id,day" })
       .select()
       .single();
     return data as Availability;
   }
+  row = safe;
   const rows = readJson<Availability>("availability.json");
   const idx = rows.findIndex(
     (r) =>
@@ -304,7 +357,7 @@ export async function getScrims(division?: string): Promise<Scrim[]> {
 
 export async function createScrim(scrim: Omit<Scrim, "id" | "created_at" | "updated_at">): Promise<Scrim> {
   if (!supabase) throw new Error("Supabase required for scrims");
-  const { data, error } = await supabase.from("scrims").insert(scrim).select().single();
+  const { data, error } = await supabase.from("scrims").insert(pick(scrim, SCRIM_COLUMNS)).select().single();
   if (error) throw error;
   return data as Scrim;
 }
@@ -313,7 +366,7 @@ export async function updateScrim(id: string, patch: Partial<Scrim>): Promise<Sc
   if (!supabase) throw new Error("Supabase required for scrims");
   const { data, error } = await supabase
     .from("scrims")
-    .update(patch)
+    .update(pick(patch, SCRIM_COLUMNS))
     .eq("id", id)
     .select()
     .single();
@@ -344,14 +397,14 @@ export async function getAnnouncements(audience?: string): Promise<Announcement[
 
 export async function createAnnouncement(a: Omit<Announcement, "id" | "created_at" | "updated_at">): Promise<Announcement> {
   if (!supabase) throw new Error("Supabase required for announcements");
-  const { data, error } = await supabase.from("announcements").insert(a).select().single();
+  const { data, error } = await supabase.from("announcements").insert(pick(a, ANNOUNCEMENT_COLUMNS)).select().single();
   if (error) throw error;
   return data as Announcement;
 }
 
 export async function updateAnnouncement(id: string, patch: Partial<Announcement>): Promise<void> {
   if (!supabase) throw new Error("Supabase required for announcements");
-  await supabase.from("announcements").update(patch).eq("id", id);
+  await supabase.from("announcements").update(pick(patch, ANNOUNCEMENT_COLUMNS)).eq("id", id);
 }
 
 export async function deleteAnnouncement(id: string): Promise<void> {
@@ -476,10 +529,9 @@ export async function saveTemplates(
   rows: { day_of_week: number; morning: AvailabilityBlock; afternoon: AvailabilityBlock; evening: AvailabilityBlock }[],
 ): Promise<void> {
   if (!supabase) return;
-  const toUpsert = rows.map((r) => ({
-    player_discord_id: discordId,
-    ...r,
-  }));
+  const toUpsert = rows.map((r) =>
+    pick({ player_discord_id: discordId, ...r }, AVAILABILITY_TEMPLATE_COLUMNS),
+  );
   await supabase
     .from("availability_templates")
     .upsert(toUpsert, { onConflict: "player_discord_id,day_of_week" });
@@ -506,7 +558,7 @@ export async function upsertOverride(
   const { data, error } = await supabase
     .from("availability_overrides")
     .upsert(
-      { player_discord_id: discordId, ...override },
+      pick({ player_discord_id: discordId, ...override }, AVAILABILITY_OVERRIDE_COLUMNS),
       { onConflict: "player_discord_id,override_date" },
     )
     .select()

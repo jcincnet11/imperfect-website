@@ -4,6 +4,7 @@ import { getTemplates, saveTemplates, type AvailabilityBlock } from "@/lib/db";
 import { resolveOrgRole, hasRole } from "@/lib/permissions";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
+import { invalidEnum, AVAILABILITY_BLOCKS } from "@/lib/validate";
 
 /**
  * GET /api/availability/template?discord_id=...
@@ -68,6 +69,17 @@ export async function POST(request: NextRequest) {
 
     if (!Array.isArray(body.rows) || body.rows.length === 0) {
       return Response.json({ error: "rows required" }, { status: 400 });
+    }
+
+    for (const r of body.rows) {
+      if (!Number.isInteger(r.day_of_week) || r.day_of_week < 0 || r.day_of_week > 6) {
+        return apiError("Invalid day_of_week: must be an integer 0-6", 400);
+      }
+      const blockErr =
+        invalidEnum("morning", r.morning, AVAILABILITY_BLOCKS) ||
+        invalidEnum("afternoon", r.afternoon, AVAILABILITY_BLOCKS) ||
+        invalidEnum("evening", r.evening, AVAILABILITY_BLOCKS);
+      if (blockErr) return apiError(blockErr, 400);
     }
 
     await saveTemplates(targetId, body.rows);

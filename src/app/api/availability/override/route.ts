@@ -4,6 +4,7 @@ import { getOverrides, upsertOverride, deleteOverride, type AvailabilityBlock } 
 import { resolveOrgRole, hasRole } from "@/lib/permissions";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
+import { invalidEnum, invalidFormat, AVAILABILITY_BLOCKS, DATE_RE } from "@/lib/validate";
 
 /**
  * GET /api/availability/override?discord_id=...
@@ -69,6 +70,13 @@ export async function POST(request: NextRequest) {
     if (!body.override_date) {
       return Response.json({ error: "override_date required" }, { status: 400 });
     }
+
+    const fieldErr =
+      invalidFormat("override_date", body.override_date, DATE_RE) ||
+      invalidEnum("morning", body.morning, AVAILABILITY_BLOCKS) ||
+      invalidEnum("afternoon", body.afternoon, AVAILABILITY_BLOCKS) ||
+      invalidEnum("evening", body.evening, AVAILABILITY_BLOCKS);
+    if (fieldErr) return apiError(fieldErr, 400);
 
     // Max 30 future overrides
     const existing = await getOverrides(targetId);

@@ -12,6 +12,11 @@ import { notifyBlockAdded, notifyBlockUpdated, notifyBlockDeleted } from "@/lib/
 import { randomUUID } from "crypto";
 import { apiError } from "@/lib/api-error";
 import { verifyCsrfOrigin } from "@/lib/csrf";
+import { resolveOrgRole, hasRole } from "@/lib/permissions";
+import {
+  missingField, invalidEnum, invalidFormat,
+  DAYS, BLOCK_TYPES, DATE_RE, TIME_SLOT_RE, DIVISIONS,
+} from "@/lib/validate";
 
 export async function GET(request: NextRequest) {
   try {
@@ -46,14 +51,25 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const role = (session.user as Record<string, unknown>).role as string;
-    if (role !== "admin" && role !== "coach") {
+    const orgRole = resolveOrgRole(session.user);
+    if (!hasRole(orgRole, "HEAD_COACH")) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
     if (!verifyCsrfOrigin(request)) return Response.json({ error: "Invalid origin" }, { status: 403 });
 
     const body = await request.json() as Partial<ScheduleBlock>;
+
+    const missing = missingField(body, ["week_start", "division", "day", "time_slot", "block_type"]);
+    if (missing) return apiError(`Missing required field: ${missing}`, 400);
+    const fieldErr =
+      invalidFormat("week_start", body.week_start, DATE_RE) ||
+      invalidFormat("time_slot", body.time_slot, TIME_SLOT_RE) ||
+      invalidEnum("day", body.day, DAYS) ||
+      invalidEnum("block_type", body.block_type, BLOCK_TYPES) ||
+      invalidEnum("division", body.division, DIVISIONS);
+    if (fieldErr) return apiError(fieldErr, 400);
+
     const block: ScheduleBlock = {
       id: body.id ?? randomUUID(),
       week_start: body.week_start!,
@@ -83,8 +99,8 @@ export async function DELETE(request: NextRequest) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const role = (session.user as Record<string, unknown>).role as string;
-    if (role !== "admin" && role !== "coach") {
+    const orgRole = resolveOrgRole(session.user);
+    if (!hasRole(orgRole, "HEAD_COACH")) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
