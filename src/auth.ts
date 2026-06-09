@@ -1,11 +1,33 @@
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
+import { cookies } from "next/headers";
 import type { OrgRole } from "@/lib/permissions";
 
 const approvedIds = (process.env.APPROVED_DISCORD_IDS || "")
   .split(",")
   .map((id) => id.trim())
   .filter(Boolean);
+
+// Extract the join token the user is actively redeeming, if any.
+// NextAuth stores the post-login destination (set via signIn redirectTo)
+// in the callback-url cookie. A brand new member only ever reaches sign-in
+// by following a /team-hub/join/<token> link, so the token in that cookie
+// is the specific invite this identity is claiming.
+async function getRedeemingInviteToken(): Promise<string | null> {
+  try {
+    const store = await cookies();
+    const raw =
+      store.get("__Secure-authjs.callback-url")?.value ??
+      store.get("authjs.callback-url")?.value ??
+      null;
+    if (!raw) return null;
+    const decoded = decodeURIComponent(raw);
+    const match = decoded.match(/\/team-hub\/join\/([^/?#]+)/);
+    return match ? match[1] : null;
+  } catch {
+    return null;
+  }
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -23,16 +45,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (discordId === process.env.OWNER_DISCORD_ID) return true;
         // Check if player is in DB
         try {
-          const { getPlayerByDiscordId, getInvites } = await import("@/lib/db");
+          const { getPlayerByDiscordId, getInviteByToken } = await import("@/lib/db");
           const player = await getPlayerByDiscordId(discordId);
           if (player) return true;
-          // Not in DB — allow through only if there are valid (unused, unexpired) invites
-          // so new members can complete the invite redemption flow
-          const invites = await getInvites();
-          const hasValidInvite = invites.some(
-            (inv) => !inv.used_by && new Date(inv.expires_at) > new Date()
-          );
-          if (hasValidInvite) return true;
+          // Not in DB — allow through ONLY if this identity is following a
+          // specific invite link whose token maps to a valid (unused,
+          // unexpired) invite. A globally outstanding invite is not enough:
+          // the user must be redeeming THEIR own invite.
+          const token = await getRedeemingInviteToken();
+          if (token) {
+            const invite = await getInviteByToken(token);
+            const validInvite =
+              invite && !invite.used_by && new Date(invite.expires_at) > new Date();
+            if (validInvite) return true;
+          }
           return "/team-hub?error=not_approved";
         } catch {
           // DB unavailable — fall back to env var approved list

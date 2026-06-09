@@ -42,10 +42,10 @@ export default async function JoinPage({ params }: { params: Promise<{ token: st
     archived: false,
   });
 
-  // Mark invite used
-  const { createClient } = await import("@supabase/supabase-js");
-  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!);
-  await supabase.from("invites").update({ used_by: discordId, used_at: new Date().toISOString() }).eq("token", token);
+  // Mark invite used. Use the shared server client (service role) so this
+  // write keeps working now that the allow-all anon RLS policies are dropped.
+  const { redeemInvite } = await import("@/lib/db");
+  await redeemInvite(token, discordId);
 
   await appendAuditLog({
     actor_discord_id: invite.created_by,
