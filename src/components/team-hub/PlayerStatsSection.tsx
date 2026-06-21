@@ -56,12 +56,13 @@ export default function PlayerStatsSection({
   discordId?: string;
 }) {
   const [stats, setStats] = useState<PlayerStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Only the MR division fetches stats, so non-MR starts un-loaded — avoids a
+  // synchronous setState inside the effect (react-hooks/set-state-in-effect).
+  const [loading, setLoading] = useState(division === "MR");
   const [error, setError] = useState(false);
 
   useEffect(() => {
     if (division !== "MR") {
-      setLoading(false);
       return;
     }
 

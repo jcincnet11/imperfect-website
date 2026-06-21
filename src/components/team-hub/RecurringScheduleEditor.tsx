@@ -117,6 +117,8 @@ export default function RecurringScheduleEditor({
     setTemplateLoaded(true);
   }, [effectiveId, currentDiscordId]);
 
+  // Intentional load-on-mount; load() sets state only after awaited fetches.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { load(); }, [load]);
 
   // When override date changes, pre-fill from template
@@ -126,11 +128,15 @@ export default function RecurringScheduleEditor({
     const jsDay = d.getDay();
     const dow = jsDay === 0 ? 6 : jsDay - 1;
     const tpl = template.find((t) => t.day_of_week === dow);
+    // Re-seed editable override state whenever the picked date or template
+    // changes; an effect is the right tool here (two reactive inputs).
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (tpl) {
       setOverrideRow({ morning: tpl.morning, afternoon: tpl.afternoon, evening: tpl.evening });
     } else {
       setOverrideRow({ morning: "unset", afternoon: "unset", evening: "unset" });
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [overrideDate, template]);
 
   const toggleTemplate = (dayIdx: number, slot: typeof SLOTS[number]) => {
